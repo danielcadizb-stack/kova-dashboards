@@ -1044,7 +1044,7 @@ async function callCFO(type,period,out){
 
 async function callAPI(prompt,out){
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Error en la respuesta';
     out.innerHTML=`<div class="cfo-text">${txt}</div>`;
@@ -1072,7 +1072,7 @@ async function genReport(type){
 
   const prompt=buildPrompt(types[type],'periodo correspondiente')+'\n\nAdemás incluye: resumen ejecutivo en 3 líneas, tabla de métricas clave, comparación vs benchmarks SaaS, y las 3 acciones más urgentes.';
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cfo-text">${txt}</div>`;
