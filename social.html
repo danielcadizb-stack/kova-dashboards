@@ -634,7 +634,7 @@ OBJETIVO:
 [Qué métrica o resultado busca este contenido]`;
 
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Error generando contenido';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
@@ -673,7 +673,7 @@ HASHTAGS: [3-5 hashtags]
 POST: [adaptado a Facebook, tono más conversacional]
 NOTA: [puede reutilizar contenido de Instagram con ajustes]`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
@@ -693,7 +693,7 @@ Genera un PLAN SEMANAL completo para los próximos 7 días. Por cada día:
 - KPI que mejora
 Termina con 3 recomendaciones estratégicas basadas en los datos actuales.`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
@@ -727,7 +727,7 @@ Genera un ${tn[type]} ejecutivo con:
 
 Sé directo, específico y usa los datos reales.`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     window._rep=txt;
