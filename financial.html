@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOVA Financial Intelligence Center</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg:#050709;--bg2:#090c12;--bg3:#0e1219;--bg4:#131a24;
+  --gold:#d4a843;--gold2:rgba(212,168,67,0.1);--gold3:rgba(212,168,67,0.05);
+  --green:#2dd4a0;--green2:rgba(45,212,160,0.1);
+  --red:#e05555;--red2:rgba(224,85,85,0.1);
+  --blue:#5b9bd5;--blue2:rgba(91,155,213,0.1);
+  --amber:#f59e0b;--amber2:rgba(245,158,11,0.1);
+  --text:#dce4ee;--text2:#7a8fa8;--text3:#3a4a5a;--text4:#1e2a38;
+  --border:rgba(212,168,67,0.08);--border2:rgba(212,168,67,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body{
+  background:
+    radial-gradient(ellipse 60% 30% at 5% 0%,rgba(212,168,67,0.04),transparent),
+    radial-gradient(ellipse 40% 40% at 95% 100%,rgba(45,212,160,0.03),transparent),
+    var(--bg);
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(212,168,67,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,0.015) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 36px;border-bottom:1px solid var(--border2);
+  background:rgba(5,7,9,0.97);backdrop-filter:blur(20px);
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:16px;}
+.logo-badge{
+  width:46px;height:46px;
+  background:linear-gradient(135deg,var(--gold),rgba(212,168,67,0.6));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces';font-weight:700;font-size:20px;color:#000;
+  box-shadow:0 0 20px rgba(212,168,67,0.2);
+}
+.logo-name{font-family:'Fraunces';font-size:14px;color:var(--gold);font-weight:600;letter-spacing:0.06em;}
+.logo-sub{font-family:'IBM Plex Mono';font-size:9px;color:var(--text3);letter-spacing:0.2em;margin-top:2px;}
+.hdr-center{display:flex;align-items:center;gap:20px;}
+.live-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 16px;border:1px solid rgba(212,168,67,0.25);
+  border-radius:20px;font-family:'IBM Plex Mono';font-size:10px;color:var(--gold);
+  background:var(--gold3);
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:glow 2s ease-in-out infinite;}
+@keyframes glow{0%,100%{opacity:1;box-shadow:0 0 4px var(--gold)}50%{opacity:0.4;box-shadow:none}}
+.hdr-time{font-family:'IBM Plex Mono';font-size:11px;color:var(--text3);}
+.hdr-right{display:flex;gap:8px;align-items:center;}
+.btn{
+  padding:9px 18px;border-radius:8px;font-size:13px;cursor:pointer;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text2);font-family:'DM Sans';transition:all .2s;
+}
+.btn:hover{background:var(--bg3);color:var(--text);border-color:var(--gold);}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600;}
+.btn-gold:hover{background:#c49830;border-color:#c49830;color:#000;}
+
+/* ALERT BAR */
+.alert-bar{
+  background:var(--amber2);border-bottom:1px solid rgba(245,158,11,0.2);
+  padding:10px 36px;display:flex;align-items:center;gap:10px;
+  font-size:13px;color:var(--amber);font-family:'IBM Plex Mono';
+}
+
+/* TABS */
+.tabs{
+  display:flex;padding:0 36px;border-bottom:1px solid var(--border);
+  background:var(--bg2);overflow-x:auto;position:relative;z-index:1;
+}
+.tab{
+  padding:13px 22px;font-size:13px;cursor:pointer;border:none;
+  background:transparent;color:var(--text3);border-bottom:2px solid transparent;
+  margin-bottom:-1px;transition:all .2s;font-family:'DM Sans';white-space:nowrap;
+}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab:hover:not(.active){color:var(--text2);}
+
+/* CONTENT */
+.content{padding:32px 36px;position:relative;z-index:1;}
+.panel{display:none;}.panel.active{display:block;}
+
+/* METRIC CARDS */
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.mcard{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:24px;position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.mcard:hover{border-color:var(--border2);}
+.mcard::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,168,67,0.02),transparent);
+  pointer-events:none;
+}
+.mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;}
+.mcard.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.mcard.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.mcard.red::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+.mcard.blue::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.mcard.amber::before{background:linear-gradient(90deg,transparent,var(--amber),transparent);}
+.ml{font-family:'IBM Plex Mono';font-size:9px;color:var(--text3);letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px;}
+.mv{font-family:'Fraunces';font-size:30px;font-weight:600;line-height:1;margin-bottom:8px;}
+.mcard.gold .mv{color:var(--gold);}
+.mcard.green .mv{color:var(--green);}
+.mcard.red .mv{color:var(--red);}
+.mcard.blue .mv{color:var(--blue);}
+.mcard.amber .mv{color:var(--amber);}
+.ms{font-size:12px;color:var(--text3);}
+.ms.up{color:var(--green);}
+.ms.dn{color:var(--red);}
+
+/* SUBSCRIBER GRID */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.scard{
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;
+  position:relative;
+}
+.scard-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.scard-name{font-family:'Fraunces';font-size:16px;font-weight:600;}
+.scard-price{font-family:'IBM Plex Mono';font-size:14px;}
+.scard.free .scard-name{color:var(--text2);}
+.scard.starter .scard-name{color:var(--blue);}
+.scard.pro .scard-name{color:var(--gold);}
+.scard.enterprise .scard-name{color:var(--green);}
+.scard.free .scard-price{color:var(--text3);}
+.scard.starter .scard-price{color:var(--blue);}
+.scard.pro .scard-price{color:var(--gold);}
+.scard.enterprise .scard-price{color:var(--green);}
+.scard-stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.scard-stat:last-child{border:none;}
+.ssl{font-size:12px;color:var(--text3);}
+.ssv{font-family:'IBM Plex Mono';font-size:13px;}
+.scard-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:12px;}
+.scard-bar-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+
+/* CHART CARD */
+.chart-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:26px;margin-bottom:20px;
+}
+.chart-title{
+  font-family:'IBM Plex Mono';font-size:11px;color:var(--text3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.chart-wrap{position:relative;height:200px;}
+
+/* PLATFORM COSTS */
+.costs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px;}
+.cost-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;
+}
+.cost-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cost-name{font-family:'Fraunces';font-size:14px;font-weight:600;color:var(--text);}
+.cost-amount{font-family:'IBM Plex Mono';font-size:16px;font-weight:600;}
+.cost-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+.cost-row:last-child{border:none;}
+.cost-label{font-size:12px;color:var(--text3);}
+.cost-val{font-family:'IBM Plex Mono';font-size:12px;}
+.alert-chip{
+  padding:3px 10px;border-radius:20px;font-size:10px;
+  font-family:'IBM Plex Mono';
+}
+.ac-ok{background:var(--green2);color:var(--green);}
+.ac-warn{background:var(--amber2);color:var(--amber);}
+.ac-crit{background:var(--red2);color:var(--red);}
+
+/* CFO AGENT */
+.cfo-box{
+  background:var(--bg2);border:1px solid rgba(212,168,67,0.2);
+  border-radius:16px;padding:30px;margin-bottom:20px;
+}
+.cfo-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.cfo-icon{
+  width:52px;height:52px;
+  background:linear-gradient(135deg,var(--gold),rgba(212,168,67,0.5));
+  border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces';font-weight:700;font-size:22px;color:#000;
+}
+.cfo-name{font-family:'Fraunces';font-size:18px;font-weight:600;color:var(--gold);}
+.cfo-role{font-size:12px;color:var(--text3);margin-top:2px;}
+.cfo-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.cfo-field{display:flex;flex-direction:column;gap:6px;}
+.cfo-label{font-family:'IBM Plex Mono';font-size:10px;color:var(--text3);letter-spacing:.1em;}
+.cfo-select,.cfo-input{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans';
+}
+.cfo-select:focus,.cfo-input:focus{outline:none;border-color:var(--gold);}
+.cfo-out{
+  background:var(--bg3);border:1px solid var(--border);border-radius:12px;
+  padding:22px;margin-top:16px;min-height:140px;
+}
+.cfo-text{font-size:14px;color:var(--text2);line-height:1.9;white-space:pre-wrap;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* SUBSCRIBER TABLE */
+.table-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+  padding:24px;margin-bottom:20px;
+}
+.table-hdr{
+  font-family:'IBM Plex Mono';font-size:10px;color:var(--text3);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{
+  text-align:left;font-family:'IBM Plex Mono';font-size:9px;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;padding:8px 0;
+  border-bottom:1px solid var(--border);font-weight:400;
+}
+.tbl td{padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);}
+.tbl tr:hover td{color:var(--text);}
+.tbl tr:last-child td{border:none;}
+
+/* BADGE */
+.badge{
+  display:inline-flex;align-items:center;padding:3px 10px;
+  border-radius:20px;font-size:10px;font-family:'IBM Plex Mono';
+}
+.b-gold{background:var(--gold2);color:var(--gold);}
+.b-green{background:var(--green2);color:var(--green);}
+.b-red{background:var(--red2);color:var(--red);}
+.b-blue{background:var(--blue2);color:var(--blue);}
+.b-gray{background:rgba(122,143,168,0.1);color:var(--text3);}
+.b-amber{background:var(--amber2);color:var(--amber);}
+
+/* KPI ROW */
+.kpi-row{
+  display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;
+  gap:12px;align-items:center;padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.kpi-row:last-child{border:none;}
+.kn{font-size:13px;color:var(--text2);}
+.kv{font-family:'IBM Plex Mono';font-size:12px;}
+.ki{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;padding:5px 8px;color:var(--text);
+  font-size:12px;font-family:'IBM Plex Mono';width:85px;
+}
+.ki:focus{outline:none;border-color:var(--gold);}
+
+/* SECTION LABEL */
+.sl{
+  font-family:'IBM Plex Mono';font-size:10px;color:var(--text3);
+  letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  margin-top:4px;display:flex;align-items:center;gap:10px;
+}
+.sl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ALERTS SECTION */
+.alerts-list{display:flex;flex-direction:column;gap:10px;}
+.alert-item{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;
+  border-radius:12px;border:1px solid;
+}
+.alert-item.ok{background:rgba(45,212,160,0.04);border-color:rgba(45,212,160,0.15);}
+.alert-item.warn{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.15);}
+.alert-item.crit{background:rgba(224,85,85,0.04);border-color:rgba(224,85,85,0.15);}
+.alert-icon{font-size:18px;width:28px;text-align:center;}
+.alert-text{flex:1;}
+.alert-title{font-size:13px;font-weight:500;}
+.alert-item.ok .alert-title{color:var(--green);}
+.alert-item.warn .alert-title{color:var(--amber);}
+.alert-item.crit .alert-title{color:var(--red);}
+.alert-desc{font-size:12px;color:var(--text3);margin-top:2px;}
+.alert-action{font-size:11px;font-family:'IBM Plex Mono';}
+.alert-item.warn .alert-action{color:var(--amber);}
+.alert-item.crit .alert-action{color:var(--red);}
+
+/* BREAKEVEN */
+.be-card{
+  background:var(--bg2);border:1px solid rgba(212,168,67,0.15);
+  border-radius:16px;padding:26px;margin-bottom:20px;
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+}
+.be-title{font-family:'Fraunces';font-size:16px;font-weight:600;color:var(--gold);margin-bottom:16px;}
+.be-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.be-row:last-child{border:none;}
+.be-label{font-size:13px;color:var(--text3);}
+.be-value{font-family:'IBM Plex Mono';font-size:13px;color:var(--text);}
+.be-value.pos{color:var(--green);}
+.be-value.neg{color:var(--red);}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+@media(max-width:1100px){.mgrid{grid-template-columns:repeat(2,1fr);}.costs-grid{grid-template-columns:1fr;}.sgrid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-badge">₿</div>
+    <div>
+      <div class="logo-name">KOVA FINANCIAL CENTER</div>
+      <div class="logo-sub">CFO Agent · Revenue · Costs · Alerts</div>
+    </div>
+  </div>
+  <div class="hdr-center">
+    <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+    <div class="hdr-time" id="hdr-t">—</div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn" onclick="exportData()">⬇ Exportar</button>
+    <button class="btn" onclick="switchTab('cfo')">💡 CFO Agent</button>
+    <button class="btn btn-gold" onclick="addSubscriber()">+ Suscriptor</button>
+  </div>
+</div>
+
+<div class="alert-bar" id="alert-bar" style="display:none;">
+  <span>⚠</span><span id="alert-bar-text"></span>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ov')">Overview</button>
+  <button class="tab" onclick="switchTab('mrr')">MRR & Revenue</button>
+  <button class="tab" onclick="switchTab('subs')">Suscriptores</button>
+  <button class="tab" onclick="switchTab('costs')">Costos</button>
+  <button class="tab" onclick="switchTab('kpis')">KPIs</button>
+  <button class="tab" onclick="switchTab('alerts')">Alertas</button>
+  <button class="tab" onclick="switchTab('cfo')">CFO Agent</button>
+  <button class="tab" onclick="switchTab('reports')">Informes</button>
+</div>
+
+<div class="content">
+
+<!-- OVERVIEW -->
+<div class="panel active" id="panel-ov">
+  <div class="mgrid" id="ov-metrics"></div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:20px;">
+    <div class="chart-card">
+      <div class="chart-title"><span>MRR Histórico — Evolución mensual</span><span id="mrr-trend" class="badge b-green">+0%</span></div>
+      <div class="chart-wrap"><canvas id="chart-mrr" role="img" aria-label="Evolución mensual del MRR">MRR histórico.</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><span>Revenue por plan</span></div>
+      <div class="chart-wrap"><canvas id="chart-plans" role="img" aria-label="Revenue por plan de suscripción">Revenue por plan.</canvas></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="be-card">
+      <div>
+        <div class="be-title">Punto de equilibrio</div>
+        <div id="be-left"></div>
+      </div>
+      <div>
+        <div class="be-title" style="color:var(--text2);">Estado P&L</div>
+        <div id="be-right"></div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:0;">
+      <div class="chart-title"><span>Ingresos vs Costos</span></div>
+      <div class="chart-wrap"><canvas id="chart-ic" role="img" aria-label="Ingresos vs costos mensuales">Ingresos vs costos.</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- MRR & REVENUE -->
+<div class="panel" id="panel-mrr">
+  <div class="mgrid" id="mrr-metrics"></div>
+  <div class="table-card">
+    <div class="table-hdr">Historial mensual de MRR <button class="btn" onclick="addMonthlyData()" style="font-size:12px;padding:6px 14px;">+ Añadir mes</button></div>
+    <table class="tbl">
+      <thead><tr><th>Mes</th><th>Subs Free</th><th>Subs Starter</th><th>Subs Pro</th><th>Subs Enterprise</th><th>MRR</th><th>ARR</th><th>Variación</th></tr></thead>
+      <tbody id="mrr-table"></tbody>
+    </table>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span>Composición del revenue por plan — evolución</span></div>
+    <div class="chart-wrap" style="height:240px;"><canvas id="chart-stacked" role="img" aria-label="Evolución revenue por plan">Revenue por plan.</canvas></div>
+  </div>
+</div>
+
+<!-- SUSCRIPTORES -->
+<div class="panel" id="panel-subs">
+  <div class="sgrid" id="sub-cards"></div>
+  <div class="table-card">
+    <div class="table-hdr">
+      Registro de suscriptores
+      <div style="display:flex;gap:8px;">
+        <button class="btn" onclick="addSubscriber()" style="font-size:12px;padding:6px 14px;">+ Añadir suscriptor</button>
+        <button class="btn" onclick="exportSubs()" style="font-size:12px;padding:6px 14px;">⬇ Exportar CSV</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>ID</th><th>Fecha alta</th><th>Plan</th><th>Revenue/mes</th><th>Revenue acumulado</th><th>Estado</th><th>Acción</th></tr></thead>
+      <tbody id="subs-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COSTOS -->
+<div class="panel" id="panel-costs">
+  <div class="mgrid" id="costs-metrics"></div>
+  <div class="sl">Plataformas operativas — costos mensuales</div>
+  <div class="costs-grid" id="costs-grid"></div>
+  <div class="chart-card">
+    <div class="chart-title"><span>Distribución de costos por plataforma</span></div>
+    <div class="chart-wrap"><canvas id="chart-costs" role="img" aria-label="Distribución de costos por plataforma">Costos por plataforma.</canvas></div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="panel" id="panel-kpis">
+  <div class="table-card">
+    <div class="table-hdr">KPIs financieros clave — actualiza mensualmente <button class="btn" onclick="saveKPIs()" style="font-size:12px;padding:6px 14px;">💾 Guardar</button></div>
+    <div class="kpi-row" style="font-family:IBM Plex Mono;font-size:9px;color:var(--text3);letter-spacing:.1em;">
+      <div>MÉTRICA</div><div>OBJETIVO</div><div>REAL</div><div>ESTADO</div><div>BENCHMARK</div>
+    </div>
+    <div id="kpi-rows"></div>
+  </div>
+</div>
+
+<!-- ALERTAS -->
+<div class="panel" id="panel-alerts">
+  <div class="table-card" style="margin-bottom:20px;">
+    <div class="table-hdr">Centro de alertas financieras — actualizado en tiempo real</div>
+    <div class="alerts-list" id="alerts-list"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="table-card" style="margin-bottom:0;">
+      <div class="table-hdr">Umbrales de escalado de plataformas</div>
+      <div id="upgrade-thresholds"></div>
+    </div>
+    <div class="table-card" style="margin-bottom:0;">
+      <div class="table-hdr">Proyecciones de crecimiento</div>
+      <div id="projections"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CFO AGENT -->
+<div class="panel" id="panel-cfo">
+  <div class="cfo-box">
+    <div class="cfo-header">
+      <div class="cfo-icon">₿</div>
+      <div>
+        <div class="cfo-name">FELIX — CFO Agent de KOVA</div>
+        <div class="cfo-role">Experto en finanzas SaaS · Revenue · Unit Economics · Escalado de plataformas · P&L</div>
+      </div>
+    </div>
+    <div class="cfo-form">
+      <div class="cfo-field">
+        <div class="cfo-label">Tipo de análisis</div>
+        <select class="cfo-select" id="cfo-type">
+          <option value="estado">Estado financiero completo</option>
+          <option value="unit">Unit economics (LTV, CAC, payback)</option>
+          <option value="costos">Análisis y optimización de costos</option>
+          <option value="escalado">¿Cuándo escalar plataformas?</option>
+          <option value="runway">Runway y sostenibilidad</option>
+          <option value="pricing">Análisis de precios y planes</option>
+          <option value="proyeccion">Proyección 6 meses</option>
+          <option value="optimizar">Propuestas de ahorro y optimización</option>
+          <option value="riesgo">Análisis de riesgos financieros</option>
+        </select>
+      </div>
+      <div class="cfo-field">
+        <div class="cfo-label">Período</div>
+        <select class="cfo-select" id="cfo-period">
+          <option value="hoy">Hoy / situación actual</option>
+          <option value="semana">Esta semana</option>
+          <option value="mes">Este mes</option>
+          <option value="trimestre">Este trimestre</option>
+          <option value="año">Proyección anual</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-gold" onclick="runCFO()" style="padding:10px 24px;">⚡ Consultar a FELIX</button>
+      <button class="btn" onclick="runCFO('alert')" style="padding:10px 24px;">🔔 Detectar alertas</button>
+      <button class="btn" onclick="runCFO('optimize')" style="padding:10px 24px;">💡 Propuestas de mejora</button>
+      <button class="btn" onclick="runCFO('breakeven')" style="padding:10px 24px;">📊 Análisis breakeven</button>
+    </div>
+    <div class="cfo-out" id="cfo-out">
+      <div style="color:var(--text3);font-size:13px;">FELIX analizará el estado financiero completo de KOVA con los datos registrados y generará recomendaciones específicas y accionables.</div>
+    </div>
+    <button class="btn" id="cfo-cp" style="margin-top:12px;display:none;" onclick="cpCFO()">📋 Copiar análisis</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="table-card" style="margin-bottom:0;">
+      <div class="table-hdr">Datos enviados a FELIX</div>
+      <div id="cfo-data-display"></div>
+    </div>
+    <div class="table-card" style="margin-bottom:0;">
+      <div class="table-hdr">Preguntas rápidas</div>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="quick-qs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- INFORMES -->
+<div class="panel" id="panel-reports">
+  <div class="cfo-box" style="border-color:rgba(45,212,160,0.2);">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+      <div style="width:52px;height:52px;background:var(--green2);border:1px solid rgba(45,212,160,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:Fraunces;font-weight:700;font-size:22px;color:var(--green);">I</div>
+      <div>
+        <div style="font-family:Fraunces;font-size:18px;font-weight:600;color:var(--green);">Generador de informes financieros</div>
+        <div style="font-size:12px;color:var(--text3);">Genera informes ejecutivos con IA usando tus datos financieros reales</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="btn" onclick="genReport('daily')" style="border-color:var(--green);color:var(--green);">📊 Informe diario</button>
+      <button class="btn" onclick="genReport('weekly')">📈 Informe semanal</button>
+      <button class="btn" onclick="genReport('monthly')">📋 Informe mensual</button>
+      <button class="btn" onclick="genReport('investor')">💼 Resumen para inversor</button>
+      <button class="btn" onclick="genReport('cost_review')">💰 Revisión de costos</button>
+    </div>
+    <div class="cfo-out" id="rep-out" style="min-height:220px;">
+      <div style="color:var(--text3);font-size:13px;">Selecciona el tipo de informe. Se generará con IA usando todos tus datos financieros registrados.</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn" id="rep-cp" style="display:none;" onclick="cpRep()">📋 Copiar informe</button>
+      <button class="btn" id="rep-ex" style="display:none;" onclick="exRep()">⬇ Exportar TXT</button>
+      <button class="btn" id="rep-pdf" style="display:none;" onclick="genPDF()">📄 Exportar PDF simple</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- SUBSCRIBER MODAL -->
+<div id="sub-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;display:none;align-items:center;justify-content:center;" onclick="closeSubModal(event)">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:32px;width:480px;">
+    <div style="font-family:Fraunces;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;">
+      Añadir suscriptor
+      <button onclick="document.getElementById('sub-modal').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="cfo-field"><div class="cfo-label">Plan de suscripción</div>
+        <select class="cfo-select" id="sub-plan">
+          <option value="free">Free — €0/mes</option>
+          <option value="starter">Starter — €14.99/mes</option>
+          <option value="pro">Pro — €29.99/mes</option>
+          <option value="enterprise">Enterprise — €79.99/mes</option>
+        </select>
+      </div>
+      <div class="cfo-field"><div class="cfo-label">Fecha de alta</div>
+        <input type="date" class="cfo-input" id="sub-date"></div>
+      <div class="cfo-field"><div class="cfo-label">Notas (opcional)</div>
+        <input type="text" class="cfo-input" id="sub-notes" placeholder="Canal de adquisición, país, etc."></div>
+      <button class="btn btn-gold" onclick="saveSubscriber()" style="padding:12px;">Añadir suscriptor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='https://api.anthropic.com/v1/messages';
+
+// PLAN CONFIG
+const PLANS={
+  free:{name:'Free',price:0,color:'var(--text2)',badge:'b-gray'},
+  starter:{name:'Starter',price:14.99,color:'var(--blue)',badge:'b-blue'},
+  pro:{name:'Pro',price:29.99,color:'var(--gold)',badge:'b-gold'},
+  enterprise:{name:'Enterprise',price:79.99,color:'var(--green)',badge:'b-green'}
+};
+
+// PLATFORM COSTS (monthly €)
+const PLATFORM_COSTS=[
+  {name:'Anthropic Claude API',cat:'IA Core',monthly:0,note:'Pay per use — escala con usuarios',plan:'Pay-per-use',threshold_users:100,upgrade_cost:20,status:'ok'},
+  {name:'Vercel (Hosting)',cat:'Backend',monthly:0,note:'Plan gratuito activo',plan:'Free (Hobby)',threshold_users:50,upgrade_cost:20,status:'ok'},
+  {name:'Supabase',cat:'Database',monthly:0,note:'Plan gratuito — 500MB',plan:'Free',threshold_users:500,upgrade_cost:25,status:'ok'},
+  {name:'RevenueCat',cat:'Pagos',monthly:0,note:'Gratuito hasta 2.500 MTR',plan:'Free (<2.5k MTR)',threshold_users:2500,upgrade_cost:99,status:'ok'},
+  {name:'n8n Cloud',cat:'Automatización',monthly:20,note:'Plan básico activo',plan:'Starter (~$20)',threshold_users:999,upgrade_cost:50,status:'ok'},
+  {name:'SendGrid',cat:'Email',monthly:0,note:'100 emails/día gratuito',plan:'Free',threshold_users:100,upgrade_cost:15,status:'ok'},
+  {name:'Sentry',cat:'Monitoreo',monthly:0,note:'Plan developer gratuito',plan:'Free',threshold_users:999,upgrade_cost:26,status:'ok'},
+  {name:'BetterStack',cat:'Uptime',monthly:0,note:'Plan gratuito',plan:'Free',threshold_users:999,upgrade_cost:25,status:'ok'},
+  {name:'EAS (Expo)',cat:'Builds',monthly:0,note:'15 builds/mes gratuitas',plan:'Free',threshold_users:999,upgrade_cost:29,status:'ok'},
+  {name:'Apple Developer',cat:'App Store',monthly:8.25,note:'€99/año = €8.25/mes',plan:'Standard',threshold_users:999,upgrade_cost:0,status:'ok'},
+  {name:'Google Play',cat:'Play Store',monthly:2.08,note:'€25 único + €2.08 amort.',plan:'One-time',threshold_users:999,upgrade_cost:0,status:'ok'},
+  {name:'Dominio kova-app.net',cat:'Infra',monthly:1.5,note:'~€18/año',plan:'Standard',threshold_users:999,upgrade_cost:0,status:'ok'},
+];
+
+// STORAGE
+let FD=JSON.parse(localStorage.getItem('kf_data')||JSON.stringify({
+  subscribers:[{id:1,plan:'pro',date:'2026-04-16',notes:'Founder — cuenta propia',active:true,revenue_acc:29.99}],
+  monthly:[{month:'Abr 2026',free:1,starter:0,pro:1,enterprise:0,mrr:29.99,costs:31.83}],
+  kpis:{}
+}));
+
+let charts={};
+
+function save(){localStorage.setItem('kf_data',JSON.stringify(FD));}
+
+function calcMRR(){
+  const active=FD.subscribers.filter(s=>s.active);
+  return active.reduce((sum,s)=>sum+(PLANS[s.plan]?.price||0),0);
+}
+function calcCosts(){return PLATFORM_COSTS.reduce((s,p)=>s+p.monthly,0);}
+function calcARR(){return calcMRR()*12;}
+function calcMargin(){const r=calcMRR(),c=calcCosts();return r>0?Math.round((r-c)/r*100):0;}
+function countByPlan(plan){return FD.subscribers.filter(s=>s.active&&s.plan===plan).length;}
+
+function switchTab(n){
+  const ns=['ov','mrr','subs','costs','kpis','alerts','cfo','reports'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ns[i]===n));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+n).classList.add('active');
+  if(n==='ov')renderOv();
+  if(n==='mrr')renderMRR();
+  if(n==='subs')renderSubs();
+  if(n==='costs')renderCosts();
+  if(n==='kpis')renderKPIs();
+  if(n==='alerts'){renderAlerts();renderOv();}
+  if(n==='cfo')renderCFOData();
+  if(n==='reports'){}
+}
+
+function init(){
+  document.getElementById('hdr-t').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  // Set default date for subscriber form
+  document.getElementById('sub-date').value=new Date().toISOString().split('T')[0];
+  renderOv();checkAlerts();
+}
+
+function renderOv(){
+  const mrr=calcMRR(),costs=calcCosts(),arr=calcARR(),margin=calcMargin();
+  const profit=mrr-costs;
+  const totalSubs=FD.subscribers.filter(s=>s.active).length;
+  document.getElementById('ov-metrics').innerHTML=
+    mc('MRR Actual','€'+mrr.toFixed(2),'Monthly Recurring Revenue','gold')+
+    mc('ARR','€'+arr.toFixed(2),'Proyección anual','gold')+
+    mc('Suscriptores activos',totalSubs,'en todos los planes','blue')+
+    mc('Costos mensuales','€'+costs.toFixed(2),'plataformas operativas','amber')+
+    mc('Resultado neto','€'+profit.toFixed(2),profit>=0?'↑ Positivo':'↓ Negativo',profit>=0?'green':'red')+
+    mc('Margen bruto',margin+'%',margin>=50?'Saludable':margin>=0?'Ajustado':'Negativo',margin>=50?'green':margin>=0?'amber':'red')+
+    mc('LTV estimado','€'+calcLTV().toFixed(0),'Asumiendo 12 meses avg','blue')+
+    mc('Breakeven','€'+costs.toFixed(2)+'/mes',Math.ceil(costs/PLANS.starter.price)+' Starter o '+Math.ceil(costs/PLANS.pro.price)+' Pro','amber');
+
+  // MRR chart
+  const months=FD.monthly.slice(-8);
+  if(charts.mrr)charts.mrr.destroy();
+  charts.mrr=new Chart(document.getElementById('chart-mrr'),{
+    type:'line',
+    data:{
+      labels:months.map(m=>m.month),
+      datasets:[{label:'MRR',data:months.map(m=>m.mrr),borderColor:'var(--gold)',backgroundColor:'rgba(212,168,67,0.08)',tension:0.4,fill:true,pointBackgroundColor:'var(--gold)',pointRadius:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(212,168,67,0.05)'},ticks:{color:'#3a4a5a',font:{family:'IBM Plex Mono',size:9}}},y:{beginAtZero:true,grid:{color:'rgba(212,168,67,0.05)'},ticks:{color:'#3a4a5a',font:{family:'IBM Plex Mono',size:9},callback:v=>'€'+v}}}}
+  });
+
+  // Plans donut
+  const pd={free:countByPlan('free'),starter:countByPlan('starter'),pro:countByPlan('pro'),enterprise:countByPlan('enterprise')};
+  const prv={free:0,starter:pd.starter*14.99,pro:pd.pro*29.99,enterprise:pd.enterprise*79.99};
+  if(charts.plans)charts.plans.destroy();
+  charts.plans=new Chart(document.getElementById('chart-plans'),{
+    type:'doughnut',
+    data:{labels:['Free','Starter','Pro','Enterprise'],datasets:[{data:[prv.free,prv.starter,prv.pro,prv.enterprise],backgroundColor:['#2a3040','#5b9bd5','#d4a843','#2dd4a0'],borderWidth:0,hoverOffset:8}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}
+  });
+
+  // Income vs costs
+  if(charts.ic)charts.ic.destroy();
+  charts.ic=new Chart(document.getElementById('chart-ic'),{
+    type:'bar',
+    data:{
+      labels:months.map(m=>m.month),
+      datasets:[
+        {label:'Ingresos',data:months.map(m=>m.mrr),backgroundColor:'rgba(45,212,160,0.7)',borderRadius:4},
+        {label:'Costos',data:months.map(m=>m.costs||calcCosts()),backgroundColor:'rgba(224,85,85,0.5)',borderRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8fa8',font:{family:'IBM Plex Mono',size:9}}}},scales:{x:{grid:{color:'rgba(255,255,255,0.02)'},ticks:{color:'#3a4a5a',font:{size:9}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.02)'},ticks:{color:'#3a4a5a',font:{size:9},callback:v=>'€'+v}}}}
+  });
+
+  // Breakeven
+  const be_starter=Math.ceil(costs/14.99);
+  const be_pro=Math.ceil(costs/29.99);
+  const be_mix=Math.ceil(costs/22);
+  document.getElementById('be-left').innerHTML=[
+    ['Costo mensual total','€'+costs.toFixed(2),''],
+    ['Con solo Starter','€14.99/sub','→ '+be_starter+' subs'],
+    ['Con solo Pro','€29.99/sub','→ '+be_pro+' subs'],
+    ['Mix realista (avg €22)','€22/sub','→ '+be_mix+' subs'],
+    ['Subs actuales de pago',(countByPlan('starter')+countByPlan('pro')+countByPlan('enterprise'))+'',''],
+  ].map(([l,v,n])=>`<div class="be-row"><span class="be-label">${l}</span><span class="be-value">${v} <span style="color:var(--text3);font-size:11px;">${n}</span></span></div>`).join('');
+
+  const paidMRR=calcMRR()-0;
+  document.getElementById('be-right').innerHTML=[
+    ['Ingresos mes','€'+mrr.toFixed(2),mrr>0?'pos':''],
+    ['Costos mes','€'+costs.toFixed(2),'neg'],
+    ['Resultado neto','€'+profit.toFixed(2),profit>=0?'pos':'neg'],
+    ['Margen bruto',margin+'%',margin>=0?'pos':'neg'],
+    ['Status',profit>=0?'PROFITABLE':'PRE-REVENUE',profit>=0?'pos':'neg'],
+  ].map(([l,v,cl])=>`<div class="be-row"><span class="be-label">${l}</span><span class="be-value ${cl}">${v}</span></div>`).join('');
+
+  // Trend
+  if(months.length>=2){
+    const prev=months[months.length-2].mrr,curr=mrr;
+    const pct=prev>0?Math.round((curr-prev)/prev*100):0;
+    document.getElementById('mrr-trend').textContent=(pct>=0?'+':'')+pct+'% vs mes anterior';
+    document.getElementById('mrr-trend').className='badge '+(pct>=0?'b-green':'b-red');
+  }
+}
+
+function mc(label,value,sub,color){
+  return `<div class="mcard ${color}"><div class="ml">${label}</div><div class="mv">${value}</div><div class="ms">${sub}</div></div>`;
+}
+
+function calcLTV(){
+  const avgPrice=calcMRR()/Math.max(1,FD.subscribers.filter(s=>s.active&&s.plan!=='free').length);
+  return avgPrice*12;
+}
+
+function renderMRR(){
+  const mrr=calcMRR(),arr=calcARR();
+  const paid=FD.subscribers.filter(s=>s.active&&s.plan!=='free').length;
+  document.getElementById('mrr-metrics').innerHTML=
+    mc('MRR','€'+mrr.toFixed(2),'Revenue recurrente mensual','gold')+
+    mc('ARR','€'+arr.toFixed(2),'Proyección anual actual','gold')+
+    mc('ARPU','€'+(paid>0?(mrr/paid).toFixed(2):'0.00'),'Revenue promedio por usuario de pago','blue')+
+    mc('Subs de pago',paid,'Starter + Pro + Enterprise','green');
+
+  // Monthly table
+  document.getElementById('mrr-table').innerHTML=FD.monthly.map((m,i)=>{
+    const prev=i>0?FD.monthly[i-1].mrr:0;
+    const diff=m.mrr-prev;const pct=prev>0?Math.round(diff/prev*100):0;
+    return `<tr>
+      <td style="font-family:IBM Plex Mono;color:var(--text);">${m.month}</td>
+      <td>${m.free||0}</td>
+      <td style="color:var(--blue);">${m.starter||0}</td>
+      <td style="color:var(--gold);">${m.pro||0}</td>
+      <td style="color:var(--green);">${m.enterprise||0}</td>
+      <td style="font-family:IBM Plex Mono;color:var(--gold);">€${m.mrr.toFixed(2)}</td>
+      <td style="font-family:IBM Plex Mono;color:var(--text2);">€${(m.mrr*12).toFixed(0)}</td>
+      <td>${i>0?`<span class="badge ${diff>=0?'b-green':'b-red'}">${diff>=0?'+':''}${pct}%</span>`:'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // Stacked chart
+  if(charts.stacked)charts.stacked.destroy();
+  charts.stacked=new Chart(document.getElementById('chart-stacked'),{
+    type:'bar',
+    data:{
+      labels:FD.monthly.map(m=>m.month),
+      datasets:[
+        {label:'Starter',data:FD.monthly.map(m=>(m.starter||0)*14.99),backgroundColor:'rgba(91,155,213,0.8)',borderRadius:2},
+        {label:'Pro',data:FD.monthly.map(m=>(m.pro||0)*29.99),backgroundColor:'rgba(212,168,67,0.8)',borderRadius:2},
+        {label:'Enterprise',data:FD.monthly.map(m=>(m.enterprise||0)*79.99),backgroundColor:'rgba(45,212,160,0.8)',borderRadius:2},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#7a8fa8',font:{size:10,family:'IBM Plex Mono'}}}},
+      scales:{
+        x:{stacked:true,grid:{color:'rgba(255,255,255,0.02)'},ticks:{color:'#3a4a5a',font:{size:9}}},
+        y:{stacked:true,grid:{color:'rgba(255,255,255,0.02)'},ticks:{color:'#3a4a5a',font:{size:9},callback:v=>'€'+v}}
+      }
+    }
+  });
+}
+
+function renderSubs(){
+  const byPlan={free:countByPlan('free'),starter:countByPlan('starter'),pro:countByPlan('pro'),enterprise:countByPlan('enterprise')};
+  const total=FD.subscribers.filter(s=>s.active).length;
+  document.getElementById('sub-cards').innerHTML=Object.entries(PLANS).map(([key,plan])=>{
+    const count=byPlan[key];const rev=count*plan.price;const pct=Math.round(count/Math.max(total,1)*100);
+    return `<div class="scard ${key}">
+      <div class="scard-header">
+        <div class="scard-name">${plan.name}</div>
+        <div class="scard-price">€${plan.price}/mes</div>
+      </div>
+      <div class="scard-stat"><span class="ssl">Suscriptores activos</span><span class="ssv" style="color:${plan.color};">${count}</span></div>
+      <div class="scard-stat"><span class="ssl">Revenue mensual</span><span class="ssv" style="color:${plan.color};">€${rev.toFixed(2)}</span></div>
+      <div class="scard-stat"><span class="ssl">% del total</span><span class="ssv">${pct}%</span></div>
+      <div class="scard-stat"><span class="ssl">Revenue anual</span><span class="ssv">€${(rev*12).toFixed(0)}</span></div>
+      <div class="scard-bar"><div class="scard-bar-fill" style="width:${pct}%;background:${plan.color};"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('subs-table').innerHTML=FD.subscribers.map(s=>{
+    const p=PLANS[s.plan];const accRev=(s.revenue_acc||0).toFixed(2);
+    return `<tr>
+      <td style="font-family:IBM Plex Mono;font-size:11px;color:var(--text3);">#${s.id}</td>
+      <td style="font-family:IBM Plex Mono;font-size:12px;">${s.date}</td>
+      <td><span class="badge ${p.badge}">${p.name}</span></td>
+      <td style="font-family:IBM Plex Mono;color:${p.color};">€${p.price.toFixed(2)}</td>
+      <td style="font-family:IBM Plex Mono;color:var(--text2);">€${accRev}</td>
+      <td><span class="badge ${s.active?'b-green':'b-red'}">${s.active?'Activo':'Inactivo'}</span></td>
+      <td><button class="btn" onclick="churnSub(${s.id})" style="font-size:11px;padding:4px 10px;color:var(--red);border-color:var(--red2);">Churn</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCosts(){
+  const total=calcCosts();
+  const paid=PLATFORM_COSTS.filter(p=>p.monthly>0).reduce((s,p)=>s+p.monthly,0);
+  const free_count=PLATFORM_COSTS.filter(p=>p.monthly===0).length;
+  document.getElementById('costs-metrics').innerHTML=
+    mc('Costo total mensual','€'+total.toFixed(2),'todas las plataformas','amber')+
+    mc('Costo anual','€'+(total*12).toFixed(0),'proyección anual','amber')+
+    mc('Plataformas gratuitas',free_count,free_count+' de '+PLATFORM_COSTS.length+' gratis actualmente','green')+
+    mc('Costo por suscriptor','€'+(total/Math.max(1,FD.subscribers.filter(s=>s.active&&s.plan!=='free').length)).toFixed(2),'CAC infraestructura','blue');
+
+  document.getElementById('costs-grid').innerHTML=PLATFORM_COSTS.map(p=>{
+    const statusColor={ok:'var(--green)',warn:'var(--amber)',crit:'var(--red)'}[p.status];
+    const acClass={ok:'ac-ok',warn:'ac-warn',crit:'ac-crit'}[p.status];
+    return `<div class="cost-card">
+      <div class="cost-header">
+        <div>
+          <div class="cost-name">${p.name}</div>
+          <div style="font-size:11px;color:var(--text3);">${p.cat} · ${p.plan}</div>
+        </div>
+        <div>
+          <div class="cost-amount" style="color:${p.monthly>0?'var(--amber)':'var(--green)'};">€${p.monthly.toFixed(2)}/mes</div>
+          <div style="text-align:right;margin-top:4px;"><span class="alert-chip ${acClass}">${p.status==='ok'?'OK':p.status==='warn'?'Atención':'Crítico'}</span></div>
+        </div>
+      </div>
+      <div class="cost-row"><span class="cost-label">Nota</span><span class="cost-val" style="color:var(--text2);">${p.note}</span></div>
+      <div class="cost-row"><span class="cost-label">Escalar a</span><span class="cost-val" style="color:var(--amber);">+€${p.upgrade_cost}/mes cuando >${p.threshold_users} users</span></div>
+      <div class="cost-row"><span class="cost-label">Costo anual</span><span class="cost-val">€${(p.monthly*12).toFixed(0)}</span></div>
+    </div>`;
+  }).join('');
+
+  // Costs pie
+  const pcosts=PLATFORM_COSTS.filter(p=>p.monthly>0);
+  if(charts.costs)charts.costs.destroy();
+  charts.costs=new Chart(document.getElementById('chart-costs'),{
+    type:'doughnut',
+    data:{
+      labels:pcosts.map(p=>p.name),
+      datasets:[{data:pcosts.map(p=>p.monthly),backgroundColor:['#d4a843','#5b9bd5','#2dd4a0','#e05555','#f59e0b','#b06aff'],borderWidth:0,hoverOffset:8}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8fa8',font:{size:10,family:'IBM Plex Mono'}}}},cutout:'55%'}
+  });
+}
+
+const KPIDEFS=[
+  {id:'mrr',n:'MRR (€)',obj:100,bench:'Crecimiento 10% mensual'},
+  {id:'arr',n:'ARR (€)',obj:1200,bench:'Target año 1'},
+  {id:'churn',n:'Churn rate (%)',obj:5,bench:'SaaS B2B: < 5% mensual'},
+  {id:'ltv',n:'LTV (€)',obj:180,bench:'= ARPU × vida media'},
+  {id:'cac',n:'CAC (€)',obj:0,bench:'€0 con adquisición orgánica'},
+  {id:'ltv_cac',n:'LTV/CAC ratio',obj:3,bench:'Saludable: > 3x'},
+  {id:'payback',n:'Payback period (meses)',obj:6,bench:'SaaS: < 12 meses'},
+  {id:'margin',n:'Margen bruto (%)',obj:80,bench:'SaaS target: > 70%'},
+  {id:'nrr',n:'NRR (%)',obj:100,bench:'World-class: > 120%'},
+  {id:'arpu',n:'ARPU (€/mes)',obj:22,bench:'Avg planes Starter+Pro'},
+];
+
+function renderKPIs(){
+  const auto={
+    mrr:calcMRR().toFixed(2),
+    arr:calcARR().toFixed(2),
+    margin:calcMargin(),
+    arpu:(()=>{const p=FD.subscribers.filter(s=>s.active&&s.plan!=='free').length;return p>0?(calcMRR()/p).toFixed(2):'0';})(),
+    ltv:calcLTV().toFixed(0),
+  };
+  document.getElementById('kpi-rows').innerHTML=KPIDEFS.map(k=>{
+    const real=auto[k.id]||FD.kpis[k.id]||0;
+    const pct=k.obj>0?Math.round(parseFloat(real)/k.obj*100):100;
+    const isAuto=!!auto[k.id];
+    const cl=pct>=80?'b-green':pct>=50?'b-amber':'b-red';
+    return `<div class="kpi-row">
+      <div class="kn">${k.n} ${isAuto?'<span style="font-size:10px;color:var(--text3);">(automático)</span>':''}</div>
+      <div class="kv" style="color:var(--text3);">${k.obj}</div>
+      <div>${isAuto?`<span class="kv" style="color:var(--gold);">${real}</span>`:`<input class="ki" type="number" value="${real}" onchange="updKPI('${k.id}',this.value)">`}</div>
+      <div><span class="badge ${cl}">${pct}%</span></div>
+      <div style="font-size:11px;color:var(--text3);">${k.bench}</div>
+    </div>`;
+  }).join('');
+}
+
+function updKPI(id,v){FD.kpis[id]=parseFloat(v)||0;save();}
+function saveKPIs(){save();alert('KPIs guardados ✓');}
+
+function renderAlerts(){
+  const mrr=calcMRR(),costs=calcCosts(),totalUsers=FD.subscribers.filter(s=>s.active).length;
+  const margin=calcMargin();
+  const alerts=[];
+
+  // Auto-generate alerts
+  if(mrr<costs)alerts.push({type:'crit',icon:'🔴',title:'MRR por debajo de costos',desc:`MRR €${mrr.toFixed(2)} < Costos €${costs.toFixed(2)}. Resultado negativo de €${(mrr-costs).toFixed(2)}/mes`,action:'Prioridad máxima: conseguir suscriptores de pago'});
+  if(mrr===0)alerts.push({type:'crit',icon:'🔴',title:'Sin revenue de pago',desc:'No hay suscriptores en planes de pago. Solo plan Free activo.',action:'Activar RevenueCat y lanzar en App Stores'});
+  if(countByPlan('free')>10&&countByPlan('starter')+countByPlan('pro')===0)alerts.push({type:'warn',icon:'🟡',title:'Alta proporción de usuarios Free',desc:'Más de 10 usuarios Free sin conversión a pago.',action:'Revisar estrategia de conversión y onboarding'});
+  if(totalUsers>=45&&PLATFORM_COSTS.find(p=>p.name==='Vercel (Hosting)')?.monthly===0)alerts.push({type:'warn',icon:'🟡',title:'Vercel: considera upgrade pronto',desc:'Con 45+ usuarios activos, podrías superar límites del plan Free.',action:'Presupuestar Vercel Pro €20/mes'});
+  if(totalUsers>=80)alerts.push({type:'warn',icon:'🟡',title:'Supabase: revisar límite 500MB',desc:'Con 80+ usuarios el almacenamiento podría ajustarse.',action:'Monitorear uso de DB en Supabase dashboard'});
+  if(margin>50)alerts.push({type:'ok',icon:'🟢',title:'Margen saludable',desc:`Margen bruto del ${margin}%. Por encima del 50% objetivo SaaS.`,action:'Mantener estructura de costos actual'});
+
+  // Platform upgrade alerts
+  PLATFORM_COSTS.forEach(p=>{
+    if(p.threshold_users<=totalUsers&&p.upgrade_cost>0){
+      alerts.push({type:'warn',icon:'⚠️',title:`${p.name}: considerar upgrade`,desc:`Con ${totalUsers} usuarios activos, estás cerca del límite del plan ${p.plan}.`,action:`Presupuestar €${p.upgrade_cost}/mes para siguiente plan`});
+    }
+  });
+
+  if(alerts.length===0)alerts.push({type:'ok',icon:'🟢',title:'Sin alertas críticas',desc:'Todos los sistemas operando dentro de parámetros normales.',action:''});
+
+  document.getElementById('alerts-list').innerHTML=alerts.map(a=>`
+    <div class="alert-item ${a.type}">
+      <div class="alert-icon">${a.icon}</div>
+      <div class="alert-text">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
+      </div>
+      ${a.action?`<div class="alert-action">→ ${a.action}</div>`:''}
+    </div>`).join('');
+
+  // Thresholds
+  document.getElementById('upgrade-thresholds').innerHTML=PLATFORM_COSTS.filter(p=>p.upgrade_cost>0).map(p=>`
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div><div style="font-size:12px;color:var(--text2);">${p.name}</div><div style="font-size:11px;color:var(--text3);">Upgrade a >${p.threshold_users} usuarios</div></div>
+      <span class="badge ${totalUsers>=p.threshold_users?'b-amber':'b-gray'}">+€${p.upgrade_cost}/mes</span>
+    </div>`).join('');
+
+  // Projections
+  const projMonths=[1,3,6,12];
+  const growthRate=0.15;
+  document.getElementById('projections').innerHTML=projMonths.map(m=>{
+    const projMRR=mrr*Math.pow(1+growthRate,m);
+    const projUsers=Math.round(totalUsers*Math.pow(1+growthRate,m));
+    return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div><div style="font-size:12px;color:var(--text2);">En ${m} ${m===1?'mes':'meses'}</div><div style="font-size:11px;color:var(--text3);">+15%/mes compuesto</div></div>
+      <div style="text-align:right;"><div style="font-family:IBM Plex Mono;font-size:13px;color:var(--gold);">€${projMRR.toFixed(0)}</div><div style="font-size:11px;color:var(--text3);">${projUsers} users</div></div>
+    </div>`;
+  }).join('');
+
+  // Alert bar
+  const crits=alerts.filter(a=>a.type==='crit');
+  if(crits.length>0){
+    document.getElementById('alert-bar').style.display='flex';
+    document.getElementById('alert-bar-text').textContent=crits[0].title+' — '+crits[0].action;
+  }
+}
+
+function renderCFOData(){
+  const mrr=calcMRR(),costs=calcCosts(),totalUsers=FD.subscribers.filter(s=>s.active).length;
+  document.getElementById('cfo-data-display').innerHTML=[
+    ['MRR actual','€'+mrr.toFixed(2)],
+    ['ARR proyectado','€'+calcARR().toFixed(2)],
+    ['Costos mensuales','€'+costs.toFixed(2)],
+    ['Resultado neto','€'+(mrr-costs).toFixed(2)],
+    ['Margen bruto',calcMargin()+'%'],
+    ['Total usuarios activos',totalUsers],
+    ['Subs Free',countByPlan('free')],
+    ['Subs Starter',countByPlan('starter')],
+    ['Subs Pro',countByPlan('pro')],
+    ['LTV estimado','€'+calcLTV().toFixed(0)],
+    ['Breakeven (Pro)',Math.ceil(costs/29.99)+' subs Pro'],
+  ].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);"><span style="font-size:12px;color:var(--text3);">${k}</span><span style="font-family:IBM Plex Mono;font-size:12px;color:var(--gold);">${v}</span></div>`).join('');
+
+  const qs=[
+    '¿Cuándo seremos rentables?','¿Debo subir los precios?','¿Qué plataformas puedo optimizar?',
+    '¿Cuál es mi CAC real?','¿Qué plan genera más margen?','¿En qué momento escalar Vercel?'
+  ];
+  document.getElementById('quick-qs').innerHTML=qs.map(q=>`<button class="btn" onclick="askCFO('${q}')" style="text-align:left;font-size:12px;padding:8px 14px;color:var(--text2);">→ ${q}</button>`).join('');
+}
+
+async function runCFO(mode){
+  const type=mode||document.getElementById('cfo-type').value;
+  const period=document.getElementById('cfo-period').value;
+  const out=document.getElementById('cfo-out');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>FELIX está analizando las finanzas de KOVA...</div>';
+  document.getElementById('cfo-cp').style.display='none';
+  await callCFO(type,period,out);
+}
+
+async function askCFO(q){
+  switchTab('cfo');
+  const out=document.getElementById('cfo-out');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>FELIX analizando: '+q+'</div>';
+  document.getElementById('cfo-cp').style.display='none';
+  const prompt=buildPrompt(q,'hoy');
+  await callAPI(prompt,out);
+}
+
+function buildPrompt(topic,period){
+  const mrr=calcMRR(),costs=calcCosts(),totalUsers=FD.subscribers.filter(s=>s.active).length;
+  const margin=calcMargin();
+  const financial_data=`
+DATOS FINANCIEROS REALES DE KOVA:
+- MRR: €${mrr.toFixed(2)} | ARR: €${calcARR().toFixed(2)}
+- Costos mensuales: €${costs.toFixed(2)} | Resultado: €${(mrr-costs).toFixed(2)}
+- Margen bruto: ${margin}%
+- Total usuarios activos: ${totalUsers}
+- Plan Free: ${countByPlan('free')} usuarios (€0)
+- Plan Starter: ${countByPlan('starter')} usuarios (€${(countByPlan('starter')*14.99).toFixed(2)}/mes)
+- Plan Pro: ${countByPlan('pro')} usuarios (€${(countByPlan('pro')*29.99).toFixed(2)}/mes)
+- Plan Enterprise: ${countByPlan('enterprise')} usuarios (€${(countByPlan('enterprise')*79.99).toFixed(2)}/mes)
+- LTV estimado: €${calcLTV().toFixed(0)}
+- Breakeven: ${Math.ceil(costs/29.99)} subs Pro o ${Math.ceil(costs/14.99)} subs Starter
+
+ESTRUCTURA DE COSTOS:
+${PLATFORM_COSTS.map(p=>`- ${p.name} (${p.cat}): €${p.monthly.toFixed(2)}/mes [${p.plan}] — escala a €${p.upgrade_cost}/mes con >${p.threshold_users} usuarios`).join('\n')}
+
+CONTEXTO:
+- KOVA es una app SaaS de ventas con IA para pymes hispanohablantes
+- Disponible en iOS (App Store en revisión) y Android (prueba cerrada)
+- Fundador solo, basado en Irlanda, entidad legal OÜ Estonia
+- Aún en fase pre-revenue (pagos reales pendientes de aprobación Apple)
+- Stack gratuito en su mayoría actualmente
+`;
+
+  return `Eres FELIX, CFO experto en startups SaaS y finanzas de negocios digitales. Analizas las finanzas de KOVA con total rigor y honestidad.
+
+${financial_data}
+
+ANÁLISIS SOLICITADO: ${topic} (período: ${period})
+
+Responde con:
+1. DIAGNÓSTICO ACTUAL (2-3 líneas directas y honestas)
+2. PUNTOS CLAVE (con datos específicos de los números reales)
+3. RIESGOS IDENTIFICADOS (ser específico)
+4. RECOMENDACIONES (5 acciones concretas y priorizadas)
+5. PRÓXIMOS HITOS FINANCIEROS (con cifras específicas)
+
+Sé directo, usa los números reales, no inflaciones. Si hay problemas, dilo claramente.`;
+}
+
+async function callCFO(type,period,out){
+  const prompts={
+    estado:'análisis completo del estado financiero actual',
+    unit:'unit economics — LTV, CAC, payback period, ARPU',
+    costos:'análisis detallado de costos con propuestas de optimización y ahorro',
+    escalado:'cuándo y cómo escalar cada plataforma según el crecimiento de usuarios',
+    runway:'runway, sostenibilidad financiera y tiempo hasta necesitar ingresos externos',
+    pricing:'análisis de precios y planes — ¿son los correctos para el mercado hispano?',
+    proyeccion:'proyección financiera detallada a 6 meses',
+    optimizar:'propuestas concretas de ahorro y optimización de costos',
+    riesgo:'análisis de riesgos financieros y planes de contingencia',
+    alert:'detectar y priorizar alertas financieras urgentes',
+    optimize:'propuestas de mejora y optimización para maximizar margen',
+    breakeven:'análisis detallado del punto de equilibrio y camino para alcanzarlo',
+  };
+  await callAPI(buildPrompt(prompts[type]||type,period),out);
+}
+
+async function callAPI(prompt,out){
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'Error en la respuesta';
+    out.innerHTML=`<div class="cfo-text">${txt}</div>`;
+    document.getElementById('cfo-cp').style.display='inline-block';
+    window._cfo=txt;
+  }catch(e){out.innerHTML=`<div style="color:var(--red);">Error de conexión con la API.</div>`;}
+}
+
+function cpCFO(){navigator.clipboard.writeText(window._cfo||'');alert('Análisis copiado ✓');}
+
+async function genReport(type){
+  const out=document.getElementById('rep-out');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando informe financiero con IA...</div>';
+  document.getElementById('rep-cp').style.display='none';
+  document.getElementById('rep-ex').style.display='none';
+  document.getElementById('rep-pdf').style.display='none';
+
+  const types={
+    daily:'Informe financiero diario ejecutivo',
+    weekly:'Informe financiero semanal completo',
+    monthly:'Informe financiero mensual con P&L',
+    investor:'Resumen ejecutivo para inversor o stakeholder',
+    cost_review:'Revisión detallada de costos con propuestas de optimización'
+  };
+
+  const prompt=buildPrompt(types[type],'periodo correspondiente')+'\n\nAdemás incluye: resumen ejecutivo en 3 líneas, tabla de métricas clave, comparación vs benchmarks SaaS, y las 3 acciones más urgentes.';
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'Error';
+    out.innerHTML=`<div class="cfo-text">${txt}</div>`;
+    window._rep=txt;
+    document.getElementById('rep-cp').style.display='inline-block';
+    document.getElementById('rep-ex').style.display='inline-block';
+    document.getElementById('rep-pdf').style.display='inline-block';
+  }catch(e){out.innerHTML=`<div style="color:var(--red);">Error de conexión.</div>`;}
+}
+
+function cpRep(){navigator.clipboard.writeText(window._rep||'');alert('Informe copiado ✓');}
+function exRep(){
+  const b=new Blob([window._rep||''],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kova_informe_financiero_'+new Date().toISOString().split('T')[0]+'.txt';a.click();
+}
+function genPDF(){alert('Para exportar a PDF: Ctrl+P → Guardar como PDF en tu navegador.');}
+
+// SUBSCRIBER MANAGEMENT
+function addSubscriber(){
+  document.getElementById('sub-modal').style.display='flex';
+  document.getElementById('sub-date').value=new Date().toISOString().split('T')[0];
+}
+function closeSubModal(e){if(e.target.id==='sub-modal')document.getElementById('sub-modal').style.display='none';}
+function saveSubscriber(){
+  const plan=document.getElementById('sub-plan').value;
+  const date=document.getElementById('sub-date').value;
+  const notes=document.getElementById('sub-notes').value;
+  const id=Math.max(...FD.subscribers.map(s=>s.id),0)+1;
+  FD.subscribers.push({id,plan,date,notes,active:true,revenue_acc:0});
+  updateMonthlySnapshot();
+  save();
+  document.getElementById('sub-modal').style.display='none';
+  renderSubs();renderOv();checkAlerts();
+  alert(`Suscriptor #${id} añadido — ${PLANS[plan].name} €${PLANS[plan].price}/mes ✓`);
+}
+function churnSub(id){
+  if(!confirm('¿Marcar este suscriptor como churned?'))return;
+  const s=FD.subscribers.find(x=>x.id===id);
+  if(s)s.active=false;
+  updateMonthlySnapshot();save();renderSubs();renderOv();
+}
+
+function updateMonthlySnapshot(){
+  const now=new Date();
+  const monthStr=now.toLocaleDateString('es-ES',{month:'short',year:'numeric'}).replace(' ',' ');
+  const last=FD.monthly[FD.monthly.length-1];
+  const snap={
+    month:monthStr,
+    free:countByPlan('free'),starter:countByPlan('starter'),
+    pro:countByPlan('pro'),enterprise:countByPlan('enterprise'),
+    mrr:calcMRR(),costs:calcCosts()
+  };
+  if(last&&last.month===monthStr)FD.monthly[FD.monthly.length-1]=snap;
+  else FD.monthly.push(snap);
+}
+
+function addMonthlyData(){
+  const m=prompt('Mes (ej: "May 2026"):');if(!m)return;
+  const starter=parseInt(prompt('Subs Starter:')||0);
+  const pro=parseInt(prompt('Subs Pro:')||0);
+  const enterprise=parseInt(prompt('Subs Enterprise:')||0);
+  const mrr=starter*14.99+pro*29.99+enterprise*79.99;
+  FD.monthly.push({month:m,free:0,starter,pro,enterprise,mrr,costs:calcCosts()});
+  save();renderMRR();
+}
+
+function exportSubs(){
+  const rows=[['ID','Fecha','Plan','Precio/mes','Activo','Notas'],...FD.subscribers.map(s=>[s.id,s.date,s.plan,PLANS[s.plan].price,s.active,s.notes||''])];
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const b=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kova_suscriptores_'+new Date().toISOString().split('T')[0]+'.csv';a.click();
+}
+
+function exportData(){
+  const data={subscribers:FD.subscribers,monthly:FD.monthly,kpis:FD.kpis,snapshot:{mrr:calcMRR(),arr:calcARR(),costs:calcCosts(),margin:calcMargin(),date:new Date().toISOString()}};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kova_financial_data_'+new Date().toISOString().split('T')[0]+'.json';a.click();
+}
+
+function checkAlerts(){
+  const mrr=calcMRR(),costs=calcCosts();
+  if(mrr<costs){
+    document.getElementById('alert-bar').style.display='flex';
+    document.getElementById('alert-bar-text').textContent=`MRR (€${mrr.toFixed(2)}) por debajo de costos (€${costs.toFixed(2)}). Resultado: €${(mrr-costs).toFixed(2)}/mes. Prioridad: conseguir suscriptores de pago.`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

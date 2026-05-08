@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOVA Social Intelligence Center</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090d;--bg2:#0c0f16;--bg3:#111620;--teal:#25C48F;--teal2:rgba(37,196,143,0.12);--pink:#ff4fa0;--pink2:rgba(255,79,160,0.12);--orange:#ff7c35;--orange2:rgba(255,124,53,0.12);--blue:#4a9eff;--blue2:rgba(74,158,255,0.12);--yellow:#ffc350;--yellow2:rgba(255,195,80,0.12);--purple:#b06aff;--purple2:rgba(176,106,255,0.12);--text:#eef1f6;--text2:#7a8a9a;--text3:#3a4a5a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body{background:radial-gradient(ellipse 80% 40% at 10% 0%,rgba(37,196,143,0.05),transparent),radial-gradient(ellipse 60% 40% at 90% 100%,rgba(255,79,160,0.04),transparent),var(--bg);}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--border);background:rgba(7,9,13,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-k{width:42px;height:42px;background:linear-gradient(135deg,var(--teal),var(--pink));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne';font-weight:800;font-size:18px;color:#000;}
+.logo-txt .t1{font-family:'Syne';font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--teal),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.08em;}
+.logo-txt .t2{font-family:'JetBrains Mono';font-size:9px;color:var(--text3);letter-spacing:0.18em;}
+.hdr-mid{display:flex;align-items:center;gap:16px;}
+.live{display:flex;align-items:center;gap:6px;padding:5px 14px;border:1px solid rgba(37,196,143,0.3);border-radius:20px;font-family:'JetBrains Mono';font-size:10px;color:var(--teal);}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hdr-date{font-family:'JetBrains Mono';font-size:11px;color:var(--text3);}
+.hdr-acts{display:flex;gap:8px;}
+.btn{padding:8px 18px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'DM Sans';transition:all .2s;}
+.btn:hover{background:var(--bg3);color:var(--text);}
+.btn-grad{background:linear-gradient(135deg,var(--teal),var(--pink));border:none;color:#000;font-weight:500;}
+.btn-grad:hover{opacity:.9;}
+.tabs{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--border);background:var(--bg2);}
+.tab{padding:12px 22px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:'DM Sans';white-space:nowrap;}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.tab:hover:not(.active){color:var(--text2);}
+.content{padding:28px 32px;}
+.panel{display:none;}.panel.active{display:block;}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.mcard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;overflow:hidden;}
+.mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.mcard.tc::before{background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+.mcard.pk::before{background:linear-gradient(90deg,transparent,var(--pink),transparent);}
+.mcard.or::before{background:linear-gradient(90deg,transparent,var(--orange),transparent);}
+.mcard.bl::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.mcard.yl::before{background:linear-gradient(90deg,transparent,var(--yellow),transparent);}
+.mcard.pu::before{background:linear-gradient(90deg,transparent,var(--purple),transparent);}
+.ml{font-family:'JetBrains Mono';font-size:9px;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+.mv{font-family:'Syne';font-size:28px;font-weight:700;line-height:1;margin-bottom:6px;}
+.mcard.tc .mv{color:var(--teal);}
+.mcard.pk .mv{color:var(--pink);}
+.mcard.or .mv{color:var(--orange);}
+.mcard.bl .mv{color:var(--blue);}
+.mcard.yl .mv{color:var(--yellow);}
+.mcard.pu .mv{color:var(--purple);}
+.ms{font-size:12px;color:var(--text3);}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.pcard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.pname{font-family:'Syne';font-size:14px;font-weight:600;}
+.pico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;}
+.pstat{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);}
+.pstat:last-child{border:none;}
+.pstat span:first-child{color:var(--text3);}
+.pstat span:last-child{font-family:'JetBrains Mono';color:var(--text);}
+.ki{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;font-family:'JetBrains Mono';width:80px;}
+.ki:focus{outline:none;border-color:var(--teal);}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:24px;}
+.cday{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all .2s;min-height:80px;}
+.cday:hover{border-color:var(--border2);}
+.cday.pub{border-color:var(--teal);background:rgba(37,196,143,0.05);}
+.cday.launch{border-color:var(--yellow);background:rgba(255,195,80,0.08);}
+.cdn{font-family:'JetBrains Mono';font-size:10px;color:var(--text3);margin-bottom:5px;}
+.cdt{font-size:11px;font-weight:500;color:var(--text2);line-height:1.3;}
+.cdp{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap;}
+.cp{font-size:9px;padding:2px 5px;border-radius:4px;font-family:'JetBrains Mono';}
+.post-d{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;}
+.pd-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.pd-t{font-family:'Syne';font-size:15px;font-weight:600;}
+.pd-c{background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
+.pd-ht{font-size:12px;color:var(--blue);font-family:'JetBrains Mono';background:var(--bg3);padding:10px 14px;border-radius:8px;margin-bottom:12px;}
+.cbtn{padding:8px 16px;background:var(--teal2);border:1px solid rgba(37,196,143,0.3);border-radius:8px;color:var(--teal);font-size:12px;cursor:pointer;font-family:'DM Sans';transition:all .2s;}
+.cbtn:hover{background:rgba(37,196,143,0.2);}
+.mbtn{padding:8px 16px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Sans';}
+.mbtn.done{background:var(--teal2);border-color:rgba(37,196,143,0.3);color:var(--teal);}
+.cm-box{background:var(--bg2);border:1px solid rgba(255,79,160,0.2);border-radius:16px;padding:28px;margin-bottom:20px;}
+.cm-h{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.cm-ic{width:48px;height:48px;background:linear-gradient(135deg,var(--pink),var(--purple));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne';font-weight:800;font-size:18px;color:#000;}
+.cm-n{font-family:'Syne';font-size:16px;font-weight:700;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cm-r{font-size:12px;color:var(--text3);}
+.cm-fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.cm-fl{display:flex;flex-direction:column;gap:6px;}
+.cm-lb{font-size:11px;color:var(--text3);font-family:'JetBrains Mono';letter-spacing:.1em;}
+.cm-sl,.cm-in{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;font-family:'DM Sans';}
+.cm-sl:focus,.cm-in:focus{outline:none;border-color:var(--border2);}
+.cm-ta{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:13px;font-family:'DM Sans';resize:vertical;min-height:80px;width:100%;}
+.cm-ta:focus{outline:none;border-color:var(--border2);}
+.cm-out{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px;min-height:120px;}
+.cm-ot{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--pink);border-radius:50%;animation:sp .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg)}}
+.kpi-s{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;}
+.kpi-t{font-family:'Syne';font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.kpi-r{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.kpi-r:last-child{border:none;}
+.kn{font-size:13px;color:var(--text2);}
+.kobj{font-family:'JetBrains Mono';font-size:12px;color:var(--text3);}
+.kpct.g{color:var(--teal);}
+.kpct.w{color:var(--yellow);}
+.kpct.b{color:var(--pink);}
+.rep-box{background:var(--bg2);border:1px solid rgba(176,106,255,0.2);border-radius:16px;padding:28px;margin-bottom:16px;}
+.rep-out{background:var(--bg3);border-radius:12px;padding:20px;min-height:200px;font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;margin-top:16px;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:10px;font-family:'JetBrains Mono';}
+.btc{background:var(--teal2);color:var(--teal);}
+.bpk{background:var(--pink2);color:var(--pink);}
+.bor{background:var(--orange2);color:var(--orange);}
+.bbl{background:var(--blue2);color:var(--blue);}
+.byl{background:var(--yellow2);color:var(--yellow);}
+.bpu{background:var(--purple2);color:var(--purple);}
+.sl{font-family:'JetBrains Mono';font-size:10px;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px;margin-top:8px;display:flex;align-items:center;gap:8px;}
+.sl::after{content:'';flex:1;height:1px;background:var(--border);}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;}
+.modal-ov.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:32px;width:620px;max-height:85vh;overflow-y:auto;}
+.modal-t{font-family:'Syne';font-size:17px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+.mcl{cursor:pointer;background:none;border:none;color:var(--text3);font-size:22px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-family:'JetBrains Mono';font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--border);}
+.tbl td{padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);}
+.tbl tr:last-child td{border:none;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-k">K</div>
+    <div class="logo-txt">
+      <div class="t1">SOCIAL INTELLIGENCE CENTER</div>
+      <div class="t2">Community Manager · Analytics · AI Content</div>
+    </div>
+  </div>
+  <div class="hdr-mid">
+    <div class="live"><div class="dot"></div>LIVE</div>
+    <div class="hdr-date" id="hdr-d">—</div>
+  </div>
+  <div class="hdr-acts">
+    <button class="btn" onclick="exportAll()">⬇ Exportar datos</button>
+    <button class="btn btn-grad" onclick="switchTab('cm')">⚡ CM Agent</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ov')">Overview</button>
+  <button class="tab" onclick="switchTab('cal')">Calendario</button>
+  <button class="tab" onclick="switchTab('con')">Contenido</button>
+  <button class="tab" onclick="switchTab('kpi')">KPIs</button>
+  <button class="tab" onclick="switchTab('plat')">Plataformas</button>
+  <button class="tab" onclick="switchTab('cm')">CM Agent</button>
+  <button class="tab" onclick="switchTab('inf')">Informes</button>
+</div>
+
+<div class="content">
+
+<!-- OVERVIEW -->
+<div class="panel active" id="panel-ov">
+  <div class="mgrid">
+    <div class="mcard pk"><div class="ml">TikTok — Views</div><div class="mv" id="ov-tt">1,262</div><div class="ms">2 videos · @kova.app</div></div>
+    <div class="mcard or"><div class="ml">Instagram — Reach</div><div class="mv" id="ov-ig">—</div><div class="ms">@kovaa_pp · registra en KPIs</div></div>
+    <div class="mcard bl"><div class="ml">LinkedIn — Views</div><div class="mv" id="ov-li">—</div><div class="ms">KOVA Technologies</div></div>
+    <div class="mcard tc"><div class="ml">Posts publicados</div><div class="mv" id="ov-p">3</div><div class="ms">de 14 en el calendario</div></div>
+    <div class="mcard yl"><div class="ml">TikTok — Seguidores</div><div class="mv" id="ov-ftt">—</div><div class="ms">Actualiza en Plataformas</div></div>
+    <div class="mcard pk"><div class="ml">IG — Seguidores</div><div class="mv" id="ov-fig">—</div><div class="ms">Actualiza en Plataformas</div></div>
+    <div class="mcard pu"><div class="ml">Próximo post</div><div class="mv" id="ov-next">Día 4</div><div class="ms" id="ov-next-d">—</div></div>
+    <div class="mcard bl"><div class="ml">Días para lanzamiento</div><div class="mv" id="ov-launch">9</div><div class="ms">Día 12 — 12:00 todas las redes</div></div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-family:Syne;font-size:15px;font-weight:600;">Progreso campaña 14 días</span>
+      <span class="badge btc" id="prog-l">Día 3/14 — 21%</span>
+    </div>
+    <div style="height:8px;background:var(--border);border-radius:4px;margin-bottom:20px;">
+      <div id="prog-b" style="height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--pink));width:21%;transition:width 1s;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(14,1fr);gap:4px;" id="prog-days"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
+      <div class="sl">Próximas publicaciones</div>
+      <div id="upcoming"></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
+      <div class="sl">Estado redes sociales</div>
+      <div id="plat-st"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDARIO -->
+<div class="panel" id="panel-cal">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div>
+      <div style="font-family:Syne;font-size:20px;font-weight:700;">Calendario 14 días</div>
+      <div style="font-size:13px;color:var(--text3);">Haz clic en cada día para ver el contenido completo y marcarlo como publicado</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <span class="badge btc">✓ Publicado</span>
+      <span class="badge byl">★ Lanzamiento</span>
+    </div>
+  </div>
+  <div class="cgrid" id="cal-g"></div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="panel" id="panel-con">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="font-family:Syne;font-size:20px;font-weight:700;">Posts listos para publicar</div>
+    <div style="display:flex;gap:6px;">
+      <button class="btn" id="fa" onclick="flt('all')" style="border-color:var(--teal);color:var(--teal);">Todos</button>
+      <button class="btn" id="ftt" onclick="flt('tiktok')">TikTok</button>
+      <button class="btn" id="fig" onclick="flt('instagram')">Instagram</button>
+      <button class="btn" id="fli" onclick="flt('linkedin')">LinkedIn</button>
+      <button class="btn" id="ffb" onclick="flt('facebook')">Facebook</button>
+    </div>
+  </div>
+  <div id="posts-l"></div>
+</div>
+
+<!-- KPIs -->
+<div class="panel" id="panel-kpi">
+  <div style="font-family:Syne;font-size:20px;font-weight:700;margin-bottom:6px;">KPIs por plataforma</div>
+  <div style="font-size:13px;color:var(--text3);margin-bottom:24px;">Registra los datos diariamente. Se guardan automáticamente en el navegador.</div>
+  <div class="kpi-s">
+    <div class="kpi-t">Métricas clave <button class="btn" onclick="saveKPIs()" style="font-size:12px;padding:6px 14px;">💾 Guardar KPIs</button></div>
+    <div class="kpi-r" style="font-family:JetBrains Mono;font-size:10px;color:var(--text3);"><div>MÉTRICA</div><div>OBJETIVO 14D</div><div>REAL ACTUAL</div><div>% CUMPLIDO</div></div>
+    <div id="kpi-rows"></div>
+  </div>
+</div>
+
+<!-- PLATAFORMAS -->
+<div class="panel" id="panel-plat">
+  <div style="font-family:Syne;font-size:20px;font-weight:700;margin-bottom:6px;">Datos por plataforma</div>
+  <div style="font-size:13px;color:var(--text3);margin-bottom:20px;">Actualiza los datos manualmente después de revisar cada red social</div>
+  <div class="pgrid" id="plat-c"></div>
+  <div class="kpi-s">
+    <div class="kpi-t">Historial de datos</div>
+    <table class="tbl"><thead><tr><th>Fecha</th><th>TikTok Views</th><th>IG Reach</th><th>LinkedIn</th><th>Facebook</th><th>TT Seguidores</th><th>IG Seguidores</th></tr></thead>
+    <tbody id="hist-t"></tbody></table>
+  </div>
+</div>
+
+<!-- CM AGENT -->
+<div class="panel" id="panel-cm">
+  <div class="cm-box">
+    <div class="cm-h">
+      <div class="cm-ic">C</div>
+      <div>
+        <div class="cm-n">NOVA-CM — Community Manager IA</div>
+        <div class="cm-r">Experta en contenido KOVA · TikTok · Instagram · LinkedIn · Facebook · Genera captions, hashtags y guiones</div>
+      </div>
+    </div>
+    <div class="cm-fg">
+      <div class="cm-fl"><div class="cm-lb">Plataforma</div>
+        <select class="cm-sl" id="cm-pl">
+          <option value="tiktok">TikTok</option>
+          <option value="instagram">Instagram / Reels</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="facebook">Facebook</option>
+          <option value="all">Todas las plataformas</option>
+        </select>
+      </div>
+      <div class="cm-fl"><div class="cm-lb">Tipo de contenido</div>
+        <select class="cm-sl" id="cm-ty">
+          <option value="video-demo">Video demostración agente</option>
+          <option value="objeccion">Respuesta a objeción</option>
+          <option value="historia">Historia personal founder</option>
+          <option value="tip-ventas">Tip de ventas</option>
+          <option value="comparativa">KOVA vs alternativas</option>
+          <option value="lanzamiento">Post de lanzamiento</option>
+          <option value="educativo">Contenido educativo</option>
+          <option value="carrusel">Carrusel / slides</option>
+          <option value="resultados">Resultados / métricas reales</option>
+        </select>
+      </div>
+      <div class="cm-fl"><div class="cm-lb">Agente protagonista</div>
+        <select class="cm-sl" id="cm-ag">
+          <option value="nova">NOVA — Asistente ventas</option>
+          <option value="alex">ALEX — Simulador</option>
+          <option value="maia">MAIA — Estratega</option>
+          <option value="kova">KOVA en general</option>
+        </select>
+      </div>
+      <div class="cm-fl"><div class="cm-lb">Tono</div>
+        <select class="cm-sl" id="cm-to">
+          <option value="educativo">Educativo y útil</option>
+          <option value="directo">Directo y provocador</option>
+          <option value="personal">Personal y auténtico</option>
+          <option value="urgente">Urgente / FOMO</option>
+          <option value="humor">Con humor</option>
+        </select>
+      </div>
+    </div>
+    <div class="cm-fl" style="margin-bottom:14px;"><div class="cm-lb">Contexto adicional (opcional)</div>
+      <textarea class="cm-ta" id="cm-ctx" placeholder="Ej: 'Mostrar cómo NOVA responde a UN cliente que dice es muy caro' o 'Post de celebración del lanzamiento en App Store'"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-grad" onclick="genContent()" style="padding:10px 24px;">⚡ Generar contenido</button>
+      <button class="btn" onclick="genAll()" style="padding:10px 24px;">🔄 Todas las plataformas</button>
+      <button class="btn" onclick="genWeek()" style="padding:10px 24px;">📅 Plan semana</button>
+    </div>
+    <div class="cm-out" id="cm-o"><div style="color:var(--text3);font-size:13px;">El contenido generado aparecerá aquí con caption completo, hashtags optimizados y guión de producción.</div></div>
+    <button class="btn" id="cm-cp-btn" style="margin-top:12px;display:none;" onclick="cpOut()">📋 Copiar contenido</button>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
+    <div class="sl">Guía de producción por plataforma</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+      <div style="background:var(--bg3);border-radius:12px;padding:16px;"><div style="color:var(--pink);font-family:JetBrains Mono;font-size:10px;margin-bottom:8px;">TIKTOK / INSTAGRAM REELS</div><div style="font-size:12px;color:var(--text3);line-height:1.8;">• Vertical 9:16 en iPhone<br>• Screen recording de la app (TestFlight)<br>• Gancho en los primeros 2 segundos<br>• Duración: 30-45 segundos<br>• Editar con CapCut — texto superpuesto<br>• Subtítulos automáticos en TikTok</div></div>
+      <div style="background:var(--bg3);border-radius:12px;padding:16px;"><div style="color:var(--blue);font-family:JetBrains Mono;font-size:10px;margin-bottom:8px;">LINKEDIN</div><div style="font-size:12px;color:var(--text3);line-height:1.8;">• Posts de texto largo (1.500+ caracteres)<br>• Primera línea = hook que detiene el scroll<br>• Emojis para separar puntos clave<br>• Hora ideal: 9am o 12pm<br>• Terminar con pregunta<br>• Hashtags: 3-5 máximo</div></div>
+      <div style="background:var(--bg3);border-radius:12px;padding:16px;"><div style="color:var(--orange);font-family:JetBrains Mono;font-size:10px;margin-bottom:8px;">INSTAGRAM CARRUSEL</div><div style="font-size:12px;color:var(--text3);line-height:1.8;">• 5-8 slides con Canva<br>• Slide 1: título impactante<br>• Slide 2-7: contenido de valor<br>• Último slide: CTA + @kovaa_pp<br>• Colores: fondo oscuro + #25C48F teal<br>• Fuente: DM Sans o Syne</div></div>
+      <div style="background:var(--bg3);border-radius:12px;padding:16px;"><div style="color:var(--teal);font-family:JetBrains Mono;font-size:10px;margin-bottom:8px;">FACEBOOK</div><div style="font-size:12px;color:var(--text3);line-height:1.8;">• Reutiliza contenido de Instagram<br>• Añade contexto en el texto<br>• Grupos de emprendedores y ventas<br>• Hora ideal: 18-20h España<br>• Videos nativos mejor que links<br>• Responde comentarios en 2h</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INFORMES -->
+<div class="panel" id="panel-inf">
+  <div class="rep-box">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+      <div style="width:48px;height:48px;background:var(--purple2);border:1px solid rgba(176,106,255,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:Syne;font-weight:800;font-size:20px;color:var(--purple);">I</div>
+      <div>
+        <div style="font-family:Syne;font-size:16px;font-weight:700;color:var(--purple);">Generador de informes IA</div>
+        <div style="font-size:12px;color:var(--text3);">Analiza tus KPIs reales y genera recomendaciones ejecutivas con IA</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="btn" onclick="genReport('daily')" style="border-color:var(--purple);color:var(--purple);">📊 Informe diario</button>
+      <button class="btn" onclick="genReport('weekly')">📈 Informe semanal</button>
+      <button class="btn" onclick="genReport('biweekly')">📋 Informe 14 días</button>
+      <button class="btn" onclick="genReport('next')">🗓 Plan próximas 2 semanas</button>
+    </div>
+    <div class="rep-out" id="rep-o"><div style="color:var(--text3);">Selecciona el tipo de informe. Se generará con IA usando tus KPIs registrados.</div></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn" id="rep-cp" style="display:none;" onclick="cpRep()">📋 Copiar informe</button>
+      <button class="btn" id="rep-ex" style="display:none;" onclick="exRep()">⬇ Exportar TXT</button>
+    </div>
+  </div>
+  <div class="kpi-s">
+    <div class="kpi-t">Datos actuales para el informe</div>
+    <div id="rep-summary"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="mov" onclick="closeMov(event)">
+  <div class="modal">
+    <div class="modal-t"><span id="mt"></span><button class="mcl" onclick="closeMd()">✕</button></div>
+    <div id="mb"></div>
+  </div>
+</div>
+
+<script>
+const API='https://api.anthropic.com/v1/messages';
+const POSTS=[
+  {d:1,t:'NOVA responde objeciones',pl:['tiktok','instagram'],h:'18:00',ty:'Video',cap:`¿Tu cliente dice "es muy caro"? Esto es lo que responde NOVA 👇\n\nLe pregunté a la IA y me dio esta respuesta exacta:\n\n"En comparación con qué. Qué valor necesitarías ver para que tuviera sentido."\n\nNOVA tiene respuesta para cada objeción.\nEntrena con ALEX antes del pitch real.\nPlanifica con MAIA tu estrategia.\n\n✅ Gratis en App Store → kova-app.net`,ht:'#ventasB2B #inteligenciaartificial #emprendimiento #ventas #pymes #IA #KOVA',no:'Screen recording NOVA respondiendo a "un cliente me dijo que es muy caro"',pub:true,vs:580},
+  {d:2,t:'ALEX simulador',pl:['tiktok','instagram','facebook'],h:'18:00',ty:'Video',cap:`Practicar antes del pitch REAL es la diferencia entre cerrar o no cerrar 🎯\n\nTe presento a ALEX: el simulador de ventas de KOVA.\n\nElige el tipo de cliente difícil:\n→ El que dice "déjame pensarlo"\n→ El que ya tiene proveedor\n→ El que no tiene presupuesto\n\nALEX simula exactamente esa conversación.\nTú practicas la respuesta.\nLuego vas al pitch real con confianza.\n\n✅ Disponible en kova-app.net`,ht:'#ventas #practicaventas #simuladorventas #emprendimiento #KOVA #IA #pymes',no:'Screen recording ALEX seleccionando tipo de prospecto y simulando conversación',pub:true,vs:682},
+  {d:3,t:'MAIA plan de acción',pl:['tiktok','instagram','facebook','linkedin'],h:'18:00',ty:'Video',cap:`Le pedí a la IA un plan para conseguir 10 clientes este mes.\n\nMAIA me respondió con 3 acciones concretas:\n1. LinkedIn frío — 15 mensajes/día\n2. Referidos — pide a 3 clientes actuales\n3. Seguimiento — 5 toques en 2 semanas\n\nCAC estimado: 0€ orgánico.\nLTV estimado: 360€/cliente/año.\n\n✅ kova-app.net`,ht:'#estrategiaventas #MAIA #KOVA #emprendimiento #pymes #crecimiento #IA',no:'Screen recording MAIA respondiendo plan de 10 clientes'},
+  {d:4,t:'5 objeciones con respuesta exacta',pl:['instagram','linkedin'],h:'19:00',ty:'Carrusel',cap:`Las 5 objeciones que destruyen tus ventas B2B (y la respuesta exacta para cada una) 👇\n\n"Es muy caro" → "En comparación con qué. Qué valor necesitarías ver..."\n"Déjame pensarlo" → "Claro. ¿Qué es lo que más dudas te genera?"\n"Ya tenemos proveedor" → "Genial. ¿Qué es lo que más valoras de trabajar con ellos?"\n"No tenemos presupuesto" → "¿Es falta de presupuesto o de prioridad?"\n"Mándame información" → "Para enviarte lo más relevante, ¿qué es lo que más quieres resolver?"\n\nKOVA tiene estas respuestas y 200 más.\n👉 kova-app.net`,ht:'#objeciones #ventasB2B #KOVA #IA #emprendimiento #cerrarventas',no:'Carrusel Canva: fondo oscuro #0d0b08 + teal #25C48F. 6 slides: portada + 5 objeciones'},
+  {d:5,t:'NOVA vs ChatGPT',pl:['tiktok','instagram'],h:'18:00',ty:'Video',cap:`ChatGPT no sabe cerrar ventas. NOVA sí. 🔥\n\nHice la misma pregunta a los dos:\n"Cómo respondo a un cliente que dice que es muy caro"\n\nChatGPT: 3 párrafos genéricos\nNOVA: frase exacta lista para usar en español\n\nLa diferencia es el entrenamiento.\nNOVA lleva SPIN Selling, Challenger Sale y MEDDIC integrados.\n\n✅ kova-app.net`,ht:'#NOVAvsGPT #KOVA #IA #ventas #ChatGPT #emprendimiento',no:'Pantalla partida: ChatGPT a la izquierda, NOVA a la derecha. Mostrar respuestas simultáneas'},
+  {d:6,t:'Historia personal del founder',pl:['linkedin'],h:'9:00',ty:'Post texto',cap:`Hace 6 meses empecé a construir KOVA solo desde Irlanda.\n\nSin cofundadores. Sin inversión. Sin saber programar.\n\nSolo con una obsesión: ayudar a las pymes hispanohablantes a vender mejor con IA.\n\nHoy KOVA tiene 3 agentes IA y está a punto de lanzarse en App Store y Google Play.\n\nLo que aprendí:\n1. El mercado hispanohablante necesita herramientas de ventas en su idioma\n2. Puedes construir un SaaS sin saber programar\n3. La consistencia vale más que el talento\n\n¿Estás construyendo algo desde cero?\n\n👉 kova-app.net`,ht:'#founder #emprendimiento #SaaS #startup #KOVA #buildinpublic',no:'Solo texto. Opcional: foto tuya trabajando o screenshot del proceso de desarrollo'},
+  {d:7,t:'Error más común en ventas B2B',pl:['tiktok','instagram','facebook'],h:'18:00',ty:'Video',cap:`El error que comete el 80% de los vendedores B2B 😬\n\nHablar más que escuchar.\n\nMientras el cliente habla, ya estás preparando la respuesta.\nEso se nota. Y mata la venta.\n\nRegla 70/30:\n→ 70% escuchas\n→ 30% hablas\n\nNOVA te enseña las preguntas correctas.\nALEX te deja practicarlo.\n\n✅ kova-app.net`,ht:'#errorventas #ventasB2B #KOVA #IA #tips #emprendimiento',no:'Habla a cámara 15 segundos + corte a screen recording de NOVA'},
+  {d:8,t:'Los 3 frameworks que usa NOVA',pl:['instagram'],h:'19:00',ty:'Carrusel',cap:`Los 3 frameworks de ventas que usan los mejores equipos del mundo (ahora en tu bolsillo) 📱\n\nSPIN Selling: Situación → Problema → Implicación → Necesidad\nChallenger Sale: Enseña → Personaliza → Controla\nMEDDIC: Métricas → Comprador → Demo → Decisión → Pain → Campeón\n\nNOVA tiene los 3 integrados desde el día 1.\n\n✅ kova-app.net`,ht:'#SPIN #challenger #MEDDIC #frameworks #ventas #KOVA #IA',no:'Carrusel 4 slides: portada + 3 frameworks. Una slide por framework explicado simple'},
+  {d:9,t:'ALEX con prospecto escéptico',pl:['tiktok','instagram'],h:'18:00',ty:'Video',cap:`Simulé una venta con el cliente más difícil: el escéptico que ya fue engañado.\n\nRespuesta de ALEX: "Ya entiendo. ¿Qué tendría que pasar para que confiaras en este producto?"\n\nEsa pregunta abre la conversación real.\n\nPractica con ALEX primero.\nLuego ve al pitch. 🎯\n\n✅ kova-app.net`,ht:'#ALEX #simuladorventas #KOVA #IA #ventasB2B #prospectoesceptico',no:'Screen recording ALEX modo roleplay — prospecto escéptico. Mostrar el feedback de ALEX al final'},
+  {d:10,t:'Métricas reales de KOVA',pl:['linkedin','instagram'],h:'18:00',ty:'Post',cap:`Transparencia total: así va KOVA 📊\n\nTikTok: 1.262+ views orgánicas en 3 videos\nApp Store: en revisión\nGoogle Play: prueba cerrada en curso\n\nLo que funciona:\n→ Videos demostración > todo\n→ La autenticidad > la perfección\n→ El mercado hispano quiere IA de ventas en su idioma\n\n¿Qué quieres saber sobre construir KOVA?\n\n👉 kova-app.net`,ht:'#buildinpublic #transparencia #KOVA #startup #founder #métricas',no:'Screenshot de TikTok Analytics mostrando las views. Post de texto + imagen'},
+  {d:11,t:'MAIA en 30 segundos',pl:['tiktok'],h:'18:00',ty:'Video',cap:`Le pedí a MAIA un plan de ventas en 30 segundos. Esto me dio 🤯\n\nObjetivo: 10 clientes nuevos\nPlan: LinkedIn frío + referidos + seguimiento\nCAC: 0€\nLTV: 360€/año\n\nAsí trabaja tu estratega de bolsillo. ✅ kova-app.net`,ht:'#MAIA #estrategia #KOVA #IA #emprendimiento #plan30segundos',no:'Screen recording rápido con texto superpuesto mostrando el plan de MAIA'},
+  {d:12,t:'🚀 LANZAMIENTO OFICIAL',pl:['tiktok','instagram','linkedin','facebook'],h:'12:00',ty:'Lanzamiento',cap:`🚀 KOVA ya está disponible.\n\nDespués de meses construyendo y mejorando:\nKOVA está en App Store y Google Play.\n\n🤖 NOVA — Responde objeciones en segundos\n🥊 ALEX — Practica conversaciones difíciles\n📊 MAIA — Tu plan de ventas personalizado\n\nGratis para empezar. Sin tarjeta.\nPara pymes hispanohablantes.\n\n¿Listo para vender más con IA?\n👉 kova-app.net`,ht:'#KOVA #lanzamiento #launch #IA #ventas #AppStore #GooglePlay #pymes',no:'VIDEO ESPECIAL: Graba cara a cámara anunciando el lanzamiento + screen de App Store/Google Play'},
+  {d:13,t:'Lección aprendida',pl:['linkedin'],h:'9:00',ty:'Post texto',cap:`Los primeros 100 usuarios son más valiosos que los siguientes 10.000.\n\nCada feedback en estas primeras semanas define el producto.\n\n¿Qué objeción te encuentras más al vender tu producto o servicio?\n\n👉 kova-app.net`,ht:'#founder #startup #emprendimiento #KOVA #buildinpublic',no:'Post corto de texto. Simple. Termina con pregunta para generar comentarios'},
+  {d:14,t:'Antes y después de KOVA',pl:['tiktok','instagram'],h:'18:00',ty:'Video',cap:`Antes de KOVA: "no sé qué responderle a ese cliente"\nDespués de KOVA: respuesta exacta en 3 segundos.\n\nAsí cambia manejar objeciones con IA. 🔥\n\n✅ kova-app.net`,ht:'#antesydespues #KOVA #IA #ventas #transformacion',no:'Video comparativo: pantalla dividida o corte rápido. Antes (sin respuesta) vs después (NOVA respondiendo)'}
+];
+
+let KD=JSON.parse(localStorage.getItem('kd_kpi')||'{}');
+let PD=JSON.parse(localStorage.getItem('kd_plat')||'{"tiktok":{"views":1262,"followers":0,"likes":0},"instagram":{"reach":0,"followers":0,"saves":0},"linkedin":{"views":0,"followers":0,"reactions":0},"facebook":{"reach":0,"followers":0,"shares":0}}');
+let PUB=JSON.parse(localStorage.getItem('kd_pub')||'[1,2,3]');
+let CF='all';
+
+function switchTab(n){
+  const names=['ov','cal','con','kpi','plat','cm','inf'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===n));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+n).classList.add('active');
+  if(n==='kpi')renderKPIs();
+  if(n==='plat')renderPlats();
+  if(n==='inf')renderRepSummary();
+}
+
+const PC={tiktok:{n:'TikTok',c:'var(--pink)',bg:'rgba(255,79,160,0.08)'},instagram:{n:'Instagram',c:'var(--orange)',bg:'rgba(255,124,53,0.08)'},linkedin:{n:'LinkedIn',c:'var(--blue)',bg:'rgba(74,158,255,0.08)'},facebook:{n:'Facebook',c:'var(--blue)',bg:'rgba(74,158,255,0.08)'}};
+const PC2={tiktok:'bpk',instagram:'bor',linkedin:'bbl',facebook:'bbl'};
+
+function init(){
+  document.getElementById('hdr-d').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  renderOv();renderCal();renderPosts();renderKPIs();renderPlats();
+}
+
+function renderOv(){
+  document.getElementById('ov-tt').textContent=(PD.tiktok?.views||0).toLocaleString();
+  document.getElementById('ov-ig').textContent=PD.instagram?.reach>0?PD.instagram.reach.toLocaleString():'—';
+  document.getElementById('ov-li').textContent=PD.linkedin?.views>0?PD.linkedin.views.toLocaleString():'—';
+  document.getElementById('ov-p').textContent=PUB.length;
+  document.getElementById('ov-ftt').textContent=PD.tiktok?.followers>0?PD.tiktok.followers:'—';
+  document.getElementById('ov-fig').textContent=PD.instagram?.followers>0?PD.instagram.followers:'—';
+  const next=POSTS.find(p=>!PUB.includes(p.d));
+  if(next){document.getElementById('ov-next').textContent='Día '+next.d;document.getElementById('ov-next-d').textContent=next.t+' · '+next.h;}
+  document.getElementById('ov-launch').textContent=Math.max(0,12-PUB.length);
+  const pct=Math.round(PUB.length/14*100);
+  document.getElementById('prog-l').textContent='Día '+PUB.length+'/14 — '+pct+'%';
+  document.getElementById('prog-b').style.width=pct+'%';
+  document.getElementById('prog-days').innerHTML=POSTS.map(p=>{
+    const ok=PUB.includes(p.d);const la=p.d===12;
+    return `<div style="text-align:center;padding:8px 4px;background:var(--bg3);border-radius:8px;border:1px solid ${ok?'var(--teal)':la?'var(--yellow)':'var(--border)'};cursor:pointer;" onclick="switchTab('cal')">
+      <div style="font-family:JetBrains Mono;font-size:9px;color:${ok?'var(--teal)':la?'var(--yellow)':'var(--text3)'};">${la?'★':p.d}</div>
+      <div style="font-size:9px;margin-top:2px;color:${ok?'var(--teal)':'var(--text3)'};">${ok?'✓':'·'}</div></div>`;
+  }).join('');
+  document.getElementById('upcoming').innerHTML=POSTS.filter(p=>!PUB.includes(p.d)).slice(0,5).map(p=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div><div style="font-size:13px;color:var(--text);">Día ${p.d} — ${p.t}</div><div style="font-size:11px;color:var(--text3);">${p.pl.join(' · ')} · ${p.h}</div></div>
+      <span class="badge btc">${p.ty}</span></div>`).join('');
+  document.getElementById('plat-st').innerHTML=[
+    {n:'TikTok @kova.app',c:'var(--pink)',ok:true},
+    {n:'Instagram @kovaa_pp',c:'var(--orange)',ok:true},
+    {n:'LinkedIn KOVA',c:'var(--blue)',ok:true},
+    {n:'Facebook KOVA App',c:'var(--blue)',ok:true},
+    {n:'Buffer (Instagram)',c:'var(--teal)',ok:true},
+  ].map(x=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:${x.c};"></div><span style="font-size:13px;">${x.n}</span></div>
+    <span class="badge btc">● Activo</span></div>`).join('');
+}
+
+function renderCal(){
+  document.getElementById('cal-g').innerHTML=POSTS.map(p=>{
+    const ok=PUB.includes(p.d);const la=p.d===12;
+    const dots=p.pl.map(x=>`<div class="cp" style="background:rgba(255,255,255,0.06);color:${PC[x]?.c||'var(--text3)'};">${x.substring(0,2).toUpperCase()}</div>`).join('');
+    return `<div class="cday ${ok?'pub':''} ${la?'launch':''}" onclick="openDay(${p.d})">
+      <div class="cdn">DÍA ${p.d}${la?' ★':''} · ${p.h}</div>
+      <div class="cdt">${p.t}</div>
+      <div class="cdp">${dots}</div>
+      ${ok?'<div style="font-size:9px;color:var(--teal);margin-top:4px;font-family:JetBrains Mono;">✓ PUBLICADO</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function openDay(d){
+  const p=POSTS.find(x=>x.d===d);const ok=PUB.includes(d);
+  document.getElementById('mt').textContent='Día '+d+' — '+p.t;
+  document.getElementById('mb').innerHTML=`
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+      ${p.pl.map(x=>`<span class="badge ${PC2[x]||'btc'}">${x.toUpperCase()}</span>`).join('')}
+      <span class="badge bpu">${p.ty}</span>
+      <span style="margin-left:auto;font-family:JetBrains Mono;font-size:12px;color:var(--text3);">🕐 ${p.h}</span>
+    </div>
+    <div style="font-family:JetBrains Mono;font-size:10px;color:var(--text3);letter-spacing:.1em;margin-bottom:6px;">CAPTION COMPLETO</div>
+    <div class="pd-c">${p.cap}</div>
+    <div style="font-family:JetBrains Mono;font-size:10px;color:var(--text3);letter-spacing:.1em;margin-bottom:6px;">HASHTAGS</div>
+    <div class="pd-ht">${p.ht}</div>
+    <div style="background:var(--yellow2);border:1px solid rgba(255,195,80,0.15);border-radius:8px;padding:12px;font-size:12px;color:var(--yellow);margin-bottom:16px;">📹 ${p.no}</div>
+    ${p.vs?`<div style="font-family:JetBrains Mono;font-size:12px;color:var(--teal);margin-bottom:12px;">👁 ${p.vs.toLocaleString()} views registradas</div>`:''}
+    <div style="display:flex;gap:8px;">
+      <button class="cbtn" onclick="cpDay(${d})">📋 Copiar caption + hashtags</button>
+      <button class="mbtn ${ok?'done':''}" onclick="togPub(${d})">${ok?'✓ Publicado':'Marcar publicado'}</button>
+    </div>`;
+  document.getElementById('mov').classList.add('open');
+}
+
+function cpDay(d){const p=POSTS.find(x=>x.d===d);navigator.clipboard.writeText(p.cap+'\n\n'+p.ht);alert('Copiado ✓');}
+function togPub(d){
+  PUB=PUB.includes(d)?PUB.filter(x=>x!==d):[...PUB,d];
+  localStorage.setItem('kd_pub',JSON.stringify(PUB));
+  renderCal();renderOv();closeMd();
+}
+function closeMov(e){if(e.target.id==='mov')closeMd();}
+function closeMd(){document.getElementById('mov').classList.remove('open');}
+
+function flt(f){
+  CF=f;
+  ['all','tiktok','instagram','linkedin','facebook'].forEach(id=>{
+    const b=document.getElementById('f'+id.replace('tiktok','tt').replace('instagram','ig').replace('linkedin','li').replace('facebook','fb').replace('all','a'));
+    if(b){b.style.borderColor=id===f?'var(--teal)':'';b.style.color=id===f?'var(--teal)':'';}
+  });
+  renderPosts();
+}
+
+function renderPosts(){
+  const list=POSTS.filter(p=>CF==='all'||p.pl.includes(CF));
+  const pc={tiktok:'var(--pink)',instagram:'var(--orange)',linkedin:'var(--blue)',facebook:'var(--blue)'};
+  document.getElementById('posts-l').innerHTML=list.map(p=>{
+    const ok=PUB.includes(p.d);const ac=pc[p.pl[0]]||'var(--teal)';
+    return `<div class="post-d" style="border-left:3px solid ${ok?'var(--teal)':ac};">
+      <div class="pd-h">
+        <div>
+          <div class="pd-t">Día ${p.d} — ${p.t}</div>
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            ${p.pl.map(x=>`<span class="badge ${PC2[x]||'btc'}">${x.toUpperCase()}</span>`).join('')}
+            <span class="badge bpu">${p.ty}</span>
+            <span style="font-family:JetBrains Mono;font-size:11px;color:var(--text3);padding:3px 0;">🕐 ${p.h}</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${p.vs?`<span style="font-family:JetBrains Mono;font-size:12px;color:var(--teal);">👁 ${p.vs.toLocaleString()}</span>`:''}
+          ${ok?'<span class="badge btc">✓ Publicado</span>':''}
+        </div>
+      </div>
+      <div class="pd-c">${p.cap}</div>
+      <div class="pd-ht">${p.ht}</div>
+      <div style="background:var(--yellow2);border:1px solid rgba(255,195,80,0.15);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">📹 ${p.no}</div>
+      <div style="display:flex;gap:8px;">
+        <button class="cbtn" onclick="cpDay(${p.d})">📋 Copiar caption + hashtags</button>
+        <button class="mbtn ${ok?'done':''}" onclick="togPubI(${p.d},this)">${ok?'✓ Publicado':'Marcar publicado'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togPubI(d,btn){
+  PUB=PUB.includes(d)?PUB.filter(x=>x!==d):[...PUB,d];
+  localStorage.setItem('kd_pub',JSON.stringify(PUB));
+  btn.textContent=PUB.includes(d)?'✓ Publicado':'Marcar publicado';
+  btn.className='mbtn'+(PUB.includes(d)?' done':'');
+  renderCal();renderOv();
+}
+
+const KDEFS=[
+  {id:'tt_views',n:'TikTok — Views totales',obj:2000},
+  {id:'tt_followers',n:'TikTok — Seguidores nuevos',obj:100},
+  {id:'tt_eng',n:'TikTok — Engagement rate %',obj:5},
+  {id:'ig_reach',n:'Instagram — Reach total',obj:1000},
+  {id:'ig_followers',n:'Instagram — Seguidores nuevos',obj:50},
+  {id:'ig_saves',n:'Instagram — Guardados',obj:30},
+  {id:'li_views',n:'LinkedIn — Views posts',obj:500},
+  {id:'li_reactions',n:'LinkedIn — Reacciones',obj:50},
+  {id:'fb_reach',n:'Facebook — Reach',obj:200},
+  {id:'web',n:'Landing — Visitas kova-app.net',obj:100},
+  {id:'downloads',n:'App — Descargas iOS',obj:10},
+  {id:'reg',n:'App — Usuarios registrados',obj:20},
+];
+
+function renderKPIs(){
+  document.getElementById('kpi-rows').innerHTML=KDEFS.map(k=>{
+    const real=KD[k.id]||0;const pct=k.obj>0?Math.round(real/k.obj*100):0;
+    const cl=pct>=80?'g':pct>=50?'w':'b';
+    return `<div class="kpi-r">
+      <div class="kn">${k.n}</div>
+      <div class="kobj">${k.obj}</div>
+      <div><input class="ki" type="number" value="${real}" onchange="updKPI('${k.id}',this.value)" min="0"></div>
+      <div class="kpct ${cl}">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function updKPI(id,v){KD[id]=parseFloat(v)||0;localStorage.setItem('kd_kpi',JSON.stringify(KD));}
+function saveKPIs(){
+  localStorage.setItem('kd_kpi',JSON.stringify(KD));
+  PD.tiktok.views=KD.tt_views||PD.tiktok.views;
+  PD.tiktok.followers=KD.tt_followers||PD.tiktok.followers;
+  PD.instagram.reach=KD.ig_reach||PD.instagram.reach;
+  PD.instagram.followers=KD.ig_followers||PD.instagram.followers;
+  PD.linkedin.views=KD.li_views||PD.linkedin.views;
+  PD.facebook.reach=KD.fb_reach||PD.facebook.reach;
+  localStorage.setItem('kd_plat',JSON.stringify(PD));
+  renderOv();alert('KPIs guardados ✓');
+}
+
+function renderPlats(){
+  const defs=[
+    {id:'tiktok',n:'TikTok',c:'var(--pink)',ic:'♪',h:'@kova.app',fs:[{k:'views',l:'Views acumuladas'},{k:'followers',l:'Seguidores'},{k:'likes',l:'Likes totales'}]},
+    {id:'instagram',n:'Instagram',c:'var(--orange)',ic:'◈',h:'@kovaa_pp',fs:[{k:'reach',l:'Reach total'},{k:'followers',l:'Seguidores'},{k:'saves',l:'Guardados'}]},
+    {id:'linkedin',n:'LinkedIn',c:'var(--blue)',ic:'in',h:'KOVA Technologies',fs:[{k:'views',l:'Views posts'},{k:'followers',l:'Seguidores'},{k:'reactions',l:'Reacciones'}]},
+    {id:'facebook',n:'Facebook',c:'var(--blue)',ic:'f',h:'KOVA App',fs:[{k:'reach',l:'Reach'},{k:'followers',l:'Seguidores'},{k:'shares',l:'Compartidos'}]},
+  ];
+  document.getElementById('plat-c').innerHTML=defs.map(p=>`
+    <div class="pcard">
+      <div class="ph">
+        <div><div class="pname" style="color:${p.c};">${p.n}</div><div style="font-size:11px;color:var(--text3);">${p.h}</div></div>
+        <div class="pico" style="background:rgba(255,255,255,0.05);color:${p.c};">${p.ic}</div>
+      </div>
+      ${p.fs.map(f=>`<div class="pstat"><span>${f.l}</span><input type="number" class="ki" style="width:75px;" value="${PD[p.id]?.[f.k]||0}" onchange="updPlat('${p.id}','${f.k}',this.value)"></div>`).join('')}
+      <button class="cbtn" style="width:100%;margin-top:12px;text-align:center;" onclick="savePlat()">💾 Guardar</button>
+    </div>`).join('');
+  const hist=JSON.parse(localStorage.getItem('kd_hist')||'[]');
+  document.getElementById('hist-t').innerHTML=hist.length?hist.map(h=>`<tr><td style="font-family:JetBrains Mono;font-size:11px;">${h.date}</td><td>${h.tt||0}</td><td>${h.ig||0}</td><td>${h.li||0}</td><td>${h.fb||0}</td><td style="color:var(--pink);">${h.ttf||0}</td><td style="color:var(--orange);">${h.igf||0}</td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">Sin datos registrados aún. Actualiza los datos diariamente.</td></tr>';
+}
+
+function updPlat(p,k,v){if(!PD[p])PD[p]={};PD[p][k]=parseFloat(v)||0;}
+function savePlat(){
+  localStorage.setItem('kd_plat',JSON.stringify(PD));
+  const hist=JSON.parse(localStorage.getItem('kd_hist')||'[]');
+  hist.push({date:new Date().toLocaleDateString('es-ES'),tt:PD.tiktok?.views||0,ig:PD.instagram?.reach||0,li:PD.linkedin?.views||0,fb:PD.facebook?.reach||0,ttf:PD.tiktok?.followers||0,igf:PD.instagram?.followers||0});
+  localStorage.setItem('kd_hist',JSON.stringify(hist.slice(-30)));
+  renderOv();renderPlats();alert('Datos guardados ✓');
+}
+
+async function genContent(){
+  const pl=document.getElementById('cm-pl').value;
+  const ty=document.getElementById('cm-ty').value;
+  const ag=document.getElementById('cm-ag').value;
+  const to=document.getElementById('cm-to').value;
+  const ctx=document.getElementById('cm-ctx').value;
+  const out=document.getElementById('cm-o');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>NOVA-CM está generando el contenido...</div>';
+  document.getElementById('cm-cp-btn').style.display='none';
+
+  const pn={tiktok:'TikTok',instagram:'Instagram/Reels',linkedin:'LinkedIn',facebook:'Facebook',all:'todas las plataformas'};
+  const an={nova:'NOVA (asistente de ventas B2B)',alex:'ALEX (simulador de prospectos)',maia:'MAIA (estratega de negocio)',kova:'KOVA en general'};
+  const tn={tiktok:'video corto (30-45s) con gancho fuerte en los primeros 2 segundos, texto directo y coloquial',instagram:'reel o carrusel con caption detallado, emojis y llamada a la acción',linkedin:'post profesional largo con historia, insights y pregunta al final',facebook:'post conversacional que puede reutilizar contenido de Instagram',all:'contenido adaptado para cada plataforma'};
+  const prompt=`Eres NOVA-CM, community manager experta de KOVA, app móvil de ventas con IA para pymes hispanohablantes.
+
+KOVA tiene 3 agentes: NOVA (ventas), ALEX (simulador prospectos), MAIA (estratega). 
+Web: kova-app.net | TikTok: @kova.app | Instagram: @kovaa_pp
+Plan Free siempre gratis. Starter €14.99/mes, Pro €29.99/mes.
+
+Crea contenido de tipo "${ty}" para ${pn[pl]}, protagonizado por ${an[ag]}, con formato de ${tn[pl]||'post adaptado'}, tono ${to}.
+${ctx?'Contexto específico: '+ctx:''}
+
+Responde con esta estructura exacta (sin markdown adicional):
+
+CAPTION:
+[Caption completo y listo para publicar]
+
+HASHTAGS:
+[Hashtags optimizados para ${pn[pl]}]
+
+GUIÓN / NOTAS DE PRODUCCIÓN:
+[Instrucciones detalladas de qué filmar, cómo estructurarlo, qué mostrar en pantalla]
+
+HORA RECOMENDADA:
+[Mejor hora para publicar]
+
+OBJETIVO:
+[Qué métrica o resultado busca este contenido]`;
+
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'Error generando contenido';
+    out.innerHTML=`<div class="cm-ot">${txt}</div>`;
+    document.getElementById('cm-cp-btn').style.display='inline-block';
+    window._cm=txt;
+  }catch(e){out.innerHTML=`<div style="color:var(--pink);">Error de conexión con la API.</div>`;}
+}
+
+async function genAll(){
+  const ty=document.getElementById('cm-ty').value;
+  const ag=document.getElementById('cm-ag').value;
+  const ctx=document.getElementById('cm-ctx').value;
+  const out=document.getElementById('cm-o');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando para las 4 plataformas...</div>';
+  const prompt=`Eres NOVA-CM, community manager de KOVA (app ventas IA pymes hispanohablantes). 
+KOVA: NOVA/ALEX/MAIA. kova-app.net | @kova.app TikTok | @kovaa_pp Instagram.
+${ctx?'Contexto: '+ctx:''}
+
+Crea contenido de tipo "${ty}" con "${ag}" adaptado ESPECÍFICAMENTE a cada plataforma:
+
+═══ TIKTOK (@kova.app) ═══
+CAPTION: [máx 150 palabras, gancho en primera línea]
+HASHTAGS: [hashtags TikTok virales]
+GUIÓN: [qué filmar, duración, estructura]
+
+═══ INSTAGRAM (@kovaa_pp) ═══
+CAPTION: [200 palabras, con emojis]
+HASHTAGS: [hashtags Instagram]
+NOTAS: [reel o carrusel, instrucciones]
+
+═══ LINKEDIN ═══
+POST: [post profesional completo con historia e insights]
+HASHTAGS: [3-5 hashtags]
+
+═══ FACEBOOK ═══
+POST: [adaptado a Facebook, tono más conversacional]
+NOTA: [puede reutilizar contenido de Instagram con ajustes]`;
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();const txt=d.content?.[0]?.text||'Error';
+    out.innerHTML=`<div class="cm-ot">${txt}</div>`;
+    document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
+  }catch(e){out.innerHTML=`<div style="color:var(--pink);">Error de conexión.</div>`;}
+}
+
+async function genWeek(){
+  const out=document.getElementById('cm-o');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando plan semanal...</div>';
+  const pending=POSTS.filter(p=>!PUB.includes(p.d)).slice(0,7).map(p=>`Día ${p.d}: ${p.t} (${p.pl.join('+')})`).join(', ');
+  const kpiS=`TikTok views:${PD.tiktok?.views||0} followers:${PD.tiktok?.followers||0} | IG reach:${PD.instagram?.reach||0} | LinkedIn:${PD.linkedin?.views||0}`;
+  const prompt=`Eres NOVA-CM de KOVA. Posts publicados: ${PUB.length}/14. KPIs: ${kpiS}. Pendientes: ${pending}.
+Genera un PLAN SEMANAL completo para los próximos 7 días. Por cada día:
+- Plataforma(s) y formato
+- Idea central o gancho del contenido
+- Hora de publicación
+- KPI que mejora
+Termina con 3 recomendaciones estratégicas basadas en los datos actuales.`;
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();const txt=d.content?.[0]?.text||'Error';
+    out.innerHTML=`<div class="cm-ot">${txt}</div>`;
+    document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
+  }catch(e){out.innerHTML=`<div style="color:var(--pink);">Error de conexión.</div>`;}
+}
+
+function cpOut(){navigator.clipboard.writeText(window._cm||'');alert('Copiado ✓');}
+
+async function genReport(type){
+  const out=document.getElementById('rep-o');
+  out.innerHTML='<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando informe con IA real...</div>';
+  const tn={daily:'Informe diario',weekly:'Informe semanal',biweekly:'Informe completo 14 días',next:'Plan de acción próximas 2 semanas'};
+  const kS=KDEFS.map(k=>`${k.n}: objetivo=${k.obj} real=${KD[k.id]||0}`).join(' | ');
+  const pS=`TikTok views:${PD.tiktok?.views||0} followers:${PD.tiktok?.followers||0} | Instagram reach:${PD.instagram?.reach||0} followers:${PD.instagram?.followers||0} | LinkedIn views:${PD.linkedin?.views||0} | Facebook reach:${PD.facebook?.reach||0}`;
+  const prompt=`Eres NOVA-CM, analista de redes sociales de KOVA (app ventas IA pymes hispanohablantes). @kova.app TikTok | @kovaa_pp Instagram.
+
+DATOS REALES:
+- Posts publicados: ${PUB.length}/14 (días: ${PUB.join(',')})
+- Plataformas: ${pS}
+- KPIs vs objetivos: ${kS}
+- TikTok views conocidas: 1262 (video1:580, video2:682, video3:nuevo)
+
+Genera un ${tn[type]} ejecutivo con:
+1. RESUMEN EJECUTIVO (3 líneas máx)
+2. QUÉ ESTÁ FUNCIONANDO BIEN (con datos específicos)
+3. QUÉ MEJORAR (con datos específicos)
+4. TOP 3 CONTENIDOS MÁS EFECTIVOS
+5. MÉTRICAS vs OBJETIVOS (tabla simple)
+6. PLAN DE ACCIÓN (5 acciones concretas y específicas)
+7. PREDICCIÓN próximos 7 días
+
+Sé directo, específico y usa los datos reales.`;
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();const txt=d.content?.[0]?.text||'Error';
+    out.innerHTML=`<div class="cm-ot">${txt}</div>`;
+    window._rep=txt;
+    document.getElementById('rep-cp').style.display='inline-block';
+    document.getElementById('rep-ex').style.display='inline-block';
+  }catch(e){out.innerHTML=`<div style="color:var(--pink);">Error de conexión.</div>`;}
+}
+
+function renderRepSummary(){
+  document.getElementById('rep-summary').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+      <div style="background:var(--bg3);border-radius:10px;padding:14px;"><div style="font-family:JetBrains Mono;font-size:9px;color:var(--text3);margin-bottom:8px;">TIKTOK</div><div style="font-size:12px;color:var(--text2);">Views: <span style="color:var(--pink);font-family:JetBrains Mono;">${(PD.tiktok?.views||0).toLocaleString()}</span></div><div style="font-size:12px;color:var(--text2);">Seguidores: <span style="color:var(--pink);font-family:JetBrains Mono;">${PD.tiktok?.followers||0}</span></div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:14px;"><div style="font-family:JetBrains Mono;font-size:9px;color:var(--text3);margin-bottom:8px;">INSTAGRAM</div><div style="font-size:12px;color:var(--text2);">Reach: <span style="color:var(--orange);font-family:JetBrains Mono;">${(PD.instagram?.reach||0).toLocaleString()}</span></div><div style="font-size:12px;color:var(--text2);">Seguidores: <span style="color:var(--orange);font-family:JetBrains Mono;">${PD.instagram?.followers||0}</span></div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:14px;"><div style="font-family:JetBrains Mono;font-size:9px;color:var(--text3);margin-bottom:8px;">LINKEDIN</div><div style="font-size:12px;color:var(--text2);">Views: <span style="color:var(--blue);font-family:JetBrains Mono;">${(PD.linkedin?.views||0).toLocaleString()}</span></div><div style="font-size:12px;color:var(--text2);">Seguidores: <span style="color:var(--blue);font-family:JetBrains Mono;">${PD.linkedin?.followers||0}</span></div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:14px;"><div style="font-family:JetBrains Mono;font-size:9px;color:var(--text3);margin-bottom:8px;">POSTS</div><div style="font-size:12px;color:var(--text2);">Publicados: <span style="color:var(--teal);font-family:JetBrains Mono;">${PUB.length}/14</span></div><div style="font-size:12px;color:var(--text2);">KPIs registrados: <span style="color:var(--teal);font-family:JetBrains Mono;">${Object.values(KD).filter(v=>v>0).length}</span></div></div>
+    </div>`;
+}
+
+function cpRep(){navigator.clipboard.writeText(window._rep||'');alert('Informe copiado ✓');}
+function exRep(){
+  const b=new Blob([window._rep||''],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kova_informe_social_'+new Date().toISOString().split('T')[0]+'.txt';a.click();
+}
+
+function exportAll(){
+  const data={posts:POSTS,kpis:KD,platforms:PD,published:PUB,date:new Date().toISOString()};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kova_social_data_'+new Date().toISOString().split('T')[0]+'.json';a.click();
+}
+
+init();
+</script>
+</body>
+</html>
