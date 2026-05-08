@@ -154,6 +154,7 @@ body{background:radial-gradient(ellipse 80% 40% at 10% 0%,rgba(37,196,143,0.05),
   <button class="tab" onclick="switchTab('plat')">Plataformas</button>
   <button class="tab" onclick="switchTab('cm')">CM Agent</button>
   <button class="tab" onclick="switchTab('inf')">Informes</button>
+  <button class="tab" onclick="switchTab('studio')">🎬 Studio</button>
 </div>
 
 <div class="content">
@@ -347,6 +348,131 @@ body{background:radial-gradient(ellipse 80% 40% at 10% 0%,rgba(37,196,143,0.05),
 </div>
 
 </div>
+
+
+<!-- STUDIO -->
+<div class="panel" id="panel-studio">
+  <div style="font-family:Syne;font-size:20px;font-weight:700;margin-bottom:6px;">🎬 Content Studio</div>
+  <div style="font-size:13px;color:var(--text3);margin-bottom:24px;">Genera el material completo listo para producir en Canva, CapCut o cámara</div>
+
+  <!-- SELECTOR -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div class="cm-fl">
+        <div class="cm-lb">Tipo de contenido</div>
+        <select class="cm-sl" id="st-type">
+          <option value="video-tiktok">📱 Video TikTok / Reels (30-45s)</option>
+          <option value="carrusel-ig">🖼 Carrusel Instagram (5-8 slides)</option>
+          <option value="post-linkedin">💼 Post LinkedIn con imagen</option>
+          <option value="story">📖 Story Instagram / Facebook</option>
+          <option value="video-largo">🎥 Video explicativo (60-90s)</option>
+          <option value="thumbnail">🖼 Thumbnail / portada</option>
+        </select>
+      </div>
+      <div class="cm-fl">
+        <div class="cm-lb">Agente / tema</div>
+        <select class="cm-sl" id="st-agent">
+          <option value="nova">NOVA — Respuesta objeciones</option>
+          <option value="alex">ALEX — Simulador prospectos</option>
+          <option value="maia">MAIA — Plan estratégico</option>
+          <option value="kova-general">KOVA — Presentación general</option>
+          <option value="objecion">Objeción de ventas específica</option>
+          <option value="comparativa">KOVA vs ChatGPT</option>
+          <option value="lanzamiento">Lanzamiento oficial</option>
+        </select>
+      </div>
+      <div class="cm-fl">
+        <div class="cm-lb">Contexto extra (opcional)</div>
+        <input type="text" class="cm-in" id="st-ctx" placeholder="Ej: 'objeción: es muy caro'">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-grad" onclick="genStudio()" style="padding:10px 24px;">🎬 Generar material completo</button>
+      <button class="btn" onclick="genCanvaPrompts()" style="padding:10px 24px;">🎨 Solo prompts Canva</button>
+      <button class="btn" onclick="genVideoScript()" style="padding:10px 24px;">📝 Solo guión video</button>
+    </div>
+  </div>
+
+  <!-- OUTPUT TABS -->
+  <div style="display:flex;gap:4px;margin-bottom:16px;" id="studio-tabs">
+    <button class="btn" id="stab-script" onclick="showStudioTab('script')" style="border-color:var(--teal);color:var(--teal);">📝 Guión</button>
+    <button class="btn" id="stab-canva" onclick="showStudioTab('canva')">🎨 Canva paso a paso</button>
+    <button class="btn" id="stab-visual" onclick="showStudioTab('visual')">🖼 Brief visual</button>
+    <button class="btn" id="stab-caption" onclick="showStudioTab('caption')">✍ Caption listo</button>
+    <button class="btn" id="stab-checklist" onclick="showStudioTab('checklist')">✅ Checklist producción</button>
+  </div>
+
+  <div id="studio-output" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;min-height:300px;">
+    <div style="color:var(--text3);font-size:13px;">Selecciona el tipo de contenido y haz clic en "Generar material completo". Recibirás guión, instrucciones Canva paso a paso, brief visual y caption listo.</div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:12px;">
+    <button class="btn" id="st-cp" style="display:none;" onclick="cpStudio()">📋 Copiar</button>
+    <button class="btn" id="st-ex" style="display:none;" onclick="exStudio()">⬇ Exportar TXT</button>
+  </div>
+
+  <!-- CANVA GUIDE -->
+  <div style="margin-top:24px;">
+    <div class="sl">Guía permanente — Cómo usar Canva para KOVA</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;">
+        <div style="color:var(--pink);font-family:JetBrains Mono;font-size:10px;margin-bottom:12px;letter-spacing:.1em;">CARRUSEL INSTAGRAM — PASO A PASO</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+          <strong style="color:var(--text);">1. Abre Canva.com</strong> → Nueva presentación → <strong>Instagram Post (cuadrado 1080x1080)</strong><br>
+          <strong style="color:var(--text);">2. Busca plantilla</strong> → escribe "dark minimal" o "dark professional" en el buscador<br>
+          <strong style="color:var(--text);">3. Colores KOVA:</strong> Fondo: <span style="color:var(--teal);font-family:JetBrains Mono;">#0d0b08</span> | Acento: <span style="color:var(--teal);font-family:JetBrains Mono;">#25C48F</span> | Texto: <span style="color:var(--text);font-family:JetBrains Mono;">#f0ede6</span><br>
+          <strong style="color:var(--text);">4. Fuente:</strong> Título → <strong>DM Sans Bold</strong> | Cuerpo → DM Sans Regular<br>
+          <strong style="color:var(--text);">5. Slide 1:</strong> Título impactante + logo KOVA (K en cuadrado teal)<br>
+          <strong style="color:var(--text);">6. Slides 2-6:</strong> Una idea por slide — texto grande + ícono<br>
+          <strong style="color:var(--text);">7. Último slide:</strong> CTA + "@kovaa_pp" + "kova-app.net"<br>
+          <strong style="color:var(--text);">8. Descarga:</strong> PNG 1080x1080 → sube a Instagram como carrusel
+        </div>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;">
+        <div style="color:var(--orange);font-family:JetBrains Mono;font-size:10px;margin-bottom:12px;letter-spacing:.1em;">VIDEO TIKTOK/REELS — PASO A PASO</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+          <strong style="color:var(--text);">1. Graba</strong> screen recording de la app KOVA en iPhone (Control Center → grabación pantalla)<br>
+          <strong style="color:var(--text);">2. Abre CapCut</strong> → Nueva edición → importa el video<br>
+          <strong style="color:var(--text);">3. Añade gancho</strong> en los primeros 2s: texto grande arriba de la pantalla<br>
+          <strong style="color:var(--text);">4. Subtítulos:</strong> CapCut → "Auto subtítulos" → idioma Español<br>
+          <strong style="color:var(--text);">5. Música:</strong> CapCut → Sonidos → busca trending sin copyright<br>
+          <strong style="color:var(--text);">6. Texto superpuesto:</strong> Añade 2-3 textos clave durante el video<br>
+          <strong style="color:var(--text);">7. CTA final:</strong> "Descarga KOVA gratis → kova-app.net"<br>
+          <strong style="color:var(--text);">8. Exporta</strong> en 1080x1920 → publica directamente desde CapCut
+        </div>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;">
+        <div style="color:var(--blue);font-family:JetBrains Mono;font-size:10px;margin-bottom:12px;letter-spacing:.1em;">IMAGEN LINKEDIN — PASO A PASO</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+          <strong style="color:var(--text);">1. Canva</strong> → Nueva presentación → <strong>LinkedIn Post (1200x627)</strong><br>
+          <strong style="color:var(--text);">2. Diseño limpio:</strong> fondo oscuro + título grande + logo KOVA<br>
+          <strong style="color:var(--text);">3. Colores:</strong> Fondo <span style="color:var(--teal);font-family:JetBrains Mono;">#0d0b08</span> | Texto <span style="color:var(--teal);font-family:JetBrains Mono;">#25C48F</span><br>
+          <strong style="color:var(--text);">4. Usa Canva IA:</strong> escribe el prompt generado por el Studio<br>
+          <strong style="color:var(--text);">5. Incluye:</strong> el dato o stat más impactante del post en grande<br>
+          <strong style="color:var(--text);">6. Descarga</strong> en PNG → adjunta al post de LinkedIn<br>
+          <strong style="color:var(--text);">7. En LinkedIn:</strong> sube imagen ANTES de escribir el texto del post
+        </div>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;">
+        <div style="color:var(--teal);font-family:JetBrains Mono;font-size:10px;margin-bottom:12px;letter-spacing:.1em;">CANVA IA — CÓMO USARLO</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+          <strong style="color:var(--text);">1. En Canva</strong> → haz clic en cualquier elemento de texto<br>
+          <strong style="color:var(--text);">2. Busca "Magic Write"</strong> en la barra lateral izquierda<br>
+          <strong style="color:var(--text);">3. Pega el prompt</strong> generado por el Studio de KOVA<br>
+          <strong style="color:var(--text);">4. Para imágenes:</strong> Elementos → "Genera una imagen" → pega el prompt visual<br>
+          <strong style="color:var(--text);">5. Para fondo IA:</strong> Fondo → "Genera fondo" → describe la escena<br>
+          <strong style="color:var(--text);">6. Ejemplo de prompt:</strong> "Dark tech background with teal glowing lines, minimal, professional, suitable for AI sales app"<br>
+          <strong style="color:var(--text);">7. Ajusta</strong> el resultado con los colores KOVA antes de exportar
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAL -->
 <div class="modal-ov" id="mov" onclick="closeMov(event)">
@@ -634,7 +760,7 @@ OBJETIVO:
 [Qué métrica o resultado busca este contenido]`;
 
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1000})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Error generando contenido';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
@@ -673,7 +799,7 @@ HASHTAGS: [3-5 hashtags]
 POST: [adaptado a Facebook, tono más conversacional]
 NOTA: [puede reutilizar contenido de Instagram con ajustes]`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
@@ -693,7 +819,7 @@ Genera un PLAN SEMANAL completo para los próximos 7 días. Por cada día:
 - KPI que mejora
 Termina con 3 recomendaciones estratégicas basadas en los datos actuales.`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1200})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     document.getElementById('cm-cp-btn').style.display='inline-block';window._cm=txt;
@@ -727,7 +853,7 @@ Genera un ${tn[type]} ejecutivo con:
 
 Sé directo, específico y usa los datos reales.`;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1200})});
     const d=await r.json();const txt=d.content?.[0]?.text||'Error';
     out.innerHTML=`<div class="cm-ot">${txt}</div>`;
     window._rep=txt;
@@ -759,6 +885,175 @@ function exportAll(){
 }
 
 init();
+
+// STUDIO
+let studioData = {};
+
+function showStudioTab(tab) {
+  ['script','canva','visual','caption','checklist'].forEach(t => {
+    const btn = document.getElementById('stab-'+t);
+    if(btn) btn.style.borderColor = t===tab ? 'var(--teal)' : '';
+    if(btn) btn.style.color = t===tab ? 'var(--teal)' : '';
+  });
+  const out = document.getElementById('studio-output');
+  if(studioData[tab]) {
+    out.innerHTML = '<div class="cm-ot" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text2);">'+studioData[tab]+'</div>';
+    window._studioCurrent = studioData[tab];
+  }
+}
+
+async function genStudio() {
+  const type = document.getElementById('st-type').value;
+  const agent = document.getElementById('st-agent').value;
+  const ctx = document.getElementById('st-ctx').value;
+  const out = document.getElementById('studio-output');
+  out.innerHTML = '<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando material completo de producción...</div>';
+  document.getElementById('st-cp').style.display='none';
+  document.getElementById('st-ex').style.display='none';
+
+  const typeNames = {
+    'video-tiktok':'Video TikTok/Reels 30-45 segundos vertical 9:16',
+    'carrusel-ig':'Carrusel Instagram 5-8 slides 1080x1080',
+    'post-linkedin':'Post LinkedIn con imagen 1200x627',
+    'story':'Story Instagram/Facebook vertical 1080x1920',
+    'video-largo':'Video explicativo 60-90 segundos',
+    'thumbnail':'Thumbnail/portada imagen'
+  };
+  const agentNames = {
+    'nova':'NOVA (asistente de ventas que responde objeciones)',
+    'alex':'ALEX (simulador de prospectos difíciles)',
+    'maia':'MAIA (estratega que crea planes de ventas)',
+    'kova-general':'KOVA en general (los 3 agentes)',
+    'objecion':'Una objeción de ventas específica',
+    'comparativa':'Comparativa KOVA vs ChatGPT',
+    'lanzamiento':'Lanzamiento oficial de KOVA'
+  };
+
+  const prompt = `Eres un director creativo experto en contenido para redes sociales de apps SaaS. Creas material de producción profesional y detallado.
+
+KOVA es una app móvil de ventas con IA para pymes hispanohablantes. 3 agentes: NOVA (ventas), ALEX (simulador), MAIA (estratega).
+Colores: Fondo #0d0b08, Teal #25C48F, Texto #f0ede6, Amarillo #ffc350
+Fuente: DM Sans. Handles: @kova.app (TikTok) @kovaa_pp (Instagram). Web: kova-app.net
+${ctx ? 'Contexto específico: '+ctx : ''}
+
+Crea el PAQUETE DE PRODUCCIÓN COMPLETO para: ${typeNames[type]} sobre ${agentNames[agent]}
+
+Responde con exactamente estas 5 secciones separadas por ===SECCION===:
+
+===GUION===
+[Guión completo con timecodes si es video. Cada escena con: tiempo exacto, qué se ve en pantalla, qué se dice/escribe, texto superpuesto]
+
+===CANVA_PASO_A_PASO===
+[Instrucciones EXACTAS para Canva paso a paso numeradas. Incluir: dimensiones, plantilla a buscar, colores HEX exactos, fuentes, qué escribir en cada elemento, prompts para Canva IA si aplica]
+
+===BRIEF_VISUAL===
+[Descripción visual detallada de cada slide/escena. Incluir prompt exacto para Canva IA o Midjourney para cada imagen]
+
+===CAPTION===
+[Caption completo listo para copiar con emojis y hashtags optimizados para la plataforma]
+
+===CHECKLIST===
+[Lista de verificación antes de publicar: archivos necesarios, pasos de edición, elementos a verificar, hora de publicación]`;
+
+  try {
+    const r = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:prompt}], max_tokens:2000})
+    });
+    const d = await r.json();
+    const txt = d.content?.[0]?.text || 'Error';
+    
+    // Parse sections
+    const sections = txt.split('===');
+    studioData = {};
+    for(let i=0; i<sections.length; i++) {
+      const s = sections[i].trim();
+      if(s === 'GUION' && sections[i+1]) studioData.script = sections[i+1].trim();
+      if(s === 'CANVA_PASO_A_PASO' && sections[i+1]) studioData.canva = sections[i+1].trim();
+      if(s === 'BRIEF_VISUAL' && sections[i+1]) studioData.visual = sections[i+1].trim();
+      if(s === 'CAPTION' && sections[i+1]) studioData.caption = sections[i+1].trim();
+      if(s === 'CHECKLIST' && sections[i+1]) studioData.checklist = sections[i+1].trim();
+    }
+    
+    window._studioFull = txt;
+    window._studioCurrent = studioData.script || txt;
+    
+    // Show script by default
+    showStudioTab('script');
+    document.getElementById('st-cp').style.display='inline-block';
+    document.getElementById('st-ex').style.display='inline-block';
+    
+  } catch(e) {
+    out.innerHTML = '<div style="color:var(--pink);">Error de conexión.</div>';
+  }
+}
+
+async function genCanvaPrompts() {
+  const type = document.getElementById('st-type').value;
+  const agent = document.getElementById('st-agent').value;
+  const ctx = document.getElementById('st-ctx').value;
+  const out = document.getElementById('studio-output');
+  out.innerHTML = '<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando prompts para Canva IA...</div>';
+
+  const prompt = `Eres experto en Canva y diseño para redes sociales. Crea PROMPTS EXACTOS para usar en Canva IA (Magic Write y generador de imágenes) para crear contenido de KOVA (app ventas IA).
+
+Colores KOVA: Fondo #0d0b08, Teal #25C48F, Texto #f0ede6
+Tipo: ${type} | Tema: ${agent} ${ctx ? '| Contexto: '+ctx : ''}
+
+Genera:
+1. PROMPT IMAGEN DE FONDO para Canva IA (en inglés, detallado)
+2. PROMPT ELEMENTOS VISUALES para cada slide/escena
+3. TEXTO EXACTO para cada elemento de texto en Canva
+4. PALETA DE COLORES con códigos HEX para cada elemento
+5. INSTRUCCIONES PASO A PASO en Canva (con nombres exactos de menús)`;
+
+  try {
+    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1200})});
+    const d = await r.json();
+    const txt = d.content?.[0]?.text || 'Error';
+    out.innerHTML = '<div class="cm-ot" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text2);">'+txt+'</div>';
+    studioData.canva = txt;
+    window._studioCurrent = txt;
+    document.getElementById('st-cp').style.display='inline-block';
+    document.getElementById('st-ex').style.display='inline-block';
+  } catch(e) { out.innerHTML = '<div style="color:var(--pink);">Error.</div>'; }
+}
+
+async function genVideoScript() {
+  const agent = document.getElementById('st-agent').value;
+  const ctx = document.getElementById('st-ctx').value;
+  const out = document.getElementById('studio-output');
+  out.innerHTML = '<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando guión detallado...</div>';
+
+  const prompt = `Eres guionista experto en videos virales de TikTok e Instagram para apps SaaS. Crea un GUIÓN COMPLETO Y DETALLADO para un video de 30-45 segundos sobre ${agent} de KOVA (app ventas IA para pymes hispanohablantes). ${ctx ? 'Contexto: '+ctx : ''}
+
+El guión debe tener:
+- GANCHO (0-3s): frase exacta que detiene el scroll
+- DESARROLLO (3-35s): escena por escena con timecode exacto, qué se ve en pantalla (screen recording de la app o cara a cámara), qué se dice/escribe, texto superpuesto exacto
+- CTA (35-45s): llamada a la acción exacta
+- NOTAS DE GRABACIÓN: ángulo, iluminación, tips técnicos
+- TEXTO SUPERPUESTO: cada texto con posición (arriba/centro/abajo) y color`;
+
+  try {
+    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1200})});
+    const d = await r.json();
+    const txt = d.content?.[0]?.text || 'Error';
+    out.innerHTML = '<div class="cm-ot" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text2);">'+txt+'</div>';
+    studioData.script = txt;
+    window._studioCurrent = txt;
+    document.getElementById('st-cp').style.display='inline-block';
+    document.getElementById('st-ex').style.display='inline-block';
+  } catch(e) { out.innerHTML = '<div style="color:var(--pink);">Error.</div>'; }
+}
+
+function cpStudio() { navigator.clipboard.writeText(window._studioCurrent||''); alert('Copiado ✓'); }
+function exStudio() {
+  const b = new Blob([window._studioFull||window._studioCurrent||''], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = 'kova_studio_'+new Date().toISOString().split('T')[0]+'.txt'; a.click();
+}
+
 </script>
 </body>
 </html>
