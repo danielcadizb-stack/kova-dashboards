@@ -609,7 +609,7 @@ let PUB=JSON.parse(localStorage.getItem('kd_pub')||'[1,2,3]');
 let CF='all';
 
 function switchTab(n){
-  const names=['ov','cal','con','kpi','plat','cm','inf'];
+  const names=['ov','cal','con','kpi','plat','cm','inf','studio','design'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===n));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');
