@@ -609,7 +609,7 @@ let PUB=JSON.parse(localStorage.getItem('kd_pub')||'[1,2,3]');
 let CF='all';
 
 function switchTab(n){
-  const names=['ov','cal','con','kpi','plat','cm','inf','studio','design'];
+  const names=['ov','cal','con','kpi','plat','cm','inf'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===n));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');
@@ -1240,7 +1240,7 @@ RESPONDE SOLO CON JSON VALIDO sin texto extra ni markdown:
     const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:800})});
     const d = await r.json();
     let txt = d.content?.[0]?.text || '{}';
-    txt = txt.replace(/```json|```/g,'').trim();
+    txt = txt.replace(/\x60\x60\x60json|\x60\x60\x60/g,'').trim();
     const jsonMatch = txt.match(/\{[\s\S]*\}/);
     if(jsonMatch) txt = jsonMatch[0];
     let data;
@@ -1407,7 +1407,7 @@ Responde SOLO con JSON valido:
     const r = await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:600})});
     const d = await r.json();
     let txt = d.content?.[0]?.text || '{}';
-    txt = txt.replace(/```json|```/g,'').trim();
+    txt = txt.replace(/\x60\x60\x60json|\x60\x60\x60/g,'').trim();
     const jsonMatch = txt.match(/\{[\s\S]*\}/);
     if(jsonMatch) txt = jsonMatch[0];
     let data;
