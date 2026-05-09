@@ -486,13 +486,32 @@ body{background:radial-gradient(ellipse 80% 40% at 10% 0%,rgba(37,196,143,0.05),
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;">
       <div class="cm-fl"><div class="cm-lb">Tipo de diseño</div>
         <select class="cm-sl" id="ds-type">
-          <option value="carrusel">Carrusel Instagram (5 slides)</option>
-          <option value="post-cuadrado">Post cuadrado 1:1</option>
-          <option value="story">Story vertical 9:16</option>
-          <option value="linkedin-banner">Banner LinkedIn</option>
-          <option value="tiktok-overlay">Overlay TikTok (texto)</option>
-          <option value="quote">Quote / cita impactante</option>
-        </select>
+  <optgroup label="── INSTAGRAM ──">
+    <option value="carrusel">Carrusel Instagram (5 slides 1080x1080)</option>
+    <option value="post-cuadrado">Post cuadrado Instagram (1080x1080)</option>
+    <option value="story-ig">Story Instagram (1080x1920)</option>
+    <option value="reel-cover">Portada Reel Instagram</option>
+  </optgroup>
+  <optgroup label="── TIKTOK ──">
+    <option value="tiktok-cover">Portada TikTok (1080x1920)</option>
+    <option value="tiktok-overlay">Texto overlay TikTok</option>
+    <option value="tiktok-gancho">Slide gancho TikTok</option>
+  </optgroup>
+  <optgroup label="── LINKEDIN ──">
+    <option value="linkedin-post">Post LinkedIn con imagen (1200x628)</option>
+    <option value="linkedin-carrusel">Carrusel LinkedIn PDF (5 slides)</option>
+    <option value="linkedin-quote">Quote profesional LinkedIn</option>
+  </optgroup>
+  <optgroup label="── FACEBOOK ──">
+    <option value="facebook-post">Post Facebook (1200x630)</option>
+    <option value="facebook-story">Story Facebook (1080x1920)</option>
+  </optgroup>
+  <optgroup label="── UNIVERSAL ──">
+    <option value="quote">Quote impactante (todas las redes)</option>
+    <option value="stat">Estadistica impactante</option>
+    <option value="antes-despues">Antes y despues de KOVA</option>
+  </optgroup>
+</select>
       </div>
       <div class="cm-fl"><div class="cm-lb">Agente / tema</div>
         <select class="cm-sl" id="ds-agent">
@@ -1221,7 +1240,18 @@ Para carrusel genera 5 slides. Para otros tipos genera 1-2 slides maximo. Siempr
     const d = await r.json();
     let txt = d.content?.[0]?.text || '{}';
     txt = txt.replace(/```json|```/g,'').trim();
-    const data = JSON.parse(txt);
+    const jsonMatch = txt.match(/\{[\s\S]*\}/);
+    if(jsonMatch) txt = jsonMatch[0];
+    let data;
+    try { data = JSON.parse(txt); }
+    catch(e) {
+      data = {
+        slides:[{titulo:'KOVA VENTAS CON IA',contenido:'Responde objeciones en segundos. Practica con ALEX. Planifica con MAIA.'},{titulo:'PRUEBALO GRATIS',contenido:'kova-app.net · Sin tarjeta de credito'}],
+        caption:'KOVA transforma como vendes con IA. Descarga gratis.',
+        hashtags:'#KOVA #ventas #IA #emprendimiento #pymes',
+        instrucciones:'Descarga el diseno y publícalo en tus redes.'
+      };
+    }
     currentSlides = data.slides || [];
     currentSlideIdx = 0;
     
@@ -1347,7 +1377,18 @@ Responde SOLO con JSON valido:
     const d = await r.json();
     let txt = d.content?.[0]?.text || '{}';
     txt = txt.replace(/```json|```/g,'').trim();
-    const data = JSON.parse(txt);
+    const jsonMatch = txt.match(/\{[\s\S]*\}/);
+    if(jsonMatch) txt = jsonMatch[0];
+    let data;
+    try { data = JSON.parse(txt); }
+    catch(e) {
+      data = {
+        slides:[{titulo:'KOVA VENTAS CON IA',contenido:'Responde objeciones en segundos. Practica con ALEX. Planifica con MAIA.'},{titulo:'PRUEBALO GRATIS',contenido:'kova-app.net · Sin tarjeta de credito'}],
+        caption:'KOVA transforma como vendes con IA. Descarga gratis.',
+        hashtags:'#KOVA #ventas #IA #emprendimiento #pymes',
+        instrucciones:'Descarga el diseno y publícalo en tus redes.'
+      };
+    }
     
     const items = [
       {key:'carrusel',label:'Carrusel IG (5 slides)',slide:data.carrusel?.slides?.[0]},
