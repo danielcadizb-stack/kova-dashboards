@@ -836,6 +836,7 @@ function renderAlerts() {
   // OK
   if(opsScore >= 70) alerts.push({type:'ok',icon:'🟢',title:'Operaciones saludables ('+opsScore+'%)',desc:'Backend, Supabase, n8n y Sentry funcionando correctamente.'});
   if(KD.security >= 90) alerts.push({type:'ok',icon:'🟢',title:'Seguridad en nivel óptimo ('+KD.security+'/100)',desc:'RLS activo, 0 violations, HTTPS, variables de entorno seguras.'});
+  const ttViews = KD.tt_views || 0;
   if(ttViews >= 500) alerts.push({type:'ok',icon:'🟢',title:'TikTok con tracción orgánica',desc:`${(KD.tt_views||0).toLocaleString()} views con €0 en ads. Canal más efectivo actualmente.`});
   if(mrr >= costs) alerts.push({type:'ok',icon:'🟢',title:'KOVA es rentable',desc:`MRR €${mrr.toFixed(2)} cubre costos de €${costs.toFixed(2)}. Margen positivo.`});
 
