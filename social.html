@@ -504,31 +504,17 @@ var CAL = [
   {d:1,t:'Presentacion NOVA',pl:['TikTok','IG'],pub:true},
   {d:2,t:'Objeciones de ventas',pl:['TikTok','IG','LinkedIn'],pub:true},
   {d:3,t:'ALEX simulador demo',pl:['TikTok','IG'],pub:true},
-  {d:4,t:'Stats ventas B2B',pl:['LinkedIn','IG'],pub:true},
+  {d:4,t:'Stats ventas B2B',pl:['LinkedIn','IG'],pub:false},
   {d:5,t:'MAIA planificacion',pl:['TikTok','IG'],pub:false},
   {d:6,t:'Testimonial formato',pl:['IG','LinkedIn'],pub:false},
-  {d:7,t:'Tip de ventas 1',pl:['TikTok','IG','LinkedIn','FB'],pub:false},
+  {d:7,t:'Tip de ventas #1',pl:['TikTok','IG','LinkedIn','FB'],pub:false},
   {d:8,t:'Antes y despues KOVA',pl:['IG','LinkedIn'],pub:false},
   {d:9,t:'FAQ frecuentes',pl:['TikTok','IG'],pub:false},
   {d:10,t:'Comparativa IA ventas',pl:['LinkedIn','IG'],pub:false},
-  {d:11,t:'Tip de ventas 2',pl:['TikTok','IG','LinkedIn'],pub:false},
-  {d:12,t:'Behind the scenes KOVA',pl:['TikTok','IG'],pub:false},
-  {d:13,t:'Caso de uso real',pl:['LinkedIn','IG'],pub:false},
-  {d:14,t:'Tip de ventas 3',pl:['TikTok','IG','FB'],pub:false},
-  {d:15,t:'MAIA estrategia demo',pl:['TikTok','IG'],pub:false},
-  {d:16,t:'Objecion del mes',pl:['IG','LinkedIn'],pub:false},
-  {d:17,t:'Stats impactantes',pl:['TikTok','IG','LinkedIn'],pub:false},
-  {d:18,t:'Testimonial 2',pl:['IG','LinkedIn','FB'],pub:false},
-  {d:19,t:'ALEX vs vendedor real',pl:['TikTok','IG'],pub:false},
-  {d:20,t:'Cuenta regresiva 48h',pl:['TikTok','IG','Stories'],pub:false},
-  {d:21,t:'LANZAMIENTO OFICIAL',pl:['Todas'],pub:false,launch:true},
-  {d:22,t:'Recap lanzamiento',pl:['TikTok','IG','LinkedIn'],pub:false},
-  {d:23,t:'Primeros usuarios',pl:['IG','LinkedIn','FB'],pub:false},
-  {d:24,t:'Primeras reviews',pl:['TikTok','IG'],pub:false},
-  {d:25,t:'Metricas semana 1',pl:['LinkedIn','IG'],pub:false},
-  {d:26,t:'Tip de ventas 4',pl:['TikTok','IG','FB'],pub:false},
-  {d:27,t:'Caso exito usuario',pl:['LinkedIn','IG'],pub:false},
-  {d:28,t:'KOVA en accion',pl:['TikTok','IG'],pub:false},
+  {d:11,t:'Cuenta regresiva',pl:['TikTok','IG','Stories'],pub:false},
+  {d:12,t:'LANZAMIENTO OFICIAL',pl:['Todas'],pub:false,launch:true},
+  {d:13,t:'Recap lanzamiento',pl:['TikTok','IG','LinkedIn'],pub:false},
+  {d:14,t:'Primeros usuarios',pl:['IG','LinkedIn','FB'],pub:false},
 ];
 
 // PLATFORMS
@@ -546,10 +532,7 @@ var KPIDEFS = [
   {id:'ig_reach',n:'Instagram Reach',obj:5000,p:'Instagram'},
   {id:'ig_followers',n:'Instagram Seguidores',obj:200,p:'Instagram'},
   {id:'li_views',n:'LinkedIn Views',obj:2000,p:'LinkedIn'},
-  {id:'li_followers',n:'LinkedIn Seguidores',obj:100,p:'LinkedIn'},
-  {id:'fb_reach',n:'Facebook Reach',obj:2000,p:'Facebook'},
-  {id:'fb_followers',n:'Facebook Seguidores',obj:100,p:'Facebook'},
-  {id:'posts',n:'Posts publicados',obj:28,p:'General'},
+  {id:'posts',n:'Posts publicados',obj:14,p:'General'},
   {id:'engagement',n:'Engagement rate %',obj:5,p:'General'}
 ];
 
@@ -575,7 +558,7 @@ function switchTab(n) {
 // ===================== OVERVIEW =====================
 function renderOv() {
   var pub = CAL.filter(function(c){return c.pub;}).length;
-  var pct = Math.round(pub/28*100);
+  var pct = Math.round(pub/14*100);
   var daysLeft = 14 - pub;
   var launchDay = 12 - pub;
 
@@ -584,10 +567,10 @@ function renderOv() {
     mc('TikTok Seguidores',KD.tt_followers||0,'Actualiza en Plataformas','mc-pink') +
     mc('Instagram Reach',(KD.ig_reach||0).toLocaleString(),'@kovaa_pp · registra en KPIs','mc-yellow') +
     mc('LinkedIn Views',(KD.li_views||0).toLocaleString(),'KOVA Technologies','mc-blue') +
-    mc('Posts publicados',pub+'/28','de 28 en el calendario','mc-teal') +
+    mc('Posts publicados',pub+'/14','de 14 en el calendario','mc-teal') +
     mc('IG Seguidores',KD.ig_followers||0,'Actualiza en Plataformas','mc-pink') +
     mc('Proximo post','Dia '+(pub+1),'—','mc-yellow') +
-    mc('Dias para lanzamiento',Math.max(0,21-pub),'Dia 12 — 12:00 todas las redes','mc-purple');
+    mc('Dias para lanzamiento',Math.max(0,12-pub),'Dia 12 — 12:00 todas las redes','mc-purple');
 
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('prog-badge').textContent = 'Dia ' + pub + '/14 — ' + pct + '%';
@@ -717,7 +700,7 @@ function buildCMPrompt(ty, ag, to, day, ctx) {
 
   var prompt = 'Eres NOVA-CM, community manager experta de KOVA (app movil ventas IA pymes hispanohablantes). ';
   prompt += 'KOVA: 3 agentes NOVA/ALEX/MAIA. Web: kova-app.net. TikTok: @kova.app. Instagram: @kovaa_pp. ';
-  prompt += 'Planes: Free gratis, Starter 14.99/mes, Pro 29.99/mes, Enterprise 79.99/mes. ';
+  prompt += 'Planes: Free gratis, Starter 14.99/mes, Pro 29.99/mes. ';
   prompt += 'Crea contenido tipo "' + (types[ty]||ty) + '" protagonizado por ' + (agents[ag]||ag);
   prompt += ', tono ' + (tones[to]||to) + ', para el dia ' + day + ' del calendario (tema: ' + dayTopic + '). ';
   if(ctx) prompt += 'Contexto especifico: ' + ctx + '. ';
@@ -1080,13 +1063,13 @@ async function dlAllSlides() {
   var color = agentColors[ag]||'#25C48F';
   for(var i=0; i<currentSlides.length; i++) {
     currentSlideIdx = i; showSlide();
-    await new Promise(function(r){setTimeout(r,500);});
+    await new Promise(function(r){setTimeout(r,300);});
     var preview = document.getElementById('ds-preview');
     try {
-      var canvas = await html2canvas(preview,{backgroundColor:"#0d0b08",scale:2,useCORS:true,allowTaint:true,logging:false});
+      var canvas = await html2canvas(preview,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true});
       var link = document.createElement('a');
       link.download = 'kova_slide_'+(i+1)+'de'+currentSlides.length+'.png';
-      link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      link.href = canvas.toDataURL('image/png'); link.click();
       await new Promise(function(r){setTimeout(r,400);});
     } catch(e){}
   }
