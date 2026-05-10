@@ -700,7 +700,7 @@ function buildCMPrompt(ty, ag, to, day, ctx) {
 
   var prompt = 'Eres NOVA-CM, community manager experta de KOVA (app movil ventas IA pymes hispanohablantes). ';
   prompt += 'KOVA: 3 agentes NOVA/ALEX/MAIA. Web: kova-app.net. TikTok: @kova.app. Instagram: @kovaa_pp. ';
-  prompt += 'Planes: Free gratis, Starter 14.99/mes, Pro 29.99/mes. ';
+  prompt += 'Planes: Free gratis, Starter 14.99/mes, Pro 29.99/mes, Enterprise 79.99/mes. ';
   prompt += 'Crea contenido tipo "' + (types[ty]||ty) + '" protagonizado por ' + (agents[ag]||ag);
   prompt += ', tono ' + (tones[to]||to) + ', para el dia ' + day + ' del calendario (tema: ' + dayTopic + '). ';
   if(ctx) prompt += 'Contexto especifico: ' + ctx + '. ';
@@ -1063,13 +1063,13 @@ async function dlAllSlides() {
   var color = agentColors[ag]||'#25C48F';
   for(var i=0; i<currentSlides.length; i++) {
     currentSlideIdx = i; showSlide();
-    await new Promise(function(r){setTimeout(r,300);});
+    await new Promise(function(r){setTimeout(r,500);});
     var preview = document.getElementById('ds-preview');
     try {
-      var canvas = await html2canvas(preview,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true});
+      var canvas = await html2canvas(preview,{backgroundColor:"#0d0b08",scale:2,useCORS:true,allowTaint:true,logging:false});
       var link = document.createElement('a');
       link.download = 'kova_slide_'+(i+1)+'de'+currentSlides.length+'.png';
-      link.href = canvas.toDataURL('image/png'); link.click();
+      link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link);
       await new Promise(function(r){setTimeout(r,400);});
     } catch(e){}
   }
