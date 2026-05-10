@@ -676,7 +676,7 @@ function renderKPI() {
     var col = pct >= 80 ? 'var(--teal)' : pct >= 40 ? 'var(--yellow)' : 'var(--pink)';
     return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">' +
       '<div style="font-size:13px;color:var(--text2);">' + k.n + ' <span style="font-size:11px;color:var(--text3);">obj:' + k.obj + '</span></div>' +
-      '<div><input type="number" value="' + real + '" onchange="updKPI('' + k.id + '',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;font-family:JetBrains Mono;width:80px;"></div>' +
+      '<div><input type="number" value="' + real + '" data-id="'+ k.id +'" onchange="updKPI(this.dataset.id,this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;font-family:JetBrains Mono;width:80px;"></div>' +
       '<div style="font-family:JetBrains Mono;font-size:12px;color:' + col + ';">' + pct + '%</div>' +
       '<div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;border-radius:2px;background:' + col + ';width:' + pct + '%;"></div></div>' +
       '</div>';
@@ -696,7 +696,7 @@ function renderPlat() {
       '<a href="https://' + key + '.com" target="_blank" class="cbtn" style="font-size:11px;">Abrir</a></div>' +
       plat.kpis.map(function(k) {
         return '<div class="pstat"><span>' + k.charAt(0).toUpperCase()+k.slice(1) + '</span>' +
-          '<input type="number" value="' + (data[k]||0) + '" onchange="updPlat('' + key + '','' + k + '',this.value)">' +
+          '<input type="number" value="' + (data[k]||0) + '" data-plat="'+ key +'" data-key="'+ k +'" onchange="updPlat(this.dataset.plat,this.dataset.key,this.value)">' +
           '</div>';
       }).join('') + '</div>';
   }).join('');
