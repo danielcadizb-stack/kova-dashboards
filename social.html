@@ -1126,11 +1126,11 @@ async function genVideoScript() {
   const agent = document.getElementById('st-agent').value;
   const ctx = document.getElementById('st-ctx').value;
   const out = document.getElementById('studio-output');
-  out.innerHTML = '<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando guion detallado...</div>';
+  out.innerHTML = '<div style="color:var(--text3);font-size:13px;"><span class="spin"></span>Generando guion...</div>';
 
-  const prompt = Crea un guion detallado para video de TikTok/Reels de KOVA sobre  + agent + . 
-    + (ctx ? Contexto:  + ctx.substring(0,150) + .  : `)
-    + Incluye: gancho 0-3s, desarrollo con timecodes, texto superpuesto, CTA final con kova-app.net.;
+  var prompt = 'Crea un guion detallado para video TikTok/Reels de KOVA sobre ' + agent + '.';
+  if(ctx) prompt += ' Contexto: ' + ctx.substring(0,150);
+  prompt += ' Incluye: gancho 0-3s, desarrollo con timecodes, texto superpuesto, CTA kova-app.net.';
 
 
 
