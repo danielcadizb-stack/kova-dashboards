@@ -518,6 +518,21 @@ var KD = JSON.parse(localStorage.getItem('kova_kpis') || JSON.stringify({
 }));
 var METRICS = JSON.parse(localStorage.getItem('kova_metrics') || '[]');
 
+function switchTab(n){
+  var names=['ov','cal','con','kpi','plat','cm','inf','studio','design'];
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',names[i]===n);});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  var panel=document.getElementById('panel-'+n);
+  if(panel) panel.classList.add('active');
+  if(n==='ov') renderOv();
+  if(n==='cal') renderCal();
+  if(n==='con') renderCon();
+  if(n==='kpi') renderKPI();
+  if(n==='plat') renderPlat();
+}
+
+
+
 // CALENDAR DATA
 var CAL = [
   {d:1,t:'Presentacion NOVA',pl:['TikTok','IG'],pub:true},
