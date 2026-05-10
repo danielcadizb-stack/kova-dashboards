@@ -1400,14 +1400,14 @@ async function genAllDesigns() {
   const agentColors = {nova:'#25C48F',alex:'#ffc350',maia:'#f0ede6',kova:'#25C48F',tip:'#4a9eff',stat:'#b06aff'};
   const color = agentColors[agent] || '#25C48F';
   
-  const prompt = `Genera contenido KOVA para 4 formatos diferentes sobre ${agent}. ${ctx?'Contexto: '+ctx:''}
-Responde SOLO con JSON valido:
-{
-  "carrusel": {"slides":[{"titulo":"TITULO","contenido":"Texto max 80 chars"},{"titulo":"TITULO","contenido":"Texto"},{"titulo":"TITULO","contenido":"Texto"},{"titulo":"TITULO","contenido":"Texto"},{"titulo":"DESCARGA KOVA","contenido":"kova-app.net · Tu asistente de ventas con IA"}]},
-  "post": {"titulo":"TITULO","contenido":"Texto impactante max 100 chars"},
-  "story": {"titulo":"TITULO","contenido":"Texto breve y potente"},
-  "quote": {"titulo":"QUOTE","contenido":"Frase memorable de ventas max 80 chars"}
-}`;
+  var p1 = 'Genera contenido KOVA para 4 formatos sobre ' + agent;
+  if(ctx) p1 += '. Contexto: ' + ctx.substring(0,150);
+  p1 += '. Responde SOLO con JSON valido sin markdown ni texto extra. Formato exacto: ';
+  p1 += '{carrusel:{slides:[{titulo:TITULO,contenido:Texto max 80},{titulo:T2,contenido:C2},{titulo:T3,contenido:C3},{titulo:T4,contenido:C4},{titulo:DESCARGA KOVA,contenido:kova-app.net}]},';
+  p1 += 'post:{titulo:TITULO POST,contenido:Texto max 100},';
+  p1 += 'story:{titulo:TITULO STORY,contenido:Texto breve},';
+  p1 += 'quote:{titulo:QUOTE,contenido:Frase memorable}}';
+  const prompt = p1;
 
   try {
     const r = await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:600})});
