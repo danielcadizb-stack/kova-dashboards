@@ -1281,9 +1281,9 @@ function renderSlides(type, color, data) {
   const nav = document.getElementById('design-nav');
   if(currentSlides.length > 1) {
     nav.style.display = 'flex';
-    nav.innerHTML = currentSlides.map((s,i) => 
-      `<div onclick="goSlide(${i},'${type}','${color}')" style="width:${i===currentSlideIdx?24:8}px;height:8px;border-radius:4px;background:${i===currentSlideIdx?'var(--teal)':'var(--border2)'};cursor:pointer;transition:all .2s;"></div>`
-    ).join('');
+    nav.innerHTML = currentSlides.map(function(s,i){
+      var w=i===currentSlideIdx?24:8; var bg=i===currentSlideIdx?"var(--teal)":"var(--border2)"; return "<div onclick=\"goSlide("+i+")\" style=\"width:"+w+"px;height:8px;border-radius:4px;background:"+bg+";cursor:pointer;\"></div>";
+    }).join("");
   }
   
   // Store for export
