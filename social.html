@@ -1281,9 +1281,7 @@ function renderSlides(type, color, data) {
   const nav = document.getElementById('design-nav');
   if(currentSlides.length > 1) {
     nav.style.display = 'flex';
-    nav.innerHTML = currentSlides.map(function(s,i){
-      var w=i===currentSlideIdx?24:8; var bg=i===currentSlideIdx?"var(--teal)":"var(--border2)"; return "<div onclick=\"goSlide("+i+")\" style=\"width:"+w+"px;height:8px;border-radius:4px;background:"+bg+";cursor:pointer;\"></div>";
-    }).join("");
+    nav.innerHTML = currentSlides.map(function(s,i){ var w=i===currentSlideIdx?24:8; var bg=i===currentSlideIdx?'var(--teal)':'var(--border2)'; return '<div onclick="goSlide('+i+')" style="width:'+w+'px;height:8px;border-radius:4px;background:'+bg+';cursor:pointer;"></div>'; }).join('');
   }
   
   // Store for export
@@ -1300,33 +1298,41 @@ function renderInstructions(type, data) {
   const platGuides = {
     'carrusel': '📱 <strong>Instagram Carrusel:</strong><br>1. Descarga todos los slides (Descargar todos PNG)<br>2. Instagram → + → Post → selecciona las 5 imagenes en orden<br>3. Pega caption + hashtags<br>4. ⏰ Hora ideal: 18:00-20:00',
     'post-cuadrado': '📱 <strong>Instagram Post:</strong><br>1. Descarga como PNG<br>2. Instagram → + → Post → sube imagen<br>3. Pega caption y hashtags<br>4. ⏰ Hora ideal: 18:00-20:00',
-    'story-ig': '📖 <strong>Instagram Story:</strong><br>1. Descarga como PNG<br>2. Instagram → tu foto → + Story → sube imagen<br>3. Añade sticker enlace → kova-app.net<br>4. ⏰ Hora ideal: 9:00 o 20:00',
-    'reel-cover': '🎬 <strong>Portada Reel:</strong><br>1. Descarga como PNG<br>2. Al subir el Reel → Editar portada → sube esta imagen<br>3. Mejora el CTR del reel en el feed',
-    'tiktok-cover': '🎵 <strong>TikTok Portada:</strong><br>1. Descarga como PNG<br>2. Al subir video → Seleccionar portada → sube imagen<br>3. ⏰ Hora ideal: 18:00-21:00',
-    'tiktok-overlay': '🎵 <strong>TikTok Overlay:</strong><br>1. Graba screen recording de KOVA<br>2. Importa en CapCut → añade texto como overlay<br>3. Activa subtitulos automaticos<br>4. ⏰ 18:00-21:00',
-    'tiktok-gancho': '🎵 <strong>TikTok Gancho:</strong><br>1. Usa el texto como primeros 3 segundos<br>2. Graba cara a camara diciendo el gancho<br>3. ⏰ Hora ideal: 18:00-21:00',
-    'linkedin-post': '💼 <strong>LinkedIn Post:</strong><br>1. Descarga como PNG<br>2. LinkedIn → + → Post → adjunta imagen<br>3. Pega el caption<br>4. ⏰ Hora ideal: 9:00 o 12:00',
-    'linkedin-carrusel': '💼 <strong>LinkedIn Carrusel PDF:</strong><br>1. Descarga todos los slides PNG<br>2. Combinalos en PDF<br>3. LinkedIn → + → Documento → sube el PDF<br>4. ⏰ 9:00-12:00',
-    'linkedin-quote': '💼 <strong>LinkedIn Quote:</strong><br>1. Descarga como PNG<br>2. Adjunta al post de LinkedIn<br>3. Añade reflexion personal<br>4. ⏰ Hora ideal: 9:00',
-    'facebook-post': '📘 <strong>Facebook Post:</strong><br>1. Descarga como PNG<br>2. Facebook → Crear publicacion → añade imagen<br>3. Pega el caption<br>4. ⏰ 18:00-20:00',
-    'facebook-story': '📘 <strong>Facebook Story:</strong><br>1. Descarga como PNG<br>2. Facebook → + Historia → sube imagen<br>3. Añade enlace → kova-app.net<br>4. ⏰ 9:00 o 20:00',
-    'quote': '💬 <strong>Todas las plataformas:</strong><br>1. Descarga como PNG<br>2. Publica en Instagram, LinkedIn, Facebook y Twitter/X<br>3. Ideal tambien para Stories',
-    'stat': '📊 <strong>Estadistica — todas las redes:</strong><br>1. Descarga como PNG<br>2. Publica en todas las plataformas<br>3. Las estadisticas generan alto engagement',
-    'antes-despues': '🔄 <strong>Antes y Despues:</strong><br>1. Descarga como PNG<br>2. Publica en Instagram, LinkedIn y Facebook<br>3. Muy alto engagement en todas las redes',
+    'story-ig': '📖 <strong>Instagram Story:</strong><br>1. Descarga como PNG<br>2. Instagram → tu foto → + Story → sube imagen<br>3. Sticker enlace → kova-app.net<br>4. ⏰ 9:00 o 20:00',
+    'reel-cover': '🎬 <strong>Portada Reel:</strong><br>1. Descarga como PNG<br>2. Al subir el Reel → Editar portada → sube imagen',
+    'tiktok-cover': '🎵 <strong>TikTok Portada:</strong><br>1. Descarga como PNG<br>2. Al subir video → Seleccionar portada<br>3. ⏰ 18:00-21:00',
+    'tiktok-overlay': '🎵 <strong>TikTok Overlay:</strong><br>1. Graba screen recording de KOVA<br>2. Importa en CapCut → añade texto<br>3. ⏰ 18:00-21:00',
+    'tiktok-gancho': '🎵 <strong>TikTok Gancho:</strong><br>1. Usa el texto como primeros 3 segundos<br>2. ⏰ 18:00-21:00',
+    'linkedin-post': '💼 <strong>LinkedIn Post:</strong><br>1. Descarga como PNG<br>2. LinkedIn → + → Post → adjunta imagen<br>3. ⏰ 9:00 o 12:00',
+    'linkedin-carrusel': '💼 <strong>LinkedIn Carrusel PDF:</strong><br>1. Descarga todos los slides PNG<br>2. Combinalos en PDF<br>3. LinkedIn → + → Documento → sube el PDF',
+    'linkedin-quote': '💼 <strong>LinkedIn Quote:</strong><br>1. Descarga como PNG<br>2. Adjunta al post de LinkedIn',
+    'facebook-post': '📘 <strong>Facebook Post:</strong><br>1. Descarga como PNG<br>2. Facebook → Crear publicacion → añade imagen<br>3. ⏰ 18:00-20:00',
+    'facebook-story': '📘 <strong>Facebook Story:</strong><br>1. Descarga como PNG<br>2. Facebook → + Historia → sube imagen',
+    'quote': '💬 <strong>Todas las plataformas:</strong><br>1. Descarga como PNG<br>2. Publica en Instagram, LinkedIn, Facebook y Twitter/X',
+    'stat': '📊 <strong>Estadistica — todas las redes:</strong><br>1. Descarga como PNG<br>2. Publica en todas las plataformas',
+    'antes-despues': '🔄 <strong>Antes y Despues:</strong><br>1. Descarga como PNG<br>2. Publica en Instagram, LinkedIn y Facebook',
   };
-  
-  instrDiv.innerHTML = `
-    <div style="font-size:13px;color:var(--text2);line-height:1.9;">
-      ${platGuides[type] || 'Descarga y publica en tus redes sociales.'}
-    </div>
-    ${data.caption ? `
-    <div style="margin-top:16px;">
-      <div style="font-family:JetBrains Mono;font-size:10px;color:var(--text3);letter-spacing:.1em;margin-bottom:6px;">CAPTION LISTO PARA COPIAR</div>
-      <div style="background:var(--bg3);border-radius:8px;padding:12px;font-size:12px;color:var(--text2);line-height:1.7;">${data.caption}</div>
-      <button class="cbtn" style="margin-top:8px;width:100%;" onclick="navigator.clipboard.writeText('${(data.caption+'\n\n'+data.hashtags).replace(/'/g,"\'")}');alert('Copiado ✓')">📋 Copiar caption + hashtags</button>
-    </div>` : ''}
-  `;
+  var guide = platGuides[type] || 'Descarga y publica en tus redes sociales.';
+  var captionHTML = '';
+  if(data && data.caption) {
+    var fullText = (data.caption + ' ' + (data.hashtags||'')).replace(/'/g, '');
+    captionHTML = '<div style="margin-top:16px;">'
+      + '<div style="font-family:JetBrains Mono;font-size:10px;color:var(--text3);letter-spacing:.1em;margin-bottom:6px;">CAPTION LISTO PARA COPIAR</div>'
+      + '<div style="background:var(--bg3);border-radius:8px;padding:12px;font-size:12px;color:var(--text2);line-height:1.7;">' + (data.caption||'') + '</div>'
+      + '<button class="cbtn" style="margin-top:8px;width:100%;" onclick="cpCaption()">Copiar caption + hashtags</button>'
+      + '</div>';
+  }
+  instrDiv.innerHTML = '<div style="font-size:13px;color:var(--text2);line-height:1.9;">' + guide + '</div>' + captionHTML;
+  window._captionData = data;
 }
+
+function cpCaption() {
+  if(window._captionData) {
+    navigator.clipboard.writeText((window._captionData.caption||'') + ' ' + (window._captionData.hashtags||''));
+    alert('Copiado!');
+  }
+}
+
 
 async function downloadDesign() {
   const preview = document.getElementById('design-preview');
