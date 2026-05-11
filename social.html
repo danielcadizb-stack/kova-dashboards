@@ -800,9 +800,9 @@ function makeSlide(title, content, accent, w, h) {
   var tpx=title.length>25?Math.round(w*0.058):title.length>18?Math.round(w*0.068):Math.round(w*0.082);
   var spx=Math.round(w*0.028), bpx=Math.round(w*0.034);
   var dotIdx=content.indexOf('.');
-  var rawSub=dotIdx>0&&dotIdx<50?content.substring(0,dotIdx):content.split(' ').slice(0,4).join(' ');
-  var sub=rawSub.toUpperCase();
-  if(sub.length>38) sub=sub.substring(0,36)+'..';
+  // Subtitle: max 4 words always
+  var subWords=content.split(' ').slice(0,4).join(' ');
+  var sub=subWords.toUpperCase();
   var body=dotIdx>0&&dotIdx<42?content.substring(dotIdx+1).trim():'';
   var gs=Math.round(w*0.1);
   return '<div style="width:'+w+'px;height:'+h+'px;background:'+bg+';position:relative;overflow:hidden;font-family:\'DM Sans\',sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:'+pad+'px;box-sizing:border-box;">'
