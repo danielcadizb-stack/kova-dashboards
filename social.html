@@ -474,7 +474,7 @@ function renderOv() {
 
   document.getElementById('ov-status').innerHTML =
     '<div style="display:flex;flex-wrap:wrap;gap:10px;">' +
-    '<span class="badge b-teal">&#10003; CM Agent activo</span>' +
+    '<span class="badge b-teal">OK CM Agent activo</span>' +
     '<span class="badge b-teal">&#10003; Dise?os PNG disponibles</span>' +
     '<span class="badge b-yellow">&#9203; iOS ? esperando aprobacion Apple</span>' +
     '<span class="badge b-yellow">&#9203; Android ? prueba cerrada en curso</span>' +
@@ -488,19 +488,19 @@ function renderOv() {
     {label:'LinkedIn',val:KD.li_views||0,color:'#4a9eff'},
     {label:'Facebook',val:KD.fb_reach||0,color:'#b06aff'}
   ];
-  var svg = '<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">';
+  var svg = '<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">';
   var angle = -Math.PI/2;
   slices.forEach(function(s) {
     var pct = s.val/total;
     var sweep = pct*2*Math.PI;
     if(sweep < 0.01) { angle+=sweep; return; }
-    var x1=60+55*Math.cos(angle), y1=60+55*Math.sin(angle);
+    var x1=80+70*Math.cos(angle), y1=80+70*Math.sin(angle);
     angle+=sweep;
-    var x2=60+55*Math.cos(angle), y2=60+55*Math.sin(angle);
+    var x2=80+70*Math.cos(angle), y2=80+70*Math.sin(angle);
     var large=sweep>Math.PI?1:0;
     svg+='<path d="M60,60 L'+x1+','+y1+' A55,55 0 '+large+',1 '+x2+','+y2+' Z" fill="'+s.color+'" opacity="0.85"/>';
   });
-  svg += '<circle cx="60" cy="60" r="30" fill="#0a0c10"/></svg>';
+  svg += '<circle cx="80" cy="80" r="38" fill="#0a0c10"/></svg>';
   var legend = slices.map(function(s){
     var pct=total>1?Math.round(s.val/total*100):0;
     return '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:'+s.color+';flex-shrink:0;"></div>'+s.label+' <span style="color:'+s.color+';font-family:JetBrains Mono;">'+pct+'%</span></div>';
