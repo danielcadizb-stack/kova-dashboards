@@ -209,14 +209,7 @@ body{background:radial-gradient(ellipse 60% 40% at 0% 0%,rgba(37,196,143,0.05),t
 
 <!-- CONTENIDO -->
 <div class="panel" id="panel-con">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;">
-    <div class="sl">Registro de publicaciones</div>
-    <table class="tbl">
-      <thead><tr><th>D&iacute;a</th><th>Plataforma</th><th>Tipo</th><th>Agente</th><th>Estado</th><th>Acci&oacute;n</th></tr></thead>
-      <tbody id="con-table"></tbody>
-    </table>
-  </div>
-</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="sl" style="margin:0;">Registro diario de metricas</div><button class="cbtn" onclick="saveAllMetrics()">Guardar y sincronizar KPIs</button></div><div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;"><div class="cm-fl"><div class="cm-lb">Dia</div><select class="cm-sl" id="m-day" style="font-size:12px;"></select></div><div class="cm-fl"><div class="cm-lb">Plataforma</div><select class="cm-sl" id="m-plat" style="font-size:12px;"><option value="tiktok">TikTok</option><option value="instagram">Instagram</option><option value="linkedin">LinkedIn</option><option value="facebook">Facebook</option></select></div><div class="cm-fl"><div class="cm-lb">Views</div><input type="number" class="cm-in" id="m-views" placeholder="0" min="0"></div><div class="cm-fl"><div class="cm-lb">Likes</div><input type="number" class="cm-in" id="m-likes" placeholder="0" min="0"></div><div class="cm-fl"><div class="cm-lb">Comentarios</div><input type="number" class="cm-in" id="m-comments" placeholder="0" min="0"></div><div class="cm-fl"><div class="cm-lb">Compartidos</div><input type="number" class="cm-in" id="m-shares" placeholder="0" min="0"></div><div class="cm-fl"><div class="cm-lb">Seguidores</div><input type="number" class="cm-in" id="m-followers" placeholder="0" min="0"></div></div><button class="btn btn-grad" onclick="addMetric()" style="padding:8px 20px;">+ Agregar registro</button></div><table class="tbl"><thead><tr><th>Dia</th><th>Plataforma</th><th>Views</th><th>Likes</th><th>Comentarios</th><th>Compartidos</th><th>Seguidores</th><th></th></tr></thead><tbody id="con-table"></tbody></table><div style="margin-top:14px;padding:14px;background:var(--bg3);border-radius:10px;"><div class="sl">Totales acumulados</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;" id="con-totals"></div></div></div>
 
 <!-- KPIs -->
 <div class="panel" id="panel-kpi">
@@ -311,7 +304,7 @@ body{background:radial-gradient(ellipse 60% 40% at 0% 0%,rgba(37,196,143,0.05),t
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
       <button class="btn" onclick="genRep('diario')" style="border-color:var(--purple);color:var(--purple);">Diario</button>
       <button class="btn" onclick="genRep('semanal')">Semanal</button>
-      <button class="btn" onclick="genRep('campana')">Campa&ntilde;a 14 dias</button>
+      <button class="btn" onclick="genRep('mensual')">Mensual</button>
       <button class="btn" onclick="genRep('estrategia')">Estrategia</button>
     </div>
     <div class="cm-ot" id="rep-out">Selecciona el tipo de informe.</div>
