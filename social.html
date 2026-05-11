@@ -614,9 +614,63 @@ function genForDay(d) {
   el.innerHTML = '<span class="spin"></span>Generando contenido...';
   var prompt = 'Genera un post completo de redes sociales para KOVA (app ventas IA) sobre el tema: "' + c.t + '". Plataformas: ' + c.pl.join(', ') + '. Incluye caption con emojis, hashtags y tip de publicacion.';
   callAI(prompt, function(txt) {
-    el.innerHTML = txt;
+    var data;
+    try {
+      var match = txt.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : txt);
+    } catch(e) {
+      data = {
+        slides:[
+          {titulo:'KOVA VENTAS CON IA',contenido:'Tu equipo de ventas con IA'},
+          {titulo:'NOVA RESPONDE',contenido:'Objeciones resueltas al instante'},
+          {titulo:'ALEX SIMULA',contenido:'Practica antes del pitch real'},
+          {titulo:'MAIA PLANIFICA',contenido:'Plan de ventas personalizado'},
+          {titulo:'DESCARGA GRATIS',contenido:'kova-app.net sin tarjeta'}
+        ],
+        caption:'KOVA transforma como vendes. kova-app.net',
+        hashtags:'#KOVA #ventas #IA #pymes',
+        instrucciones:'Publica entre 18-20h para mayor alcance.'
+      };
+    }
+    var slides = data.slides || [];
+    if (!slides.length) slides = [{titulo:'KOVA',contenido:'kova-app.net'}];
+    currentSlides = slides;
+    currentSlideIdx = 0;
+    var isVertical = ['story','tiktok','tiktok-overlay'].indexOf(ty) > -1;
+    var sw = isVertical ? 225 : 400;
+    var sh = isVertical ? 400 : 400;
+    preview.innerHTML = makeSlide(slides[0].titulo, slides[0].contenido, accent, sw, sh);
+    applyLogo('slide-logo-slot');
+    if (slides.length > 1) {
+      nav.style.display = 'flex';
+      nav.innerHTML = slides.map(function(s, i) {
+        var dot = document.createElement('div');
+        dot.className = 'ds-dot';
+        dot.style.width = (i === 0 ? 24 : 8) + 'px';
+        dot.dataset.idx = i;
+        dot.dataset.ty = ty;
+        dot.dataset.accent = accent;
+        dot.dataset.sw = sw;
+        dot.dataset.sh = sh;
+        dot.onclick = function() {
+          goSlide(parseInt(this.dataset.idx), this.dataset.ty, this.dataset.accent, parseInt(this.dataset.sw), parseInt(this.dataset.sh));
+        };
+        return dot.outerHTML;
+      }).join('');
+    }
+    var guide = PLAT_GUIDES[ty] || 'Descarga y publica en tus redes sociales.';
+    if (data.instrucciones) guide = data.instrucciones + ' ' + (PLAT_GUIDES[ty] || '');
+    inst.innerHTML = guide;
+    if (data.caption) {
+      window._designCaption = (data.caption || '') + '\n\n' + (data.hashtags || '');
+      document.getElementById('ds-caption-text').innerHTML = data.caption + '<br><br>' + (data.hashtags || '');
+      document.getElementById('ds-caption-area').style.display = 'block';
+    }
+    document.getElementById('dl-slide-btn').style.display = 'inline-block';
+    if (slides.length > 1) document.getElementById('dl-all-btn').style.display = 'inline-block';
   }, function() {
-    el.innerHTML = 'Error al generar. Intenta de nuevo.';
+    preview.innerHTML = '<div style="color:var(--pink);font-size:12px;">Error de conexion.</div>';
+  });
   });
 }
 
