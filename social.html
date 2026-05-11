@@ -1056,12 +1056,9 @@ function genDesign() {
     if (slides.length > 1) {
       nav.style.display = 'flex';
       nav.innerHTML = slides.map(function(s, i) {
-        var dot = document.createElement('div');
-        dot.className = 'ds-dot';
-        dot.style.width = (i === 0 ? 24 : 8) + 'px';
-        dot.dataset.idx = i;
-        dot.onclick = function() { goSlide(parseInt(this.dataset.idx), ty, accent, w, h); };
-        return dot.outerHTML;
+        var w = i === 0 ? 24 : 8;
+        var onclick = 'goSlide(' + i + ',' + JSON.stringify(ty) + ',' + JSON.stringify(accent) + ',' + sw + ',' + sh + ')';
+        return '<div class="ds-dot" style="width:' + w + 'px;" onclick="' + onclick + '"></div>';
       }).join('');
     }
 
