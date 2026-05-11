@@ -789,23 +789,31 @@ function makeSlide(title, content, accent, w, h) {
   accent = accent || '#25C48F';
   w = w || 400;
   h = h || 400;
+  var titleSize = w >= 400 ? '28' : '20';
+  var subtitleSize = w >= 400 ? '11' : '9';
+  var contentSize = w >= 400 ? '16' : '13';
+  var parts = content.split('.');
+  var subtitle = parts[0] ? parts[0].toUpperCase().trim() : '';
+  var body = parts.slice(1).join('.').trim();
+  if (!body) { body = content; subtitle = ''; }
   return '<div style="width:' + w + 'px;height:' + h + 'px;background:#0a0c10;position:relative;overflow:hidden;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:32px;box-sizing:border-box;">' +
-    '<div style="position:absolute;inset:0;background-image:linear-gradient(rgba(37,196,143,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(37,196,143,0.03) 1px,transparent 1px);background-size:40px 40px;"></div>' +
-    '<div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,' + accent + '20,transparent 70%);"></div>' +
+    '<div style="position:absolute;inset:0;background-image:linear-gradient(rgba(37,196,143,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(37,196,143,0.04) 1px,transparent 1px);background-size:36px 36px;"></div>' +
     '<div style="display:flex;align-items:center;gap:10px;position:relative;">' +
-    '<div id="slide-logo-slot" style="width:32px;height:32px;border-radius:8px;overflow:hidden;"></div>' +
-    '<div style="font-family:Syne;font-weight:800;font-size:13px;color:' + accent + ';letter-spacing:.08em;">KOVA</div>' +
+    '<div id="slide-logo-slot" style="width:36px;height:36px;border-radius:8px;overflow:hidden;background:rgba(37,196,143,0.1);display:flex;align-items:center;justify-content:center;font-family:Syne;font-weight:800;font-size:14px;color:' + accent + ';">K</div>' +
+    '<div style="font-family:Syne;font-weight:800;font-size:14px;color:' + accent + ';letter-spacing:.06em;">KOVA</div>' +
     '</div>' +
-    '<div style="position:relative;">' +
-    '<div style="font-family:Syne;font-weight:800;font-size:' + (w > 400 ? '22' : '18') + 'px;color:#f0ede6;line-height:1.2;margin-bottom:12px;">' + title + '</div>' +
-    '<div style="font-size:13px;color:#a09b91;line-height:1.6;">' + content + '</div>' +
+    '<div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 0;">' +
+    (subtitle ? '<div style="font-family:JetBrains Mono;font-size:' + subtitleSize + 'px;color:' + accent + ';letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;">' + subtitle + '</div>' : '') +
+    '<div style="font-family:Syne;font-weight:800;font-size:' + titleSize + 'px;color:#ffffff;line-height:1.15;">' + title + '</div>' +
+    (body ? '<div style="font-size:' + contentSize + 'px;color:#8a9ab5;line-height:1.6;margin-top:12px;">' + body + '</div>' : '') +
     '</div>' +
     '<div style="display:flex;justify-content:space-between;align-items:center;position:relative;">' +
-    '<div style="font-size:10px;color:' + accent + ';font-family:JetBrains Mono;">kova-app.net</div>' +
-    '<div style="width:20px;height:2px;background:' + accent + ';border-radius:1px;"></div>' +
+    '<div style="font-size:10px;color:rgba(255,255,255,0.3);font-family:JetBrains Mono;">kova-app.net</div>' +
+    '<div style="width:24px;height:2px;background:' + accent + ';border-radius:1px;"></div>' +
     '</div>' +
     '</div>';
 }
+
 
 function genDesign() {
   var ty = document.getElementById('ds-ty').value;
