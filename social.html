@@ -475,11 +475,39 @@ function renderOv() {
 
   document.getElementById('ov-status').innerHTML =
     '<div style="display:flex;flex-wrap:wrap;gap:10px;">' +
-    '<span class="badge b-teal">✓ CM Agent activo</span>' +
-    '<span class="badge b-teal">✓ Diseños PNG disponibles</span>' +
-    '<span class="badge b-yellow">⏳ iOS — esperando aprobación Apple</span>' +
-    '<span class="badge b-yellow">⏳ Android — prueba cerrada en curso</span>' +
+    '<span class="badge b-teal">&#10003; CM Agent activo</span>' +
+    '<span class="badge b-teal">&#10003; Dise?os PNG disponibles</span>' +
+    '<span class="badge b-yellow">&#9203; iOS ? esperando aprobacion Apple</span>' +
+    '<span class="badge b-yellow">&#9203; Android ? prueba cerrada en curso</span>' +
     '</div>';
+
+  // Pie chart
+  var total = (KD.tt_views||0)+(KD.ig_reach||0)+(KD.li_views||0)+(KD.fb_reach||0)||1;
+  var slices = [
+    {label:'TikTok',val:KD.tt_views||0,color:'#25C48F'},
+    {label:'Instagram',val:KD.ig_reach||0,color:'#FF4FA0'},
+    {label:'LinkedIn',val:KD.li_views||0,color:'#4a9eff'},
+    {label:'Facebook',val:KD.fb_reach||0,color:'#b06aff'}
+  ];
+  var svg = '<svg viewBox="0 0 120 120" width="120" height="120">';
+  var angle = -Math.PI/2;
+  slices.forEach(function(s) {
+    var pct = s.val/total;
+    var sweep = pct*2*Math.PI;
+    if(sweep < 0.01) { angle+=sweep; return; }
+    var x1=60+55*Math.cos(angle), y1=60+55*Math.sin(angle);
+    angle+=sweep;
+    var x2=60+55*Math.cos(angle), y2=60+55*Math.sin(angle);
+    var large=sweep>Math.PI?1:0;
+    svg+='<path d="M60,60 L'+x1+','+y1+' A55,55 0 '+large+',1 '+x2+','+y2+' Z" fill="'+s.color+'" opacity="0.85"/>';
+  });
+  svg+='<circle cx="60" cy="60" r="30" fill="#0a0c10"/></svg>';
+  var legend = slices.map(function(s){
+    var pct=total>1?Math.round(s.val/total*100):0;
+    return '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:'+s.color+';flex-shrink:0;"></div>'+s.label+' <span style="color:'+s.color+';font-family:JetBrains Mono;">'+pct+'%</span></div>';
+  }).join('');
+  var chartEl = document.getElementById('ov-chart');
+  if(chartEl) chartEl.innerHTML = '<div style="display:flex;align-items:center;gap:20px;">'+svg+'<div style="display:flex;flex-direction:column;gap:8px;">'+legend+'</div></div>';
 }
 
 // ─── CALENDARIO ─────────────────────────────────────────────────────────────
