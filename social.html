@@ -877,8 +877,9 @@ function genDesign() {
     if (data.slides.length > 1) {
       nav.style.display = 'flex';
       nav.innerHTML = data.slides.map(function(s,i){
-        return '<div class="ds-dot" style="width:'+(i===0?24:8)+'px;" onclick="goSlide('+i+',''+ty+'',''+accent+'','+sw+','+sh+')"></div>';
+        return '<div class="ds-dot" style="width:'+(i===0?24:8)+'px;" data-i="'+i+'" onclick="goSlide(parseInt(this.dataset.i),window.currentTy,window.currentAccent,window.currentSW,window.currentSH)"></div>';
       }).join('');
+      window.currentTy=ty; window.currentAccent=accent; window.currentSW=sw; window.currentSH=sh;
     }
     var guide = PLAT_GUIDES[ty] || 'Publica en tus redes sociales.';
     if (data.instrucciones) guide = data.instrucciones + ' ' + guide;
