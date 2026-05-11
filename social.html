@@ -993,7 +993,8 @@ function genDesign() {
 
   var prompt = 'Eres diseñador de contenido para KOVA (app ventas IA para pymes hispanohablantes). NOVA responde objeciones, ALEX simula prospectos, MAIA crea estrategias. Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + '.';
   if (ctx) prompt += ' Tema especifico: ' + ctx + '.';
-  prompt += ' Genera exactamente ' + slideCount + ' slides. REGLAS: titulo maximo 5 palabras impactantes sin emojis, contenido una estadistica o dato corto maximo 8 palabras sin emojis. Responde SOLO JSON sin texto extra:';
+  prompt += ' Genera exactamente ' + slideCount + ' slides DIFERENTES sobre el tema. REGLAS CRITICAS: titulo maximo 4 palabras sin emojis, contenido maximo 7 palabras sin emojis. Responde SOLO con este JSON valido (reemplaza los valores):';
+  prompt += ' {"slides":[{"titulo":"GANCHO IMPACTANTE","contenido":"dato o pregunta corta"},{"titulo":"TITULO DOS","contenido":"punto clave dos"},{"titulo":"TITULO TRES","contenido":"punto clave tres"},{"titulo":"TITULO CUATRO","contenido":"punto clave cuatro"},{"titulo":"DESCARGA KOVA HOY","contenido":"kova-app.net gratis"}],"caption":"caption completo con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip de publicacion"}';
 
   callAI(prompt, function(txt) {
     var data;
