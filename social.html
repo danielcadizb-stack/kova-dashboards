@@ -489,7 +489,7 @@ function renderOv() {
     {label:'LinkedIn',val:KD.li_views||0,color:'#4a9eff'},
     {label:'Facebook',val:KD.fb_reach||0,color:'#b06aff'}
   ];
-  var svg = '<svg viewBox="0 0 120 120" width="120" height="120">';
+  var svg = '<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">';
   var angle = -Math.PI/2;
   slices.forEach(function(s) {
     var pct = s.val/total;
@@ -501,7 +501,7 @@ function renderOv() {
     var large=sweep>Math.PI?1:0;
     svg+='<path d="M60,60 L'+x1+','+y1+' A55,55 0 '+large+',1 '+x2+','+y2+' Z" fill="'+s.color+'" opacity="0.85"/>';
   });
-  svg+='<circle cx="60" cy="60" r="30" fill="#0a0c10"/></svg>';
+  svg += '<circle cx="60" cy="60" r="30" fill="#0a0c10"/></svg>';
   var legend = slices.map(function(s){
     var pct=total>1?Math.round(s.val/total*100):0;
     return '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:'+s.color+';flex-shrink:0;"></div>'+s.label+' <span style="color:'+s.color+';font-family:JetBrains Mono;">'+pct+'%</span></div>';
