@@ -616,8 +616,17 @@ function genForDay(d) {
   callAI(prompt, function(txt) {
     var data;
     try {
-      var match = txt.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : txt);
+      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+      var match = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : clean);
+      // Truncate long content to fit slides
+      if (data.slides) data.slides = data.slides.map(function(s) {
+        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
+        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
+        if (t.length > 35) t = t.substring(0,33)+'..';
+        if (co.length > 50) co = co.substring(0,48)+'..';
+        return {titulo:t, contenido:co};
+      });
     } catch(e) {
       data = {
         slides:[
@@ -1052,8 +1061,17 @@ function genDesign() {
   callAI(prompt, function(txt) {
     var data;
     try {
-      var match = txt.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : txt);
+      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+      var match = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : clean);
+      // Truncate long content to fit slides
+      if (data.slides) data.slides = data.slides.map(function(s) {
+        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
+        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
+        if (t.length > 35) t = t.substring(0,33)+'..';
+        if (co.length > 50) co = co.substring(0,48)+'..';
+        return {titulo:t, contenido:co};
+      });
     } catch(e) {
       data = {
         slides:[{titulo:'KOVA VENTAS CON IA', contenido:'Responde objeciones en segundos. Practica con ALEX. Planifica con MAIA.'}, {titulo:'DESCARGA GRATIS', contenido:'kova-app.net · Sin tarjeta de credito'}],
@@ -1169,8 +1187,17 @@ function genPack() {
   callAI(prompt, function(txt) {
     var data;
     try {
-      var match = txt.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : txt);
+      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+      var match = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : clean);
+      // Truncate long content to fit slides
+      if (data.slides) data.slides = data.slides.map(function(s) {
+        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
+        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
+        if (t.length > 35) t = t.substring(0,33)+'..';
+        if (co.length > 50) co = co.substring(0,48)+'..';
+        return {titulo:t, contenido:co};
+      });
     } catch(e) {
       data = {
         ig:{titulo:'KOVA VENTAS IA',contenido:'Tu asistente de ventas disponible 24/7.'},
@@ -1300,8 +1327,17 @@ function genVideoAssets() {
   callAI(prompt, function(txt) {
     var data;
     try {
-      var match = txt.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : txt);
+      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+      var match = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : clean);
+      // Truncate long content to fit slides
+      if (data.slides) data.slides = data.slides.map(function(s) {
+        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
+        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
+        if (t.length > 35) t = t.substring(0,33)+'..';
+        if (co.length > 50) co = co.substring(0,48)+'..';
+        return {titulo:t, contenido:co};
+      });
     } catch(e) {
       data = {
         guion: txt,
