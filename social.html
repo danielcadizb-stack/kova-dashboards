@@ -353,7 +353,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
 
     <!-- VIDEO ASSET GENERATOR -->
     <div style="border-top:1px solid var(--border);margin-top:24px;padding-top:24px;">
-      <div class="sl">🎬 Generador de assets para video (CapCut/Reels)</div>
+      <div class="sl">🎬 Generador de assets para video (Canva/Reels)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
         <div class="cm-fl">
           <div class="cm-lb">Plataforma destino</div>
@@ -384,7 +384,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
         <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);">
           <button class="tab active" id="vtab-script" onclick="switchVTab('script')" style="font-size:12px;">📝 Guión</button>
           <button class="tab" id="vtab-slides" onclick="switchVTab('slides')" style="font-size:12px;">🖼 Slides de texto</button>
-          <button class="tab" id="vtab-capcut" onclick="switchVTab('capcut')" style="font-size:12px;">✂ CapCut paso a paso</button>
+          <button class="tab" id="vtab-canva" onclick="switchVTab('canva')" style="font-size:12px;">✂ Canva paso a paso</button>
           <button class="tab" id="vtab-caption" onclick="switchVTab('caption')" style="font-size:12px;">📢 Caption</button>
         </div>
 
@@ -396,14 +396,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
 
         <!-- Slides panel -->
         <div id="vpanel-slides" style="display:none;">
-          <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Slides de texto para superponer en el video — descarga cada uno como PNG y úsalo en CapCut como overlay.</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Slides de texto para superponer en el video — descarga cada uno como PNG y úsalo en Canva como overlay.</div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;" id="vid-slides-grid"></div>
         </div>
 
-        <!-- CapCut panel -->
-        <div id="vpanel-capcut" style="display:none;">
-          <div class="out" id="vid-capcut-out" style="white-space:pre-wrap;"></div>
-          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('capcut')">Copiar instrucciones</button>
+        <!-- Canva panel -->
+        <div id="vpanel-canva" style="display:none;">
+          <div class="out" id="vid-canva-out" style="white-space:pre-wrap;"></div>
+          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('canva')">Copiar instrucciones</button>
         </div>
 
         <!-- Caption panel -->
@@ -867,7 +867,7 @@ var PLAT_GUIDES = {
   post: '📱 Instagram Post: Descarga PNG → Instagram → + → Post → sube imagen → caption y hashtags → 18:00-20:00.',
   story: '📖 Instagram Story: Descarga PNG → tu foto de perfil → + Historia → sube imagen → añade sticker enlace kova-app.net → 9:00 o 20:00.',
   tiktok: '🎵 TikTok: Descarga PNG → al subir video → Seleccionar portada → sube imagen → 18:00-21:00.',
-  'tiktok-overlay': '🎵 TikTok Overlay: Importa video en CapCut → añade texto como overlay → activa subtítulos automáticos → 18:00-21:00.',
+  'tiktok-overlay': '🎵 TikTok Overlay: Importa video en Canva → añade texto como overlay → activa subtítulos automáticos → 18:00-21:00.',
   'linkedin-post': '💼 LinkedIn Post: Descarga PNG → + → Post → adjunta imagen → caption largo → 9:00-12:00.',
   'linkedin-quote': '💼 LinkedIn Quote: Descarga PNG → adjunta al post → añade reflexión personal → 9:00.',
   facebook: '📘 Facebook: Descarga PNG → Crear publicación → añade imagen → caption → 18:00-20:00.',
@@ -1146,7 +1146,7 @@ function callAI(prompt, onSuccess, onError) {
 
 // ─── VIDEO ASSET GENERATOR ───────────────────────────────────────────────────
 function switchVTab(name) {
-  ['script','slides','capcut','caption'].forEach(function(t) {
+  ['script','slides','canva','caption'].forEach(function(t) {
     var btn = document.getElementById('vtab-' + t);
     var panel = document.getElementById('vpanel-' + t);
     if (btn) btn.classList.toggle('active', t === name);
@@ -1168,7 +1168,7 @@ function genVideoAssets() {
     ' Responde SOLO con JSON valido: {' +
     '"guion":"Guion completo con timecodes exactos. GANCHO 0-3s: [frase]. DESARROLLO 3-35s: escena por escena. CTA 35-45s: [frase + kova-app.net]",' +
     '"slides":[{"titulo":"TEXTO CORTO IMPACTANTE","subtitulo":"texto secundario max 60 chars","segundo":"0-3"},{"titulo":"TITULO 2","subtitulo":"subtitulo 2","segundo":"5-10"},{"titulo":"TITULO 3","subtitulo":"subtitulo 3","segundo":"15-20"},{"titulo":"DESCARGA KOVA GRATIS","subtitulo":"kova-app.net","segundo":"40-45"}],' +
-    '"capcut":"Instrucciones paso a paso para CapCut: 1. Abre CapCut... 2. Importa video... etc con cada segundo exacto",' +
+    '"canva":"Instrucciones paso a paso para Canva: 1. Abre Canva... 2. Importa video... etc con cada segundo exacto",' +
     '"caption":"Caption completo con emojis y hashtags listo para publicar"' +
     '}';
 
@@ -1181,7 +1181,7 @@ function genVideoAssets() {
       data = {
         guion: txt,
         slides: [{titulo:'KOVA VENTAS CON IA',subtitulo:'Responde objeciones en segundos',segundo:'0-3'},{titulo:'DESCARGA GRATIS',subtitulo:'kova-app.net',segundo:'40-45'}],
-        capcut: 'Importa tu video en CapCut. Añade los slides como overlays en los segundos indicados. Exporta en 1080x1920.',
+        canva: 'Importa tu video en Canva. Añade los slides como overlays en los segundos indicados. Exporta en 1080x1920.',
         caption: 'KOVA transforma como vendes. kova-app.net #KOVA #ventas #IA'
       };
     }
@@ -1203,9 +1203,9 @@ function genVideoAssets() {
       }).join('');
     }
 
-    // CapCut tab
-    var capCutOut = document.getElementById('vid-capcut-out');
-    if (capCutOut) capCutOut.innerHTML = data.capcut || '';
+    // Canva tab
+    var capCutOut = document.getElementById('vid-canva-out');
+    if (capCutOut) capCutOut.innerHTML = data.canva || '';
 
     // Caption tab
     var captionOut = document.getElementById('vid-caption-out');
@@ -1215,7 +1215,7 @@ function genVideoAssets() {
     }
 
     window._vidScript = data.guion || txt;
-    window._vidCapcut = data.capcut || '';
+    window._vidCanva = data.canva || '';
   }, function() {
     scriptOut.innerHTML = 'Error de conexion. Verifica el proxy.';
   });
@@ -1235,7 +1235,7 @@ function dlVidSlide(idx) {
 }
 
 function cpVid(type) {
-  var text = type === 'script' ? (window._vidScript||'') : type === 'capcut' ? (window._vidCapcut||'') : (window._vidCaption||'');
+  var text = type === 'script' ? (window._vidScript||'') : type === 'canva' ? (window._vidCanva||'') : (window._vidCaption||'');
   navigator.clipboard.writeText(text);
   alert('Copiado!');
 }
