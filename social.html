@@ -999,8 +999,15 @@ function genDesign() {
 
   var prompt = 'Eres diseñador de contenido para KOVA (app ventas IA para pymes hispanohablantes). NOVA responde objeciones, ALEX simula prospectos, MAIA crea estrategias. Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + '.';
   if (ctx) prompt += ' Tema especifico: ' + ctx + '.';
-  prompt += ' Genera exactamente ' + slideCount + ' slides DIFERENTES sobre el tema. REGLAS CRITICAS: titulo maximo 4 palabras sin emojis, contenido maximo 7 palabras sin emojis. Responde SOLO con este JSON valido (reemplaza los valores):';
-  prompt += ' {"slides":[{"titulo":"GANCHO IMPACTANTE","contenido":"dato o pregunta corta"},{"titulo":"TITULO DOS","contenido":"punto clave dos"},{"titulo":"TITULO TRES","contenido":"punto clave tres"},{"titulo":"TITULO CUATRO","contenido":"punto clave cuatro"},{"titulo":"DESCARGA KOVA HOY","contenido":"kova-app.net gratis"}],"caption":"caption completo con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip de publicacion"}';
+  if (slideCount > 1) {
+    prompt = 'INSTRUCCION CRITICA: Responde UNICAMENTE con un objeto JSON valido. Sin texto antes ni despues. Sin markdown. Sin explicaciones. El JSON debe tener exactamente ' + slideCount + ' slides.';
+    prompt += ' Tema: KOVA app ventas IA para pymes, agente ' + agent.toUpperCase() + '.';
+    if (ctx) prompt += ' Contexto: ' + ctx + '.';
+    prompt += ' FORMATO EXACTO REQUERIDO (copia esta estructura con ' + slideCount + ' slides reales):';
+    prompt += ' {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"TITULO 2","contenido":"contenido 2"},{"titulo":"TITULO 3","contenido":"contenido 3"},{"titulo":"TITULO 4","contenido":"contenido 4"},{"titulo":"DESCARGA KOVA HOY","contenido":"kova-app.net gratis"}],"caption":"caption con emojis listo publicar","hashtags":"#KOVA #ventas #IA #pymes","instrucciones":"tip publicacion horario"}';
+  } else {
+    prompt += ' Responde SOLO JSON: {"slides":[{"titulo":"TITULO","contenido":"contenido"}],"caption":"caption","hashtags":"#KOVA","instrucciones":"tip"}';
+  }
 
   callAI(prompt, function(txt) {
     var data;
@@ -1008,14 +1015,25 @@ function genDesign() {
       var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
       var match = clean.match(/\{[\s\S]*\}/);
       data = JSON.parse(match ? match[0] : clean);
-      // Truncate long content to fit slides
-      if (data.slides) data.slides = data.slides.map(function(s) {
-        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
-        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
-        if (t.length > 35) t = t.substring(0,33)+'..';
-        if (co.length > 50) co = co.substring(0,48)+'..';
-        return {titulo:t, contenido:co};
-      });
+      // Clean and truncate slides
+      if (data.slides) {
+        data.slides = data.slides.map(function(s) {
+          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
+          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
+          if (t.length > 38) t = t.substring(0,36)+'..';
+          if (co.length > 55) co = co.substring(0,53)+'..';
+          return {titulo:t, contenido:co};
+        });
+        // If AI returned fewer slides than needed, duplicate with variations
+        var needed = slideCount || 1;
+        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
+        while (data.slides.length < needed) {
+          var ei = data.slides.length - 1;
+          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
+        }
+        // Trim if too many
+        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
+      }
     } catch(e) {
       data = {
         slides:[{titulo:'KOVA VENTAS CON IA', contenido:'Responde objeciones en segundos. Practica con ALEX. Planifica con MAIA.'}, {titulo:'DESCARGA GRATIS', contenido:'kova-app.net · Sin tarjeta de credito'}],
@@ -1134,14 +1152,25 @@ function genPack() {
       var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
       var match = clean.match(/\{[\s\S]*\}/);
       data = JSON.parse(match ? match[0] : clean);
-      // Truncate long content to fit slides
-      if (data.slides) data.slides = data.slides.map(function(s) {
-        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
-        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
-        if (t.length > 35) t = t.substring(0,33)+'..';
-        if (co.length > 50) co = co.substring(0,48)+'..';
-        return {titulo:t, contenido:co};
-      });
+      // Clean and truncate slides
+      if (data.slides) {
+        data.slides = data.slides.map(function(s) {
+          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
+          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
+          if (t.length > 38) t = t.substring(0,36)+'..';
+          if (co.length > 55) co = co.substring(0,53)+'..';
+          return {titulo:t, contenido:co};
+        });
+        // If AI returned fewer slides than needed, duplicate with variations
+        var needed = slideCount || 1;
+        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
+        while (data.slides.length < needed) {
+          var ei = data.slides.length - 1;
+          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
+        }
+        // Trim if too many
+        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
+      }
     } catch(e) {
       data = {
         ig:{titulo:'KOVA VENTAS IA',contenido:'Tu asistente de ventas disponible 24/7.'},
@@ -1274,14 +1303,25 @@ function genVideoAssets() {
       var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
       var match = clean.match(/\{[\s\S]*\}/);
       data = JSON.parse(match ? match[0] : clean);
-      // Truncate long content to fit slides
-      if (data.slides) data.slides = data.slides.map(function(s) {
-        var t = (s.titulo||'').replace(/[\n•]/g,' ').trim();
-        var co = (s.contenido||'').replace(/[\n•]/g,' ').trim();
-        if (t.length > 35) t = t.substring(0,33)+'..';
-        if (co.length > 50) co = co.substring(0,48)+'..';
-        return {titulo:t, contenido:co};
-      });
+      // Clean and truncate slides
+      if (data.slides) {
+        data.slides = data.slides.map(function(s) {
+          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
+          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
+          if (t.length > 38) t = t.substring(0,36)+'..';
+          if (co.length > 55) co = co.substring(0,53)+'..';
+          return {titulo:t, contenido:co};
+        });
+        // If AI returned fewer slides than needed, duplicate with variations
+        var needed = slideCount || 1;
+        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
+        while (data.slides.length < needed) {
+          var ei = data.slides.length - 1;
+          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
+        }
+        // Trim if too many
+        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
+      }
     } catch(e) {
       data = {
         guion: txt,
