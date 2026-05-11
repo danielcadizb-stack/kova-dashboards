@@ -792,9 +792,12 @@ function makeSlide(title, content, accent, w, h) {
   var pad=Math.round(w*0.08);
   title=(title||'').replace(/<[^>]*>/g,'').trim();
   content=(content||'').replace(/<[^>]*>/g,'').trim();
-  if(title.length>60) title=title.substring(0,58)+'..';
-  if(content.length>80) content=content.substring(0,78)+'..';
-  var tpx=title.length>40?Math.round(w*0.052):title.length>28?Math.round(w*0.062):title.length>18?Math.round(w*0.074):Math.round(w*0.088);
+  // Hard limit: max 5 words for title
+  var titleWords = title.split(' ');
+  if(titleWords.length > 5) title = titleWords.slice(0,5).join(' ')+'..';
+  if(title.length>32) title=title.substring(0,30)+'..';
+  if(content.length>60) content=content.substring(0,58)+'..';
+  var tpx=title.length>25?Math.round(w*0.058):title.length>18?Math.round(w*0.068):Math.round(w*0.082);
   var spx=Math.round(w*0.028), bpx=Math.round(w*0.034);
   var dotIdx=content.indexOf('.');
   var sub=dotIdx>0&&dotIdx<55?content.substring(0,dotIdx).toUpperCase():content.toUpperCase().substring(0,52);
@@ -864,8 +867,9 @@ function genDesign() {
     data.slides = (data.slides||[]).map(function(s){
       var t=(s.titulo||'').replace(/[\n•*]/g,' ').trim();
       var co=(s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
-      if(t.length>55) t=t.substring(0,53)+'..';
-      if(co.length>75) co=co.substring(0,73)+'..';
+      var tw=t.split(' '); if(tw.length>5) t=tw.slice(0,5).join(' ');;
+      if(t.length>30) t=t.substring(0,28)+'..';
+      if(co.length>60) co=co.substring(0,58)+'..';
       return {titulo:t,contenido:co};
     });
     while(data.slides.length < needed) data.slides.push({titulo:fills[data.slides.length-1]||'KOVA',contenido:'kova-app.net'});
