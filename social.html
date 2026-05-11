@@ -876,71 +876,100 @@ var PLAT_GUIDES = {
 };
 
 function makeSlide(title, content, accent, w, h) {
-  accent = accent || '#25C48F';
+  // KOVA brand colors from kova-app.net
+  var bg = '#0d0b08';
+  var teal = '#5de0ce';
+  var gold = '#ffc350';
+  var white = '#f0ede6';
+  var dim = '#a09b91';
+  var dark = '#1a1a14';
+  accent = accent === '#25C48F' ? teal : (accent || teal);
   w = w || 400; h = h || 400;
-  // Clean input
-  title = (title||'').replace(/<[^>]*>/g,'').trim();
-  content = (content||'').replace(/<[^>]*>/g,'').trim();
-  // Title: max 3 lines = ~24 chars per line at 28px → truncate at 72
-  if (title.length > 60) title = title.substring(0,58)+'..';
-  // Content becomes the green subtitle line (short, uppercase)
-  var sub = content.length > 45 ? content.substring(0,43)+'..' : content;
-  sub = sub.toUpperCase();
-  var titlePx = title.length > 30 ? '24' : title.length > 20 ? '28' : '32';
-  if (w < 300) { titlePx = String(parseInt(titlePx)*0.75|0); }
+  var pad = Math.round(w * 0.08);
+  // Clean text
+  title = (title||'').replace(/<[^>]*>/g,'').replace(/[^\w\s\u00C0-\u024F\u00BF-\u00FF¿¡.,!?:;()\-\/]/g,'').trim();
+  content = (content||'').replace(/<[^>]*>/g,'').replace(/[^\w\s\u00C0-\u024F\u00BF-\u00FF¿¡.,!?:;()\-\/]/g,'').trim();
+  if (title.length > 40) title = title.substring(0,38)+'..';
+  if (content.length > 55) content = content.substring(0,53)+'..';
+  var titlePx = title.length > 28 ? Math.round(w*0.065) : title.length > 18 ? Math.round(w*0.078) : Math.round(w*0.09);
+  var subPx = Math.round(w*0.028);
+  var bodyPx = Math.round(w*0.035);
+  // Content: first part as subtitle tag, rest as body
+  var dotIdx = content.indexOf('.');
+  var sub = dotIdx > 0 && dotIdx < 40 ? content.substring(0, dotIdx).toUpperCase() : content.toUpperCase().substring(0,35);
+  var body = dotIdx > 0 && dotIdx < 40 ? content.substring(dotIdx+1).trim() : '';
   return [
-    '<div style="width:'+w+'px;height:'+h+'px;background:#080c10;',
+    '<div style="',
+    'width:'+w+'px;height:'+h+'px;',
+    'background:'+bg+';',
     'position:relative;overflow:hidden;',
     'font-family:\'DM Sans\',sans-serif;',
     'display:flex;flex-direction:column;',
     'justify-content:space-between;',
-    'padding:'+Math.round(w*0.08)+'px;',
+    'padding:'+pad+'px;',
     'box-sizing:border-box;">',
-    // grid
+    // EKG grid like landing
     '<div style="position:absolute;inset:0;',
-    'background-image:linear-gradient(rgba(37,196,143,0.05) 1px,transparent 1px),',
-    'linear-gradient(90deg,rgba(37,196,143,0.05) 1px,transparent 1px);',
-    'background-size:'+Math.round(w*0.09)+'px '+Math.round(w*0.09)+'px;',
+    'background-image:linear-gradient('+teal+'08 1px,transparent 1px),',
+    'linear-gradient(90deg,'+teal+'08 1px,transparent 1px);',
+    'background-size:'+Math.round(w*0.1)+'px '+Math.round(w*0.1)+'px;',
     'pointer-events:none;"></div>',
-    // glow top-right
-    '<div style="position:absolute;top:-40px;right:-40px;',
-    'width:160px;height:160px;',
-    'background:radial-gradient(circle,'+accent+'18,transparent 65%);',
+    // Radial glow top-right
+    '<div style="position:absolute;top:-'+Math.round(h*0.15)+'px;right:-'+Math.round(w*0.1)+'px;',
+    'width:'+Math.round(w*0.6)+'px;height:'+Math.round(w*0.6)+'px;',
+    'background:radial-gradient(circle,'+teal+'15,transparent 65%);',
     'pointer-events:none;"></div>',
-    // header
-    '<div style="display:flex;align-items:center;justify-content:space-between;position:relative;">',
-    '<div style="display:flex;align-items:center;gap:8px;">',
-    '<div id="slide-logo-slot" style="width:30px;height:30px;border-radius:7px;',
-    'background:rgba(37,196,143,0.12);',
+    // Header: KOVA logo + name
+    '<div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">',
+    '<div style="display:flex;align-items:center;gap:'+Math.round(w*0.025)+'px;">',
+    '<div id="slide-logo-slot" style="',
+    'width:'+Math.round(w*0.09)+'px;height:'+Math.round(w*0.09)+'px;',
+    'border-radius:'+Math.round(w*0.025)+'px;overflow:hidden;',
+    'background:'+dark+';border:1px solid '+teal+'40;',
     'display:flex;align-items:center;justify-content:center;',
-    'font-family:Syne;font-weight:800;font-size:12px;color:'+accent+';">K</div>',
-    '<span style="font-family:Syne;font-weight:800;font-size:13px;',
-    'color:'+accent+';letter-spacing:.05em;">KOVA</span>',
+    'font-family:\'Playfair Display\',serif;font-weight:700;',
+    'font-size:'+Math.round(w*0.045)+'px;color:'+teal+';">K</div>',
+    '<span style="font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
+    'font-weight:600;font-size:'+Math.round(w*0.038)+'px;',
+    'color:'+teal+';letter-spacing:0.18em;">KOVA</span>',
     '</div>',
     '</div>',
-    // body
-    '<div style="position:relative;flex:1;display:flex;flex-direction:column;',
-    'justify-content:center;padding:'+Math.round(h*0.04)+'px 0;">',
-    // green subtitle
-    '<div style="font-family:\'JetBrains Mono\',monospace;',
-    'font-size:'+Math.round(w*0.026)+'px;',
-    'color:'+accent+';letter-spacing:.1em;',
+    // Body
+    '<div style="position:relative;z-index:1;flex:1;',
+    'display:flex;flex-direction:column;justify-content:center;',
+    'padding:'+Math.round(h*0.04)+'px 0;">',
+    // Subtitle tag - teal monospace like landing stats
+    '<div style="',
+    'font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
+    'font-size:'+subPx+'px;',
+    'color:'+accent+';',
+    'letter-spacing:0.08em;',
     'text-transform:uppercase;',
-    'margin-bottom:'+Math.round(h*0.03)+'px;',
-    'line-height:1.4;opacity:.9;">'+sub+'</div>',
-    // title
-    '<div style="font-family:Syne,sans-serif;font-weight:800;',
+    'opacity:0.85;',
+    'margin-bottom:'+Math.round(h*0.025)+'px;',
+    'border-left:2px solid '+accent+';',
+    'padding-left:'+Math.round(w*0.025)+'px;">'+sub+'</div>',
+    // Main title - Playfair Display like landing H2
+    '<div style="',
+    'font-family:\'Playfair Display\',serif;',
+    'font-weight:900;',
     'font-size:'+titlePx+'px;',
-    'color:#ffffff;line-height:1.15;',
-    'letter-spacing:-.01em;">'+title+'</div>',
+    'color:'+white+';',
+    'line-height:1.1;',
+    'letter-spacing:-0.01em;">'+title+'</div>',
+    // Body text if exists
+    body ? '<div style="font-size:'+bodyPx+'px;color:'+dim+';line-height:1.5;margin-top:'+Math.round(h*0.025)+'px;">'+body+'</div>' : '',
     '</div>',
-    // footer
-    '<div style="display:flex;justify-content:space-between;align-items:center;position:relative;">',
-    '<span style="font-size:'+Math.round(w*0.025)+'px;',
-    'color:rgba(255,255,255,0.2);',
-    'font-family:\'JetBrains Mono\',monospace;',
-    'letter-spacing:.04em;">kova-app.net</span>',
-    '<div style="width:20px;height:2px;background:'+accent+';border-radius:1px;"></div>',
+    // Footer
+    '<div style="display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">',
+    '<span style="font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
+    'font-size:'+Math.round(w*0.026)+'px;',
+    'color:'+dim+';opacity:0.5;',
+    'letter-spacing:0.04em;">kova-app.net</span>',
+    '<div style="display:flex;gap:3px;">',
+    '<div style="width:'+Math.round(w*0.04)+'px;height:2px;background:'+teal+';border-radius:1px;opacity:0.6;"></div>',
+    '<div style="width:'+Math.round(w*0.025)+'px;height:2px;background:'+gold+';border-radius:1px;opacity:0.6;"></div>',
+    '</div>',
     '</div>',
     '</div>'
   ].join('');
