@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KOVA Social Intelligence Center v1778513975</title>
+<title>KOVA Social Intelligence Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -131,7 +131,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
     </div>
   </div>
   <div class="card" style="margin-top:0;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;"><div style="flex:1;"><div class="sl">Estado del sistema</div><div id="ov-status"></div></div><div id="ov-chart"></div></div>
+    <div class="sl">Estado del sistema</div>
+    <div id="ov-status"></div>
   </div>
 </div>
 
@@ -350,69 +351,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
       <div class="sl">Pack completo</div>
       <div class="pack-scroll" id="pack-scroll"></div>
     </div>
-
-    <!-- VIDEO ASSET GENERATOR -->
-    <div style="border-top:1px solid var(--border);margin-top:24px;padding-top:24px;">
-      <div class="sl">🎬 Generador de assets para video (Canva/Reels)</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-        <div class="cm-fl">
-          <div class="cm-lb">Plataforma destino</div>
-          <select class="cm-sl" id="vid-plat">
-            <option value="TikTok">TikTok (9:16 vertical)</option>
-            <option value="Instagram Reels">Instagram Reels (9:16 vertical)</option>
-            <option value="LinkedIn">LinkedIn (16:9 horizontal)</option>
-            <option value="YouTube Shorts">YouTube Shorts (9:16 vertical)</option>
-          </select>
-        </div>
-        <div class="cm-fl">
-          <div class="cm-lb">Agente protagonista</div>
-          <select class="cm-sl" id="vid-agent">
-            <option value="NOVA">NOVA — Responde objeciones</option>
-            <option value="ALEX">ALEX — Simulador de ventas</option>
-            <option value="MAIA">MAIA — Estrategia de negocio</option>
-          </select>
-        </div>
-      </div>
-      <div class="cm-fl" style="margin-bottom:12px;">
-        <div class="cm-lb">Tu guión o tema (opcional — si no pones nada, la IA lo crea)</div>
-        <textarea class="cm-in" id="vid-script" rows="3" placeholder="Ej: Mostrar como NOVA responde la objecion es muy caro en 3 pasos..."></textarea>
-      </div>
-      <button class="btn-g btn" onclick="genVideoAssets()" style="margin-bottom:16px;">🎬 Generar assets para video</button>
-
-      <div id="vid-output" style="display:none;">
-        <!-- Tabs -->
-        <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);">
-          <button class="tab active" id="vtab-script" onclick="switchVTab('script')" style="font-size:12px;">📝 Guión</button>
-          <button class="tab" id="vtab-slides" onclick="switchVTab('slides')" style="font-size:12px;">🖼 Slides de texto</button>
-          <button class="tab" id="vtab-canva" onclick="switchVTab('canva')" style="font-size:12px;">✂ Canva paso a paso</button>
-          <button class="tab" id="vtab-caption" onclick="switchVTab('caption')" style="font-size:12px;">📢 Caption</button>
-        </div>
-
-        <!-- Script panel -->
-        <div id="vpanel-script" style="display:block;">
-          <div class="out" id="vid-script-out" style="white-space:pre-wrap;"></div>
-          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('script')">Copiar guión</button>
-        </div>
-
-        <!-- Slides panel -->
-        <div id="vpanel-slides" style="display:none;">
-          <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Slides de texto para superponer en el video — descarga cada uno como PNG y úsalo en Canva como overlay.</div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;" id="vid-slides-grid"></div>
-        </div>
-
-        <!-- Canva panel -->
-        <div id="vpanel-canva" style="display:none;">
-          <div class="out" id="vid-canva-out" style="white-space:pre-wrap;"></div>
-          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('canva')">Copiar instrucciones</button>
-        </div>
-
-        <!-- Caption panel -->
-        <div id="vpanel-caption" style="display:none;">
-          <div class="out" id="vid-caption-out" style="white-space:pre-wrap;"></div>
-          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('caption')">Copiar caption</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -537,39 +475,11 @@ function renderOv() {
 
   document.getElementById('ov-status').innerHTML =
     '<div style="display:flex;flex-wrap:wrap;gap:10px;">' +
-    '<span class="badge b-teal">OK CM Agent activo</span>' +
-    '<span class="badge b-teal">&#10003; Dise?os PNG disponibles</span>' +
-    '<span class="badge b-yellow">&#9203; iOS ? esperando aprobacion Apple</span>' +
-    '<span class="badge b-yellow">&#9203; Android ? prueba cerrada en curso</span>' +
+    '<span class="badge b-teal">✓ CM Agent activo</span>' +
+    '<span class="badge b-teal">✓ Diseños PNG disponibles</span>' +
+    '<span class="badge b-yellow">⏳ iOS — esperando aprobación Apple</span>' +
+    '<span class="badge b-yellow">⏳ Android — prueba cerrada en curso</span>' +
     '</div>';
-
-  // Pie chart
-  var total = (KD.tt_views||0)+(KD.ig_reach||0)+(KD.li_views||0)+(KD.fb_reach||0)||1;
-  var slices = [
-    {label:'TikTok',val:KD.tt_views||0,color:'#25C48F'},
-    {label:'Instagram',val:KD.ig_reach||0,color:'#FF4FA0'},
-    {label:'LinkedIn',val:KD.li_views||0,color:'#4a9eff'},
-    {label:'Facebook',val:KD.fb_reach||0,color:'#b06aff'}
-  ];
-  var svg = '<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">';
-  var angle = -Math.PI/2;
-  slices.forEach(function(s) {
-    var pct = s.val/total;
-    var sweep = pct*2*Math.PI;
-    if(sweep < 0.01) { angle+=sweep; return; }
-    var x1=80+70*Math.cos(angle), y1=80+70*Math.sin(angle);
-    angle+=sweep;
-    var x2=80+70*Math.cos(angle), y2=80+70*Math.sin(angle);
-    var large=sweep>Math.PI?1:0;
-    svg+='<path d="M60,60 L'+x1+','+y1+' A55,55 0 '+large+',1 '+x2+','+y2+' Z" fill="'+s.color+'" opacity="0.85"/>';
-  });
-  svg += '<circle cx="80" cy="80" r="38" fill="#0a0c10"/></svg>';
-  var legend = slices.map(function(s){
-    var pct=total>1?Math.round(s.val/total*100):0;
-    return '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:'+s.color+';flex-shrink:0;"></div>'+s.label+' <span style="color:'+s.color+';font-family:JetBrains Mono;">'+pct+'%</span></div>';
-  }).join('');
-  var chartEl = document.getElementById('ov-chart');
-  if(chartEl) chartEl.innerHTML = '<div style="display:flex;align-items:center;gap:20px;">'+svg+'<div style="display:flex;flex-direction:column;gap:8px;">'+legend+'</div></div>';
 }
 
 // ─── CALENDARIO ─────────────────────────────────────────────────────────────
@@ -614,15 +524,9 @@ function genForDay(d) {
   el.innerHTML = '<span class="spin"></span>Generando contenido...';
   var prompt = 'Genera un post completo de redes sociales para KOVA (app ventas IA) sobre el tema: "' + c.t + '". Plataformas: ' + c.pl.join(', ') + '. Incluye caption con emojis, hashtags y tip de publicacion.';
   callAI(prompt, function(txt) {
-    el.innerHTML = '<div style="white-space:pre-wrap;font-size:13px;line-height:1.7;">' + txt.replace(/</g,'&lt;') + '</div>';
-    var cpBtn = document.createElement('button');
-    cpBtn.className = 'cbtn';
-    cpBtn.style.marginTop = '10px';
-    cpBtn.textContent = 'Copiar contenido';
-    cpBtn.onclick = function() { navigator.clipboard.writeText(txt); alert('Copiado!'); };
-    el.appendChild(cpBtn);
+    el.innerHTML = txt;
   }, function() {
-    el.innerHTML = '<span style="color:var(--pink);">Error de conexion. Intenta de nuevo.</span>';
+    el.innerHTML = 'Error al generar. Intenta de nuevo.';
   });
 }
 
@@ -873,7 +777,7 @@ var PLAT_GUIDES = {
   post: '📱 Instagram Post: Descarga PNG → Instagram → + → Post → sube imagen → caption y hashtags → 18:00-20:00.',
   story: '📖 Instagram Story: Descarga PNG → tu foto de perfil → + Historia → sube imagen → añade sticker enlace kova-app.net → 9:00 o 20:00.',
   tiktok: '🎵 TikTok: Descarga PNG → al subir video → Seleccionar portada → sube imagen → 18:00-21:00.',
-  'tiktok-overlay': '🎵 TikTok Overlay: Importa video en Canva → añade texto como overlay → activa subtítulos automáticos → 18:00-21:00.',
+  'tiktok-overlay': '🎵 TikTok Overlay: Importa video en CapCut → añade texto como overlay → activa subtítulos automáticos → 18:00-21:00.',
   'linkedin-post': '💼 LinkedIn Post: Descarga PNG → + → Post → adjunta imagen → caption largo → 9:00-12:00.',
   'linkedin-quote': '💼 LinkedIn Quote: Descarga PNG → adjunta al post → añade reflexión personal → 9:00.',
   facebook: '📘 Facebook: Descarga PNG → Crear publicación → añade imagen → caption → 18:00-20:00.',
@@ -882,103 +786,37 @@ var PLAT_GUIDES = {
 };
 
 function makeSlide(title, content, accent, w, h) {
-  // KOVA brand colors from kova-app.net
-  var bg = '#0d0b08';
-  var teal = '#5de0ce';
-  var gold = '#ffc350';
-  var white = '#f0ede6';
-  var dim = '#a09b91';
-  var dark = '#1a1a14';
-  accent = accent === '#25C48F' ? teal : (accent || teal);
-  w = w || 400; h = h || 400;
-  var pad = Math.round(w * 0.08);
-  // Clean text
-  title = (title||'').replace(/<[^>]*>/g,'').replace(/[^\w\s\u00C0-\u024F\u00BF-\u00FF¿¡.,!?:;()\-\/]/g,'').trim();
-  content = (content||'').replace(/<[^>]*>/g,'').replace(/[^\w\s\u00C0-\u024F\u00BF-\u00FF¿¡.,!?:;()\-\/]/g,'').trim();
-  if (title.length > 40) title = title.substring(0,38)+'..';
-  if (content.length > 55) content = content.substring(0,53)+'..';
-  var titlePx = title.length > 28 ? Math.round(w*0.065) : title.length > 18 ? Math.round(w*0.078) : Math.round(w*0.09);
-  var subPx = Math.round(w*0.028);
-  var bodyPx = Math.round(w*0.035);
-  // Content: first part as subtitle tag, rest as body
-  var dotIdx = content.indexOf('.');
-  var sub = dotIdx > 0 && dotIdx < 40 ? content.substring(0, dotIdx).toUpperCase() : content.toUpperCase().substring(0,35);
-  var body = dotIdx > 0 && dotIdx < 40 ? content.substring(dotIdx+1).trim() : '';
-  return [
-    '<div style="',
-    'width:'+w+'px;height:'+h+'px;',
-    'background:'+bg+';',
-    'position:relative;overflow:hidden;',
-    'font-family:\'DM Sans\',sans-serif;',
-    'display:flex;flex-direction:column;',
-    'justify-content:space-between;',
-    'padding:'+pad+'px;',
-    'box-sizing:border-box;">',
-    // EKG grid like landing
-    '<div style="position:absolute;inset:0;',
-    'background-image:linear-gradient('+teal+'08 1px,transparent 1px),',
-    'linear-gradient(90deg,'+teal+'08 1px,transparent 1px);',
-    'background-size:'+Math.round(w*0.1)+'px '+Math.round(w*0.1)+'px;',
-    'pointer-events:none;"></div>',
-    // Radial glow top-right
-    '<div style="position:absolute;top:-'+Math.round(h*0.15)+'px;right:-'+Math.round(w*0.1)+'px;',
-    'width:'+Math.round(w*0.6)+'px;height:'+Math.round(w*0.6)+'px;',
-    'background:radial-gradient(circle,'+teal+'15,transparent 65%);',
-    'pointer-events:none;"></div>',
-    // Header: KOVA logo + name
-    '<div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">',
-    '<div style="display:flex;align-items:center;gap:'+Math.round(w*0.025)+'px;">',
-    '<div id="slide-logo-slot" style="',
-    'width:'+Math.round(w*0.09)+'px;height:'+Math.round(w*0.09)+'px;',
-    'border-radius:'+Math.round(w*0.025)+'px;overflow:hidden;',
-    'background:'+dark+';border:1px solid '+teal+'40;',
-    'display:flex;align-items:center;justify-content:center;',
-    'font-family:\'Playfair Display\',serif;font-weight:700;',
-    'font-size:'+Math.round(w*0.045)+'px;color:'+teal+';">K</div>',
-    '<span style="font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
-    'font-weight:600;font-size:'+Math.round(w*0.038)+'px;',
-    'color:'+teal+';letter-spacing:0.18em;">KOVA</span>',
-    '</div>',
-    '</div>',
-    // Body
-    '<div style="position:relative;z-index:1;flex:1;',
-    'display:flex;flex-direction:column;justify-content:center;',
-    'padding:'+Math.round(h*0.04)+'px 0;">',
-    // Subtitle tag - teal monospace like landing stats
-    '<div style="',
-    'font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
-    'font-size:'+subPx+'px;',
-    'color:'+accent+';',
-    'letter-spacing:0.08em;',
-    'text-transform:uppercase;',
-    'opacity:0.85;',
-    'margin-bottom:'+Math.round(h*0.025)+'px;',
-    'border-left:2px solid '+accent+';',
-    'padding-left:'+Math.round(w*0.025)+'px;">'+sub+'</div>',
-    // Main title - Playfair Display like landing H2
-    '<div style="',
-    'font-family:\'Playfair Display\',serif;',
-    'font-weight:900;',
-    'font-size:'+titlePx+'px;',
-    'color:'+white+';',
-    'line-height:1.1;',
-    'letter-spacing:-0.01em;">'+title+'</div>',
-    // Body text if exists
-    body ? '<div style="font-size:'+bodyPx+'px;color:'+dim+';line-height:1.5;margin-top:'+Math.round(h*0.025)+'px;">'+body+'</div>' : '',
-    '</div>',
-    // Footer
-    '<div style="display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">',
-    '<span style="font-family:\'DM Mono\',\'JetBrains Mono\',monospace;',
-    'font-size:'+Math.round(w*0.026)+'px;',
-    'color:'+dim+';opacity:0.5;',
-    'letter-spacing:0.04em;">kova-app.net</span>',
-    '<div style="display:flex;gap:3px;">',
-    '<div style="width:'+Math.round(w*0.04)+'px;height:2px;background:'+teal+';border-radius:1px;opacity:0.6;"></div>',
-    '<div style="width:'+Math.round(w*0.025)+'px;height:2px;background:'+gold+';border-radius:1px;opacity:0.6;"></div>',
-    '</div>',
-    '</div>',
-    '</div>'
-  ].join('');
+  var bg='#0d0b08', teal='#5de0ce', gold='#ffc350', white='#f0ede6', dim='#a09b91';
+  accent = (accent && accent !== '#25C48F') ? accent : teal;
+  w=w||400; h=h||400;
+  var pad=Math.round(w*0.08);
+  title=(title||'').replace(/<[^>]*>/g,'').trim();
+  content=(content||'').replace(/<[^>]*>/g,'').trim();
+  if(title.length>38) title=title.substring(0,36)+'..';
+  if(content.length>55) content=content.substring(0,53)+'..';
+  var tpx=title.length>28?Math.round(w*0.065):title.length>18?Math.round(w*0.078):Math.round(w*0.09);
+  var spx=Math.round(w*0.028), bpx=Math.round(w*0.034);
+  var dotIdx=content.indexOf('.');
+  var sub=dotIdx>0&&dotIdx<42?content.substring(0,dotIdx).toUpperCase():content.toUpperCase().substring(0,38);
+  var body=dotIdx>0&&dotIdx<42?content.substring(dotIdx+1).trim():'';
+  var gs=Math.round(w*0.1);
+  return '<div style="width:'+w+'px;height:'+h+'px;background:'+bg+';position:relative;overflow:hidden;font-family:\'DM Sans\',sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:'+pad+'px;box-sizing:border-box;">'
+    +'<div style="position:absolute;inset:0;background-image:linear-gradient('+teal+'08 1px,transparent 1px),linear-gradient(90deg,'+teal+'08 1px,transparent 1px);background-size:'+gs+'px '+gs+'px;pointer-events:none;"></div>'
+    +'<div style="position:absolute;top:-40px;right:-40px;width:'+Math.round(w*0.5)+'px;height:'+Math.round(w*0.5)+'px;background:radial-gradient(circle,'+teal+'14,transparent 65%);pointer-events:none;"></div>'
+    +'<div style="display:flex;align-items:center;gap:8px;position:relative;z-index:1;">'
+    +'<div id="slide-logo-slot" style="width:'+Math.round(w*0.09)+'px;height:'+Math.round(w*0.09)+'px;border-radius:6px;background:rgba(93,224,206,0.1);border:1px solid '+teal+'30;display:flex;align-items:center;justify-content:center;font-family:Syne;font-weight:800;font-size:'+Math.round(w*0.04)+'px;color:'+teal+';">K</div>'
+    +'<span style="font-family:\'DM Mono\',monospace;font-weight:600;font-size:'+Math.round(w*0.035)+'px;color:'+teal+';letter-spacing:0.15em;">KOVA</span>'
+    +'</div>'
+    +'<div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;padding:'+Math.round(h*0.04)+'px 0;">'
+    +'<div style="font-family:\'DM Mono\',monospace;font-size:'+spx+'px;color:'+accent+';letter-spacing:0.08em;text-transform:uppercase;opacity:0.9;margin-bottom:'+Math.round(h*0.028)+'px;border-left:2px solid '+accent+';padding-left:'+Math.round(w*0.025)+'px;line-height:1.3;">'+sub+'</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-weight:900;font-size:'+tpx+'px;color:'+white+';line-height:1.1;letter-spacing:-0.01em;">'+title+'</div>'
+    +(body?'<div style="font-size:'+bpx+'px;color:'+dim+';line-height:1.5;margin-top:'+Math.round(h*0.022)+'px;">'+body+'</div>':'')
+    +'</div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">'
+    +'<span style="font-family:\'DM Mono\',monospace;font-size:'+Math.round(w*0.025)+'px;color:'+dim+';opacity:0.4;letter-spacing:0.04em;">kova-app.net</span>'
+    +'<div style="display:flex;gap:3px;"><div style="width:'+Math.round(w*0.038)+'px;height:2px;background:'+teal+';border-radius:1px;opacity:0.7;"></div><div style="width:'+Math.round(w*0.024)+'px;height:2px;background:'+gold+';border-radius:1px;opacity:0.7;"></div></div>'
+    +'</div>'
+    +'</div>';
 }
 
 
@@ -997,83 +835,61 @@ function genDesign() {
   var slideCount = ['carrusel','linkedin-carrusel'].indexOf(ty) > -1 ? 5 : 1;
   var accent = COLORS[agent] || '#25C48F';
 
-  var prompt = 'Eres diseñador de contenido para KOVA (app ventas IA para pymes hispanohablantes). NOVA responde objeciones, ALEX simula prospectos, MAIA crea estrategias. Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + '.';
-  if (ctx) prompt += ' Tema especifico: ' + ctx + '.';
+  var prompt;
   if (slideCount > 1) {
-    prompt = 'INSTRUCCION CRITICA: Responde UNICAMENTE con un objeto JSON valido. Sin texto antes ni despues. Sin markdown. Sin explicaciones. El JSON debe tener exactamente ' + slideCount + ' slides.';
-    prompt += ' Tema: KOVA app ventas IA para pymes, agente ' + agent.toUpperCase() + '.';
-    if (ctx) prompt += ' Contexto: ' + ctx + '.';
-    prompt += ' FORMATO EXACTO REQUERIDO (copia esta estructura con ' + slideCount + ' slides reales):';
-    prompt += ' {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"TITULO 2","contenido":"contenido 2"},{"titulo":"TITULO 3","contenido":"contenido 3"},{"titulo":"TITULO 4","contenido":"contenido 4"},{"titulo":"DESCARGA KOVA HOY","contenido":"kova-app.net gratis"}],"caption":"caption con emojis listo publicar","hashtags":"#KOVA #ventas #IA #pymes","instrucciones":"tip publicacion horario"}';
+    prompt = 'INSTRUCCION CRITICA: responde UNICAMENTE con JSON valido sin markdown ni texto extra. Genera exactamente ' + slideCount + ' slides sobre KOVA app ventas IA, agente ' + agent.toUpperCase() + (ctx ? ', tema: ' + ctx : '') + '. JSON requerido: {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"T2","contenido":"C2"},{"titulo":"T3","contenido":"C3"},{"titulo":"T4","contenido":"C4"},{"titulo":"DESCARGA KOVA","contenido":"kova-app.net gratis"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip horario publicacion"}';
   } else {
-    prompt += ' Responde SOLO JSON: {"slides":[{"titulo":"TITULO","contenido":"contenido"}],"caption":"caption","hashtags":"#KOVA","instrucciones":"tip"}';
+    prompt = 'Eres CM de KOVA (app ventas IA). Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + (ctx ? '. Tema: ' + ctx : '') + '. Responde SOLO JSON: {"slides":[{"titulo":"TITULO CORTO","contenido":"contenido corto"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip publicacion"}';
   }
 
   callAI(prompt, function(txt) {
     var data;
     try {
       var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
-      var match = clean.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : clean);
-      // Clean and truncate slides
-      if (data.slides) {
-        data.slides = data.slides.map(function(s) {
-          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
-          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
-          if (t.length > 38) t = t.substring(0,36)+'..';
-          if (co.length > 55) co = co.substring(0,53)+'..';
-          return {titulo:t, contenido:co};
-        });
-        // If AI returned fewer slides than needed, duplicate with variations
-        var needed = slideCount || 1;
-        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
-        while (data.slides.length < needed) {
-          var ei = data.slides.length - 1;
-          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
-        }
-        // Trim if too many
-        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
-      }
-    } catch(e) {
-      data = {
-        slides:[{titulo:'KOVA VENTAS CON IA', contenido:'Responde objeciones en segundos. Practica con ALEX. Planifica con MAIA.'}, {titulo:'DESCARGA GRATIS', contenido:'kova-app.net · Sin tarjeta de credito'}],
-        caption:'KOVA transforma como vendes. Descarga gratis en kova-app.net',
-        hashtags:'#KOVA #ventas #IA #emprendimiento #pymes',
-        instrucciones:'Descarga el diseno y publícalo en tus redes.'
-      };
+      var m = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(m ? m[0] : clean);
+    } catch(e) { data = null; }
+    if (!data || !data.slides) {
+      data = {slides:[
+        {titulo:'KOVA VENTAS CON IA',contenido:'Tu equipo IA de ventas'},
+        {titulo:'NOVA RESPONDE',contenido:'Objeciones al instante'},
+        {titulo:'ALEX SIMULA',contenido:'Practica el pitch real'},
+        {titulo:'MAIA PLANIFICA',contenido:'Estrategia personalizada'},
+        {titulo:'DESCARGA GRATIS',contenido:'kova-app.net hoy'}
+      ], caption:'KOVA transforma como vendes. kova-app.net', hashtags:'#KOVA #ventas #IA #pymes', instrucciones:'Publica entre 18-21h.'};
     }
-
-    var slides = data.slides || [{titulo:'KOVA', contenido:'kova-app.net'}];
-    currentSlides = slides;
+    // Clean + ensure slideCount slides
+    var needed = slideCount || 1;
+    var fills = ['Prueba KOVA gratis','Cierra mas ventas','Ventas con IA real','Descubre KOVA hoy'];
+    data.slides = (data.slides||[]).map(function(s){
+      var t=(s.titulo||'').replace(/[\n•*]/g,' ').trim();
+      var co=(s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
+      return {titulo:t,contenido:co};
+    });
+    while(data.slides.length < needed) data.slides.push({titulo:fills[data.slides.length-1]||'KOVA',contenido:'kova-app.net'});
+    data.slides = data.slides.slice(0, needed);
+    currentSlides = data.slides;
     currentSlideIdx = 0;
-
-    var w = isVertical ? 225 : 400;
-    var h = isVertical ? 400 : 400;
-
-    preview.innerHTML = makeSlide(slides[0].titulo, slides[0].contenido, accent, w, h, 0, slides.length);
+    var isVert = ['story','tiktok','tiktok-overlay'].indexOf(ty) > -1;
+    var sw = isVert ? 225 : 400, sh = isVert ? 400 : 400;
+    preview.innerHTML = makeSlide(data.slides[0].titulo, data.slides[0].contenido, accent, sw, sh);
     applyLogo('slide-logo-slot');
-
-    if (slides.length > 1) {
+    if (data.slides.length > 1) {
       nav.style.display = 'flex';
-      nav.innerHTML = slides.map(function(s, i) {
-        var w = i === 0 ? 24 : 8;
-        var onclick = 'goSlide(' + i + ',' + JSON.stringify(ty) + ',' + JSON.stringify(accent) + ',' + sw + ',' + sh + ')';
-        return '<div class="ds-dot" style="width:' + w + 'px;" onclick="' + onclick + '"></div>';
+      nav.innerHTML = data.slides.map(function(s,i){
+        return '<div class="ds-dot" style="width:'+(i===0?24:8)+'px;" onclick="goSlide('+i+',''+ty+'',''+accent+'','+sw+','+sh+')"></div>';
       }).join('');
     }
-
-    var guide = PLAT_GUIDES[ty] || 'Descarga y publica en tus redes sociales.';
-    if (data.instrucciones) guide = data.instrucciones + ' ' + (PLAT_GUIDES[ty] || '');
+    var guide = PLAT_GUIDES[ty] || 'Publica en tus redes sociales.';
+    if (data.instrucciones) guide = data.instrucciones + ' ' + guide;
     inst.innerHTML = guide;
-
     if (data.caption) {
-      window._designCaption = (data.caption || '') + '\n\n' + (data.hashtags || '');
-      document.getElementById('ds-caption-text').innerHTML = data.caption + '\n\n' + data.hashtags;
+      window._designCaption = (data.caption||'') + '\n\n' + (data.hashtags||'');
+      document.getElementById('ds-caption-text').innerHTML = (data.caption||'') + '<br><br>' + (data.hashtags||'');
       document.getElementById('ds-caption-area').style.display = 'block';
     }
-
     document.getElementById('dl-slide-btn').style.display = 'inline-block';
-    if (slides.length > 1) document.getElementById('dl-all-btn').style.display = 'inline-block';
+    if (data.slides.length > 1) document.getElementById('dl-all-btn').style.display = 'inline-block';
   }, function() {
     preview.innerHTML = '<div style="color:var(--pink);font-size:12px;">Error de conexion.</div>';
   });
@@ -1087,7 +903,7 @@ function goSlide(i, ty, accent, w, h) {
   var sw = w || (isVertical ? 225 : 400);
   var sh = h || 400;
   var ac = accent || '#25C48F';
-  preview.innerHTML = makeSlide(slide.titulo, slide.contenido, ac, sw, sh, i, currentSlides.length);
+  preview.innerHTML = makeSlide(slide.titulo, slide.contenido, ac, sw, sh);
   applyLogo('slide-logo-slot');
   document.querySelectorAll('.ds-dot').forEach(function(d, j) {
     d.style.width = (j === i ? 24 : 8) + 'px';
@@ -1112,7 +928,7 @@ function dlAll() {
   function next() {
     if (idx >= currentSlides.length) return;
     var preview = document.getElementById('ds-preview');
-    preview.innerHTML = makeSlide(currentSlides[idx].titulo, currentSlides[idx].contenido, '#25C48F', 400, 400, idx, currentSlides.length);
+    preview.innerHTML = makeSlide(currentSlides[idx].titulo, currentSlides[idx].contenido, '#25C48F', 400, 400);
     applyLogo('slide-logo-slot');
     setTimeout(function() {
       var el = preview.firstElementChild;
@@ -1146,28 +962,8 @@ function genPack() {
   callAI(prompt, function(txt) {
     var data;
     try {
-      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
-      var match = clean.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : clean);
-      // Clean and truncate slides
-      if (data.slides) {
-        data.slides = data.slides.map(function(s) {
-          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
-          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
-          if (t.length > 38) t = t.substring(0,36)+'..';
-          if (co.length > 55) co = co.substring(0,53)+'..';
-          return {titulo:t, contenido:co};
-        });
-        // If AI returned fewer slides than needed, duplicate with variations
-        var needed = slideCount || 1;
-        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
-        while (data.slides.length < needed) {
-          var ei = data.slides.length - 1;
-          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
-        }
-        // Trim if too many
-        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
-      }
+      var match = txt.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : txt);
     } catch(e) {
       data = {
         ig:{titulo:'KOVA VENTAS IA',contenido:'Tu asistente de ventas disponible 24/7.'},
@@ -1263,123 +1059,6 @@ function callAI(prompt, onSuccess, onError) {
     console.error(e);
     if (onError) onError(e);
   });
-}
-
-
-// ─── VIDEO ASSET GENERATOR ───────────────────────────────────────────────────
-function switchVTab(name) {
-  ['script','slides','canva','caption'].forEach(function(t) {
-    var btn = document.getElementById('vtab-' + t);
-    var panel = document.getElementById('vpanel-' + t);
-    if (btn) btn.classList.toggle('active', t === name);
-    if (panel) panel.style.display = t === name ? 'block' : 'none';
-  });
-}
-
-function genVideoAssets() {
-  var plat = document.getElementById('vid-plat').value;
-  var agent = document.getElementById('vid-agent').value;
-  var script = (document.getElementById('vid-script').value || '').substring(0, 400);
-  var out = document.getElementById('vid-output');
-  var scriptOut = document.getElementById('vid-script-out');
-  out.style.display = 'block';
-  scriptOut.innerHTML = '<span class="spin"></span>Generando assets para video...';
-
-  var prompt = 'Eres director creativo de KOVA (app ventas IA para pymes hispanohablantes). Genera un paquete completo de produccion para un video de ' + plat + ' protagonizado por ' + agent + '.' +
-    (script ? ' Guion/tema: ' + script + '.' : '') +
-    ' Responde SOLO con JSON valido: {' +
-    '"guion":"Guion completo con timecodes exactos. GANCHO 0-3s: [frase]. DESARROLLO 3-35s: escena por escena. CTA 35-45s: [frase + kova-app.net]",' +
-    '"slides":[{"titulo":"TEXTO CORTO IMPACTANTE","subtitulo":"texto secundario max 60 chars","segundo":"0-3"},{"titulo":"TITULO 2","subtitulo":"subtitulo 2","segundo":"5-10"},{"titulo":"TITULO 3","subtitulo":"subtitulo 3","segundo":"15-20"},{"titulo":"DESCARGA KOVA GRATIS","subtitulo":"kova-app.net","segundo":"40-45"}],' +
-    '"canva":"Instrucciones paso a paso para Canva: 1. Abre Canva... 2. Importa video... etc con cada segundo exacto",' +
-    '"caption":"Caption completo con emojis y hashtags listo para publicar"' +
-    '}';
-
-  callAI(prompt, function(txt) {
-    var data;
-    try {
-      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
-      var match = clean.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : clean);
-      // Clean and truncate slides
-      if (data.slides) {
-        data.slides = data.slides.map(function(s) {
-          var t = (s.titulo||'').replace(/[\n•*]/g,' ').trim();
-          var co = (s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
-          if (t.length > 38) t = t.substring(0,36)+'..';
-          if (co.length > 55) co = co.substring(0,53)+'..';
-          return {titulo:t, contenido:co};
-        });
-        // If AI returned fewer slides than needed, duplicate with variations
-        var needed = slideCount || 1;
-        var extras = ['Descubre KOVA hoy','Ventas con IA real','Tu equipo de IA','Cierra mas ventas'];
-        while (data.slides.length < needed) {
-          var ei = data.slides.length - 1;
-          data.slides.push({titulo: extras[ei] || 'KOVA', contenido: 'kova-app.net gratis'});
-        }
-        // Trim if too many
-        if (data.slides.length > needed) data.slides = data.slides.slice(0, needed);
-      }
-    } catch(e) {
-      data = {
-        guion: txt,
-        slides: [{titulo:'KOVA VENTAS CON IA',subtitulo:'Responde objeciones en segundos',segundo:'0-3'},{titulo:'DESCARGA GRATIS',subtitulo:'kova-app.net',segundo:'40-45'}],
-        canva: 'Importa tu video en Canva. Añade los slides como overlays en los segundos indicados. Exporta en 1080x1920.',
-        caption: 'KOVA transforma como vendes. kova-app.net #KOVA #ventas #IA'
-      };
-    }
-
-    // Script tab
-    scriptOut.innerHTML = data.guion || txt;
-
-    // Slides tab
-    var accent = COLORS[agent.toLowerCase()] || '#25C48F';
-    var slidesGrid = document.getElementById('vid-slides-grid');
-    if (slidesGrid && data.slides) {
-      slidesGrid.innerHTML = data.slides.map(function(s, i) {
-        var slideHtml = makeSlide(s.titulo, s.subtitulo + (s.segundo ? ' [' + s.segundo + 's]' : ''), accent, 280, 280);
-        return '<div>' +
-          '<div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-family:JetBrains Mono;">SLIDE ' + (i+1) + ' · ' + (s.segundo||'') + 's</div>' +
-          '<div id="vid-slide-' + i + '" style="border-radius:8px;overflow:hidden;">' + slideHtml + '</div>' +
-          '<button class="cbtn" style="width:100%;margin-top:6px;font-size:11px;" data-idx="' + i + '" onclick="dlVidSlide(parseInt(this.dataset.idx))">Descargar PNG</button>' +
-          '</div>';
-      }).join('');
-    }
-
-    // Canva tab
-    var capCutOut = document.getElementById('vid-canva-out');
-    if (capCutOut) capCutOut.innerHTML = data.canva || '';
-
-    // Caption tab
-    var captionOut = document.getElementById('vid-caption-out');
-    if (captionOut) {
-      captionOut.innerHTML = data.caption || '';
-      window._vidCaption = data.caption || '';
-    }
-
-    window._vidScript = data.guion || txt;
-    window._vidCanva = data.canva || '';
-  }, function() {
-    scriptOut.innerHTML = 'Error de conexion. Verifica el proxy.';
-  });
-}
-
-function dlVidSlide(idx) {
-  var el = document.getElementById('vid-slide-' + idx);
-  if (!el || !el.firstElementChild) return;
-  html2canvas(el.firstElementChild, {backgroundColor:'#0a0c10', scale:2, useCORS:true}).then(function(canvas) {
-    var a = document.createElement('a');
-    a.download = 'kova-video-slide-' + (idx+1) + '.png';
-    a.href = canvas.toDataURL('image/png');
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
-function cpVid(type) {
-  var text = type === 'script' ? (window._vidScript||'') : type === 'canva' ? (window._vidCanva||'') : (window._vidCaption||'');
-  navigator.clipboard.writeText(text);
-  alert('Copiado!');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
