@@ -350,6 +350,69 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
       <div class="sl">Pack completo</div>
       <div class="pack-scroll" id="pack-scroll"></div>
     </div>
+
+    <!-- VIDEO ASSET GENERATOR -->
+    <div style="border-top:1px solid var(--border);margin-top:24px;padding-top:24px;">
+      <div class="sl">🎬 Generador de assets para video (CapCut/Reels)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div class="cm-fl">
+          <div class="cm-lb">Plataforma destino</div>
+          <select class="cm-sl" id="vid-plat">
+            <option value="TikTok">TikTok (9:16 vertical)</option>
+            <option value="Instagram Reels">Instagram Reels (9:16 vertical)</option>
+            <option value="LinkedIn">LinkedIn (16:9 horizontal)</option>
+            <option value="YouTube Shorts">YouTube Shorts (9:16 vertical)</option>
+          </select>
+        </div>
+        <div class="cm-fl">
+          <div class="cm-lb">Agente protagonista</div>
+          <select class="cm-sl" id="vid-agent">
+            <option value="NOVA">NOVA — Responde objeciones</option>
+            <option value="ALEX">ALEX — Simulador de ventas</option>
+            <option value="MAIA">MAIA — Estrategia de negocio</option>
+          </select>
+        </div>
+      </div>
+      <div class="cm-fl" style="margin-bottom:12px;">
+        <div class="cm-lb">Tu guión o tema (opcional — si no pones nada, la IA lo crea)</div>
+        <textarea class="cm-in" id="vid-script" rows="3" placeholder="Ej: Mostrar como NOVA responde la objecion es muy caro en 3 pasos..."></textarea>
+      </div>
+      <button class="btn-g btn" onclick="genVideoAssets()" style="margin-bottom:16px;">🎬 Generar assets para video</button>
+
+      <div id="vid-output" style="display:none;">
+        <!-- Tabs -->
+        <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);">
+          <button class="tab active" id="vtab-script" onclick="switchVTab('script')" style="font-size:12px;">📝 Guión</button>
+          <button class="tab" id="vtab-slides" onclick="switchVTab('slides')" style="font-size:12px;">🖼 Slides de texto</button>
+          <button class="tab" id="vtab-capcut" onclick="switchVTab('capcut')" style="font-size:12px;">✂ CapCut paso a paso</button>
+          <button class="tab" id="vtab-caption" onclick="switchVTab('caption')" style="font-size:12px;">📢 Caption</button>
+        </div>
+
+        <!-- Script panel -->
+        <div id="vpanel-script" style="display:block;">
+          <div class="out" id="vid-script-out" style="white-space:pre-wrap;"></div>
+          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('script')">Copiar guión</button>
+        </div>
+
+        <!-- Slides panel -->
+        <div id="vpanel-slides" style="display:none;">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Slides de texto para superponer en el video — descarga cada uno como PNG y úsalo en CapCut como overlay.</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;" id="vid-slides-grid"></div>
+        </div>
+
+        <!-- CapCut panel -->
+        <div id="vpanel-capcut" style="display:none;">
+          <div class="out" id="vid-capcut-out" style="white-space:pre-wrap;"></div>
+          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('capcut')">Copiar instrucciones</button>
+        </div>
+
+        <!-- Caption panel -->
+        <div id="vpanel-caption" style="display:none;">
+          <div class="out" id="vid-caption-out" style="white-space:pre-wrap;"></div>
+          <button class="cbtn" style="margin-top:8px;" onclick="cpVid('caption')">Copiar caption</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1078,6 +1141,103 @@ function callAI(prompt, onSuccess, onError) {
     console.error(e);
     if (onError) onError(e);
   });
+}
+
+
+// ─── VIDEO ASSET GENERATOR ───────────────────────────────────────────────────
+function switchVTab(name) {
+  ['script','slides','capcut','caption'].forEach(function(t) {
+    var btn = document.getElementById('vtab-' + t);
+    var panel = document.getElementById('vpanel-' + t);
+    if (btn) btn.classList.toggle('active', t === name);
+    if (panel) panel.style.display = t === name ? 'block' : 'none';
+  });
+}
+
+function genVideoAssets() {
+  var plat = document.getElementById('vid-plat').value;
+  var agent = document.getElementById('vid-agent').value;
+  var script = (document.getElementById('vid-script').value || '').substring(0, 400);
+  var out = document.getElementById('vid-output');
+  var scriptOut = document.getElementById('vid-script-out');
+  out.style.display = 'block';
+  scriptOut.innerHTML = '<span class="spin"></span>Generando assets para video...';
+
+  var prompt = 'Eres director creativo de KOVA (app ventas IA para pymes hispanohablantes). Genera un paquete completo de produccion para un video de ' + plat + ' protagonizado por ' + agent + '.' +
+    (script ? ' Guion/tema: ' + script + '.' : '') +
+    ' Responde SOLO con JSON valido: {' +
+    '"guion":"Guion completo con timecodes exactos. GANCHO 0-3s: [frase]. DESARROLLO 3-35s: escena por escena. CTA 35-45s: [frase + kova-app.net]",' +
+    '"slides":[{"titulo":"TEXTO CORTO IMPACTANTE","subtitulo":"texto secundario max 60 chars","segundo":"0-3"},{"titulo":"TITULO 2","subtitulo":"subtitulo 2","segundo":"5-10"},{"titulo":"TITULO 3","subtitulo":"subtitulo 3","segundo":"15-20"},{"titulo":"DESCARGA KOVA GRATIS","subtitulo":"kova-app.net","segundo":"40-45"}],' +
+    '"capcut":"Instrucciones paso a paso para CapCut: 1. Abre CapCut... 2. Importa video... etc con cada segundo exacto",' +
+    '"caption":"Caption completo con emojis y hashtags listo para publicar"' +
+    '}';
+
+  callAI(prompt, function(txt) {
+    var data;
+    try {
+      var match = txt.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : txt);
+    } catch(e) {
+      data = {
+        guion: txt,
+        slides: [{titulo:'KOVA VENTAS CON IA',subtitulo:'Responde objeciones en segundos',segundo:'0-3'},{titulo:'DESCARGA GRATIS',subtitulo:'kova-app.net',segundo:'40-45'}],
+        capcut: 'Importa tu video en CapCut. Añade los slides como overlays en los segundos indicados. Exporta en 1080x1920.',
+        caption: 'KOVA transforma como vendes. kova-app.net #KOVA #ventas #IA'
+      };
+    }
+
+    // Script tab
+    scriptOut.innerHTML = data.guion || txt;
+
+    // Slides tab
+    var accent = COLORS[agent.toLowerCase()] || '#25C48F';
+    var slidesGrid = document.getElementById('vid-slides-grid');
+    if (slidesGrid && data.slides) {
+      slidesGrid.innerHTML = data.slides.map(function(s, i) {
+        var slideHtml = makeSlide(s.titulo, s.subtitulo + (s.segundo ? ' [' + s.segundo + 's]' : ''), accent, 280, 280);
+        return '<div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-family:JetBrains Mono;">SLIDE ' + (i+1) + ' · ' + (s.segundo||'') + 's</div>' +
+          '<div id="vid-slide-' + i + '" style="border-radius:8px;overflow:hidden;">' + slideHtml + '</div>' +
+          '<button class="cbtn" style="width:100%;margin-top:6px;font-size:11px;" data-idx="' + i + '" onclick="dlVidSlide(parseInt(this.dataset.idx))">Descargar PNG</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    // CapCut tab
+    var capCutOut = document.getElementById('vid-capcut-out');
+    if (capCutOut) capCutOut.innerHTML = data.capcut || '';
+
+    // Caption tab
+    var captionOut = document.getElementById('vid-caption-out');
+    if (captionOut) {
+      captionOut.innerHTML = data.caption || '';
+      window._vidCaption = data.caption || '';
+    }
+
+    window._vidScript = data.guion || txt;
+    window._vidCapcut = data.capcut || '';
+  }, function() {
+    scriptOut.innerHTML = 'Error de conexion. Verifica el proxy.';
+  });
+}
+
+function dlVidSlide(idx) {
+  var el = document.getElementById('vid-slide-' + idx);
+  if (!el || !el.firstElementChild) return;
+  html2canvas(el.firstElementChild, {backgroundColor:'#0a0c10', scale:2, useCORS:true}).then(function(canvas) {
+    var a = document.createElement('a');
+    a.download = 'kova-video-slide-' + (idx+1) + '.png';
+    a.href = canvas.toDataURL('image/png');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+}
+
+function cpVid(type) {
+  var text = type === 'script' ? (window._vidScript||'') : type === 'capcut' ? (window._vidCapcut||'') : (window._vidCaption||'');
+  navigator.clipboard.writeText(text);
+  alert('Copiado!');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
