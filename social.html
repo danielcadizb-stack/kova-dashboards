@@ -131,8 +131,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
     </div>
   </div>
   <div class="card" style="margin-top:0;">
-    <div class="sl">Estado del sistema</div>
-    <div id="ov-status"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;"><div style="flex:1;"><div class="sl">Estado del sistema</div><div id="ov-status"></div></div><div id="ov-chart"></div></div>
   </div>
 </div>
 
@@ -519,18 +518,24 @@ function markPub(d) {
 }
 
 function genForDay(d) {
-  var c = CAL[d - 1];
+  var cal = CAL[d - 1];
   var el = document.getElementById('day-out-' + d);
   el.innerHTML = '<span class="spin"></span>Generando contenido...';
-  var prompt = 'Genera un post completo de redes sociales para KOVA (app ventas IA) sobre el tema: "' + c.t + '". Plataformas: ' + c.pl.join(', ') + '. Incluye caption con emojis, hashtags y tip de publicacion.';
+  var prompt = 'Eres CM experto de KOVA (app ventas IA para pymes). Genera contenido para el tema: "' + cal.t + '". Plataformas: ' + cal.pl.join(', ') + '. Incluye caption con emojis, hashtags y tip de publicacion. Formato claro.';
   callAI(prompt, function(txt) {
-    el.innerHTML = txt;
+    el.innerHTML = '<div style="white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--text);">' + txt.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+    var cpBtn = document.createElement('button');
+    cpBtn.className = 'cbtn';
+    cpBtn.style.marginTop = '10px';
+    cpBtn.textContent = 'Copiar contenido';
+    cpBtn.onclick = function() { navigator.clipboard.writeText(txt); alert('Copiado!'); };
+    el.appendChild(cpBtn);
   }, function() {
-    el.innerHTML = 'Error al generar. Intenta de nuevo.';
+    el.innerHTML = '<span style="color:var(--pink);">Error de conexion. Intenta de nuevo.</span>';
   });
 }
 
-// ─── MÉTRICAS DIARIAS ────────────────────────────────────────────────────────
+
 function renderCon() {
   var sel = document.getElementById('m-day');
   if (sel && sel.options.length === 0) {
@@ -1069,6 +1074,69 @@ function callAI(prompt, onSuccess, onError) {
     console.error(e);
     if (onError) onError(e);
   });
+}
+
+
+// VIDEO ASSET GENERATOR
+function switchVTab(name) {
+  ['script','slides','canva','caption'].forEach(function(t) {
+    var btn = document.getElementById('vtab-' + t);
+    var panel = document.getElementById('vpanel-' + t);
+    if (btn) btn.classList.toggle('active', t === name);
+    if (panel) panel.style.display = t === name ? 'block' : 'none';
+  });
+}
+
+function genVideoAssets() {
+  var plat = document.getElementById('vid-plat').value;
+  var agent = document.getElementById('vid-agent').value;
+  var script = (document.getElementById('vid-script').value || '').substring(0, 400);
+  var out = document.getElementById('vid-output');
+  var scriptOut = document.getElementById('vid-script-out');
+  out.style.display = 'block';
+  scriptOut.innerHTML = '<span class="spin"></span>Generando assets...';
+  var prompt = 'INSTRUCCION CRITICA: responde SOLO JSON valido sin markdown. Genera assets para video ' + plat + ' protagonizado por ' + agent + (script ? ', tema: ' + script : '') + '. JSON: {"guion":"guion completo con timecodes","slides":[{"titulo":"TITULO","contenido":"subtitulo"}],"canva":"instrucciones paso a paso para Canva Video","caption":"caption con emojis listo publicar","hashtags":"#KOVA #ventas #IA"}';
+  callAI(prompt, function(txt) {
+    var data;
+    try {
+      var clean = txt.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+      var m = clean.match(/\{[\s\S]*\}/);
+      data = JSON.parse(m ? m[0] : clean);
+    } catch(e) { data = {guion:txt,slides:[{titulo:'KOVA',contenido:'kova-app.net'}],canva:'Abre Canva Video y pega el guion.',caption:'KOVA ventas con IA.',hashtags:'#KOVA #ventas'}; }
+    document.getElementById('vid-script-out').innerHTML = data.guion || txt;
+    var accent = '#25C48F';
+    var sg = document.getElementById('vid-slides-grid');
+    if (sg && data.slides) {
+      sg.innerHTML = data.slides.map(function(s,i){
+        return '<div><div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-family:JetBrains Mono;">SLIDE '+(i+1)+'</div><div id="vs-'+i+'" style="border-radius:8px;overflow:hidden;">'+makeSlide(s.titulo,s.contenido,accent,280,280)+'</div><button class="cbtn" style="width:100%;margin-top:6px;font-size:11px;" data-idx="'+i+'" onclick="dlVidSlide(parseInt(this.dataset.idx))">Descargar PNG</button></div>';
+      }).join('');
+    }
+    var co = document.getElementById('vid-canva-out');
+    if (co) co.innerHTML = data.canva || '';
+    var cap = document.getElementById('vid-caption-out');
+    if (cap) cap.innerHTML = data.caption || '';
+    window._vidScript = data.guion || txt;
+    window._vidCanva = data.canva || '';
+    window._vidCaption = (data.caption || '') + '\n\n' + (data.hashtags || '');
+  }, function() {
+    scriptOut.innerHTML = 'Error de conexion.';
+  });
+}
+
+function dlVidSlide(idx) {
+  var el = document.getElementById('vs-' + idx);
+  if (!el || !el.firstElementChild) return;
+  html2canvas(el.firstElementChild, {backgroundColor:'#0d0b08',scale:2,useCORS:true}).then(function(canvas){
+    var a = document.createElement('a');
+    a.download = 'kova-video-slide-'+(idx+1)+'.png';
+    a.href = canvas.toDataURL('image/png');
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+}
+
+function cpVid(type) {
+  var text = type==='script'?(window._vidScript||''):type==='canva'?(window._vidCanva||''):(window._vidCaption||'');
+  navigator.clipboard.writeText(text); alert('Copiado!');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
