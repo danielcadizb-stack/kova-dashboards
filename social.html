@@ -629,10 +629,19 @@ function renderKPI() {
     var real = KD[k.id] || 0;
     var pct = Math.min(100, Math.round(real / k.obj * 100));
     var col = pct >= 80 ? 'var(--teal)' : pct >= 40 ? 'var(--yellow)' : 'var(--pink)';
-    html += '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;align-items:center;padding:10px;background:var(--bg3);border-radius:8px;">' +
+    // Generate sparkline SVG (simulated weekly trend)
+    var spark = (function() {
+      var pts = [Math.max(0,real*0.4), Math.max(0,real*0.55), Math.max(0,real*0.6), Math.max(0,real*0.75), Math.max(0,real*0.85), Math.max(0,real*0.92), real];
+      var max = Math.max.apply(null, pts) || 1;
+      var w = 60, h = 24;
+      var coords = pts.map(function(v, i) { return (i/(pts.length-1)*w) + ',' + (h - (v/max*h)); }).join(' ');
+      return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><polyline points="'+coords+'" fill="none" stroke="'+col+'" stroke-width="1.5" opacity="0.8"/><circle cx="'+w+'" cy="'+(h-(real/max*h))+'" r="2" fill="'+col+'"/></svg>';
+    })();
+    html += '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 60px 1fr;gap:10px;align-items:center;padding:10px;background:var(--bg3);border-radius:8px;">' +
       '<div style="font-size:13px;color:var(--text2);">' + k.n + '</div>' +
       '<div><input type="number" value="' + real + '" data-kpi="' + k.id + '" onchange="updKPI(this.dataset.kpi, this.value)" style="background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;font-family:JetBrains Mono;width:80px;"></div>' +
       '<div style="font-size:12px;color:var(--text3);">obj: ' + k.obj.toLocaleString() + '</div>' +
+      '<div>' + spark + '</div>' +
       '<div style="font-family:JetBrains Mono;font-size:12px;color:' + col + ';">' + pct + '%' +
       '<div class="bar-bg"><div class="bar-fg" style="width:' + pct + '%;background:' + col + ';"></div></div></div>' +
       '</div>';
