@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOVA — Dashboard de Equipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0b08; --bg2: #111510; --bg3: #1a1a14; --bg4: #2a2a20;
+    --teal: #5de0ce; --gold: #ffc350; --pink: #ff4fa0; --text: #f0ede6;
+    --text2: #a09b91; --text3: #4a4a3a; --border: #1a1a14;
+    --green: #22c55e; --red: #ef4444; --yellow: #eab308;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+  .header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-size: 22px; font-weight: 800; color: var(--teal); letter-spacing: 3px; }
+  .logo span { color: var(--text2); font-size: 13px; font-weight: 400; margin-left: 12px; letter-spacing: 0; }
+  .live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); border: 1px solid var(--teal); border-radius: 20px; padding: 4px 12px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .container { padding: 24px; max-width: 1200px; margin: 0 auto; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .card { background: var(--bg2); border-radius: 14px; padding: 18px; border: 1px solid var(--border); }
+  .sl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+  .metric-val { font-size: 28px; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+  .metric-label { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .metric-change { font-size: 11px; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+  .up { color: var(--green); } .down { color: var(--red); }
+  .vendor-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg3); border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); }
+  .vendor-name { font-size: 14px; color: var(--text); font-weight: 600; }
+  .vendor-email { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .vendor-stat { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal); }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+  .badge-active { background: #0d2a1a; color: var(--green); border: 1px solid #1a4a2a; }
+  .badge-inactive { background: #2a1a0d; color: var(--gold); border: 1px solid #4a2a0d; }
+  .badge-new { background: #0d1a2a; color: #60a5fa; border: 1px solid #1a2a4a; }
+  .bar-bg { background: var(--bg4); border-radius: 4px; height: 4px; margin-top: 6px; overflow: hidden; }
+  .bar-fg { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .objection-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .objection-text { font-size: 13px; color: var(--text2); flex: 1; }
+  .objection-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold); }
+  .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 32px; }
+  .login-card { background: var(--bg2); border-radius: 20px; padding: 40px; border: 1px solid var(--border); max-width: 400px; width: 100%; text-align: center; }
+  input { background: var(--bg3); border: 1px solid var(--bg4); border-radius: 10px; padding: 14px 16px; color: var(--text); font-size: 15px; width: 100%; margin-bottom: 12px; font-family: 'Syne', sans-serif; outline: none; }
+  input:focus { border-color: var(--teal); }
+  .btn { background: var(--teal); color: var(--bg); border: none; border-radius: 10px; padding: 14px 24px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; font-family: 'Syne', sans-serif; }
+  .btn:hover { opacity: 0.9; }
+  .spin { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .agent-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+  .nova-badge { background: #0d2a2a; color: var(--teal); }
+  .alex-badge { background: #2a1f0d; color: var(--gold); }
+  .maia-badge { background: #1a1a2a; color: #c4b5fd; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); }
+  tr:last-child td { border-bottom: none; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+  .empty { text-align: center; padding: 40px; color: var(--text3); font-size: 14px; }
+  @media(max-width:768px) { .grid4{grid-template-columns:1fr 1fr;} .grid3{grid-template-columns:1fr;} .vendor-row{grid-template-columns:1fr 1fr;} }
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="logo" style="margin-bottom:8px;">KOVA</div>
+    <div style="color:var(--text2);font-size:14px;margin-bottom:28px;">Dashboard de Equipo Enterprise</div>
+    <input type="email" id="login-email" placeholder="Tu email corporativo" />
+    <input type="password" id="login-pass" placeholder="Contraseña KOVA" />
+    <button class="btn" onclick="doLogin()">Acceder al dashboard</button>
+    <div id="login-error" style="color:var(--red);font-size:12px;margin-top:12px;"></div>
+  </div>
+</div>
+
+<div id="main-screen" style="display:none;">
+  <div class="header">
+    <div>
+      <div class="logo">KOVA <span id="company-name">Dashboard Enterprise</span></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;" id="company-sector"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="live"><div class="dot"></div>EN VIVO</div>
+      <div style="font-size:12px;color:var(--text3);" id="last-update"></div>
+      <button onclick="loadDashboard()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;">↻ Actualizar</button>
+      <button onclick="doLogout()" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;">Salir</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="loading" style="text-align:center;padding:60px;"><div class="spin" style="width:32px;height:32px;border-width:3px;"></div></div>
+    <div id="dashboard-content" style="display:none;">
+
+      <!-- KPIs -->
+      <div class="grid4" id="kpi-grid"></div>
+
+      <!-- Team table + Top objections -->
+      <div class="grid2">
+        <div class="card">
+          <div class="sl">Equipo de vendedores</div>
+          <div id="team-table"></div>
+        </div>
+        <div class="card">
+          <div class="sl">Agentes más usados esta semana</div>
+          <div id="agent-usage"></div>
+          <div class="sl" style="margin-top:20px;">Actividad reciente</div>
+          <div id="recent-activity"></div>
+        </div>
+      </div>
+
+      <!-- Weekly chart -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="sl">Actividad del equipo — últimos 7 días</div>
+        <div id="weekly-chart"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://thiqgazecrgxoavtpnqx.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoaXFnYXplY3JneG9hdnRwbnF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUxNzIxNDQsImV4cCI6MjA2MDc0ODE0NH0.JTFtDFvYiCB04nFdRTSQjuGOhS2XT5_DjdPOGvl4a-Q';
+const API = 'https://kova-api.vercel.app/api/proxy';
+let currentUser = null;
+let accessToken = null;
+
+async function sb(endpoint, options = {}) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint, {
+    headers: {
+      'apikey': SUPABASE_ANON,
+      'Authorization': 'Bearer ' + (accessToken || SUPABASE_ANON),
+      'Content-Type': 'application/json',
+      ...options.headers
+    },
+    ...options
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbAuth(endpoint, body) {
+  const res = await fetch(SUPABASE_URL + '/auth/v1/' + endpoint, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Introduce tu email y contraseña'; return; }
+  try {
+    const data = await sbAuth('token?grant_type=password', { email, password: pass });
+    if (data.error) { err.textContent = data.error_description || 'Credenciales incorrectas'; return; }
+    accessToken = data.access_token;
+    currentUser = data.user;
+    // Check if enterprise
+    const profiles = await sb('user_profiles?id=eq.' + currentUser.id + '&select=plan,business_name,full_name,sector,enterprise_config_id');
+    const profile = profiles[0];
+    if (!profile || profile.plan !== 'enterprise') {
+      err.textContent = 'Este dashboard es exclusivo para clientes Enterprise.';
+      accessToken = null; return;
+    }
+    document.getElementById('company-name').textContent = profile.business_name || 'Mi Equipo';
+    document.getElementById('company-sector').textContent = profile.sector || '';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+    await loadDashboard();
+  } catch(e) { err.textContent = 'Error de conexión. Inténtalo de nuevo.'; }
+}
+
+function doLogout() {
+  accessToken = null; currentUser = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-screen').style.display = 'none';
+}
+
+async function loadDashboard() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('dashboard-content').style.display = 'none';
+  try {
+    // Get all enterprise users in same company
+    const profile = (await sb('user_profiles?id=eq.' + currentUser.id + '&select=enterprise_config_id,business_name'))[0];
+    const configId = profile?.enterprise_config_id;
+
+    let teamUsers = [];
+    if (configId) {
+      teamUsers = await sb('user_profiles?enterprise_config_id=eq.' + configId + '&select=id,full_name,email,plan,created_at,updated_at,streak_days');
+    } else {
+      teamUsers = [await sb('user_profiles?id=eq.' + currentUser.id + '&select=id,full_name,email,plan,created_at,updated_at,streak_days')];
+      teamUsers = teamUsers[0];
+    }
+
+    // Get chat activity for last 7 days
+    const since = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+    const userIds = teamUsers.map(u => u.id);
+
+    let chats = [];
+    for (const uid of userIds) {
+      try {
+        const msgs = await sb('chats?user_id=eq.' + uid + '&created_at=gte.' + since + '&select=id,agent,role,created_at,content&order=created_at.desc&limit=100');
+        chats = chats.concat(msgs.map(m => ({...m, user_id: uid})));
+      } catch(e) {}
+    }
+
+    renderDashboard(teamUsers, chats);
+    document.getElementById('last-update').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<div style="color:var(--red);padding:40px;">Error cargando datos: ' + e.message + '</div>';
+    return;
+  }
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('dashboard-content').style.display = 'block';
+}
+
+function renderDashboard(users, chats) {
+  const userMsgs = {};
+  users.forEach(u => { userMsgs[u.id] = { nova: 0, alex: 0, maia: 0, total: 0 }; });
+  chats.filter(c => c.role === 'user').forEach(c => {
+    if (!userMsgs[c.user_id]) userMsgs[c.user_id] = { nova: 0, alex: 0, maia: 0, total: 0 };
+    userMsgs[c.user_id][c.agent] = (userMsgs[c.user_id][c.agent] || 0) + 1;
+    userMsgs[c.user_id].total++;
+  });
+
+  const totalMsgs = chats.filter(c => c.role === 'user').length;
+  const activeUsers = users.filter(u => userMsgs[u.id]?.total > 0).length;
+  const alexSessions = chats.filter(c => c.agent === 'alex' && c.role === 'user').length;
+  const avgStreak = users.length ? Math.round(users.reduce((s,u) => s + (u.streak_days||0), 0) / users.length) : 0;
+
+  // KPIs
+  document.getElementById('kpi-grid').innerHTML = [
+    { label: 'Mensajes esta semana', val: totalMsgs, color: 'var(--teal)', icon: '💬' },
+    { label: 'Vendedores activos', val: activeUsers + '/' + users.length, color: 'var(--green)', icon: '👥' },
+    { label: 'Sesiones ALEX', val: alexSessions, color: 'var(--gold)', icon: '🎯' },
+    { label: 'Streak promedio', val: avgStreak + ' días', color: 'var(--pink)', icon: '🔥' },
+  ].map(k => `
+    <div class="card">
+      <div class="sl">${k.icon} ${k.label}</div>
+      <div class="metric-val" style="color:${k.color};">${k.val}</div>
+    </div>
+  `).join('');
+
+  // Team table
+  const sorted = [...users].sort((a,b) => (userMsgs[b.id]?.total||0) - (userMsgs[a.id]?.total||0));
+  const maxMsgs = Math.max(...sorted.map(u => userMsgs[u.id]?.total || 0), 1);
+  document.getElementById('team-table').innerHTML = sorted.length ? `
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:8px 0;font-size:10px;color:var(--text3);font-family:JetBrains Mono,monospace;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+      <div>Vendedor</div><div>NOVA</div><div>ALEX</div><div>MAIA</div>
+    </div>
+    ${sorted.map(u => {
+      const s = userMsgs[u.id] || {nova:0,alex:0,maia:0,total:0};
+      const pct = Math.round(s.total/maxMsgs*100);
+      const isActive = s.total > 0;
+      const isNew = new Date(u.created_at) > new Date(Date.now() - 7*24*60*60*1000);
+      return `<div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div>
+            <div style="font-size:13px;color:var(--text);font-weight:600;">${u.full_name || u.email?.split('@')[0] || 'Usuario'}</div>
+            <div style="font-size:11px;color:var(--text3);">${u.email || ''}</div>
+          </div>
+          <span class="badge ${isNew?'badge-new':isActive?'badge-active':'badge-inactive'}">${isNew?'Nuevo':isActive?'Activo':'Inactivo'}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;align-items:center;">
+          <div><div class="bar-bg"><div class="bar-fg" style="width:${pct}%;background:var(--teal);"></div></div></div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:12px;color:var(--teal);">${s.nova}</div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:12px;color:var(--gold);">${s.alex}</div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:12px;color:#c4b5fd;">${s.maia}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  ` : '<div class="empty">No hay usuarios en el equipo aún</div>';
+
+  // Agent usage
+  const novaTotal = chats.filter(c=>c.agent==='nova'&&c.role==='user').length;
+  const alexTotal = chats.filter(c=>c.agent==='alex'&&c.role==='user').length;
+  const maiaTotal = chats.filter(c=>c.agent==='maia'&&c.role==='user').length;
+  const agentMax = Math.max(novaTotal, alexTotal, maiaTotal, 1);
+  document.getElementById('agent-usage').innerHTML = [
+    {name:'NOVA', val:novaTotal, color:'var(--teal)'},
+    {name:'ALEX', val:alexTotal, color:'var(--gold)'},
+    {name:'MAIA', val:maiaTotal, color:'#c4b5fd'},
+  ].map(a => `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--text2);">${a.name}</span>
+        <span style="font-family:JetBrains Mono,monospace;font-size:12px;color:${a.color};">${a.val} msgs</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fg" style="width:${Math.round(a.val/agentMax*100)}%;background:${a.color};"></div></div>
+    </div>
+  `).join('');
+
+  // Recent activity
+  const recent = chats.filter(c=>c.role==='user').slice(0,5);
+  document.getElementById('recent-activity').innerHTML = recent.length ? recent.map(c => `
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+      <span class="agent-badge ${c.agent}-badge">${(c.agent||'nova').toUpperCase()}</span>
+      <span style="font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.content?.substring(0,50)||'...'}</span>
+      <span style="font-size:10px;color:var(--text3);">${new Date(c.created_at).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</span>
+    </div>
+  `).join('') : '<div style="color:var(--text3);font-size:12px;padding:8px 0;">Sin actividad esta semana</div>';
+
+  // Weekly chart
+  const days = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const dayData = Array(7).fill(0);
+  chats.filter(c=>c.role==='user').forEach(c => {
+    const d = new Date(c.created_at).getDay();
+    const idx = d === 0 ? 6 : d - 1;
+    dayData[idx]++;
+  });
+  const maxDay = Math.max(...dayData, 1);
+  document.getElementById('weekly-chart').innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-top:12px;">
+      ${dayData.map((v,i) => `
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text3);">${v||''}</div>
+          <div style="width:100%;background:var(--teal);border-radius:4px 4px 0 0;height:${Math.max(4,Math.round(v/maxDay*56))}px;opacity:${v>0?0.9:0.2};"></div>
+          <div style="font-size:10px;color:var(--text3);">${days[i]}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
