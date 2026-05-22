@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOVA · Panel Sistema</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #5de0ce; --gold: #ffc350; --purple: #c9b8f0;
+  --red: #ef4444; --amber: #f59e0b; --green: #22c55e;
+  --bg: #0d0b08; --bg2: #0a0f0c; --bg3: #0d1a10; --bg4: #111a14;
+  --text: #f0ede6; --text2: rgba(240,237,230,.55); --text3: rgba(240,237,230,.28);
+  --border: rgba(93,224,206,.13);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+/* grid bg */
+body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:36px 36px; opacity:.3; }
+
+.page { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:32px 20px 60px; }
+
+/* ── HEADER ── */
+.hdr { display:flex; align-items:center; gap:12px; margin-bottom:28px; padding-bottom:20px;
+  border-bottom:1px solid var(--border); }
+.hdr-logo { width:38px; height:38px; }
+.hdr-title { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; color:var(--teal); }
+.hdr-sub { font-size:11px; color:var(--text3); margin-top:2px; font-family:'JetBrains Mono',monospace; letter-spacing:.1em; }
+.hdr-badge { margin-left:auto; display:flex; align-items:center; gap:7px;
+  background:rgba(93,224,206,.06); border:1px solid rgba(93,224,206,.25);
+  border-radius:20px; padding:6px 14px; font-family:'JetBrains Mono',monospace;
+  font-size:9px; color:var(--teal); letter-spacing:.1em; }
+.pulse { width:7px; height:7px; border-radius:50%; background:var(--teal); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── SECTION LABEL ── */
+.sec-label { font-family:'Syne',sans-serif; font-size:9px; font-weight:700;
+  color:var(--text3); letter-spacing:.22em; text-transform:uppercase;
+  margin-bottom:14px; margin-top:32px; }
+
+/* ── LEVEL TABS ── */
+.level-tabs { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+.ltab { padding:7px 16px; border-radius:8px; font-size:11px; font-weight:600;
+  cursor:pointer; border:1px solid var(--border); color:var(--text3);
+  background:var(--bg2); transition:.2s; font-family:'Syne',sans-serif; }
+.ltab.active { border-color:var(--teal); color:var(--teal); background:rgba(93,224,206,.07); }
+.level-panel { display:none; }
+.level-panel.active { display:block; }
+
+/* ── PLATFORM GRID ── */
+.platform-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+.platform-card {
+  padding:16px 18px; border-radius:11px; border:1px solid var(--border);
+  background:var(--bg2); position:relative; overflow:hidden;
+}
+.platform-card::before { content:''; position:absolute; inset:0;
+  background-image: linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+  background-size:20px 20px; pointer-events:none; }
+
+.pc-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.pc-name { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--text); }
+.pc-plan { font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--text3); letter-spacing:.08em; }
+.pc-status { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.status-green  { background:var(--green); box-shadow:0 0 8px rgba(34,197,94,.5); }
+.status-amber  { background:var(--amber); box-shadow:0 0 8px rgba(245,158,11,.5); animation:pulse 2s infinite; }
+.status-red    { background:var(--red);   box-shadow:0 0 8px rgba(239,68,68,.6);  animation:pulse 1s infinite; }
+
+.pc-bar-wrap { margin:8px 0 6px; }
+.pc-bar-bg { height:4px; border-radius:2px; background:rgba(255,255,255,.06); overflow:hidden; }
+.pc-bar-fg { height:100%; border-radius:2px; transition:.5s; }
+.bar-green { background:var(--green); }
+.bar-amber { background:var(--amber); }
+.bar-red   { background:var(--red);   }
+.pc-nums { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace;
+  font-size:9px; color:var(--text3); }
+.pc-trigger { font-size:10px; color:var(--text2); margin-top:8px; line-height:1.5; }
+.pc-trigger b { color:var(--text); }
+.pc-upgrade { margin-top:8px; display:inline-block; font-size:9px; font-family:'JetBrains Mono',monospace;
+  color:var(--amber); background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2);
+  padding:3px 9px; border-radius:5px; letter-spacing:.06em; }
+.pc-ok { color:var(--green); font-size:9px; font-family:'JetBrains Mono',monospace;
+  margin-top:8px; letter-spacing:.06em; }
+
+/* ── ALERT TABLE ── */
+.alert-table { width:100%; border-collapse:collapse; margin-top:4px; }
+.alert-table th { text-align:left; font-size:8px; font-family:'JetBrains Mono',monospace;
+  color:var(--teal); letter-spacing:.12em; text-transform:uppercase;
+  padding:8px 10px; border-bottom:1px solid var(--border); background:var(--bg4); }
+.alert-table td { padding:8px 10px; font-size:11px; color:var(--text2);
+  border-bottom:1px solid rgba(255,255,255,.04); vertical-align:top; line-height:1.5; }
+.alert-table tr:last-child td { border-bottom:none; }
+.alert-table tr:nth-child(even) td { background:rgba(255,255,255,.015); }
+.badge-critico { color:var(--red); font-weight:700; font-size:9px;
+  font-family:'JetBrains Mono',monospace; letter-spacing:.06em; }
+.badge-alerta  { color:var(--amber); font-weight:700; font-size:9px;
+  font-family:'JetBrains Mono',monospace; letter-spacing:.06em; }
+.badge-info    { color:var(--green); font-weight:700; font-size:9px;
+  font-family:'JetBrains Mono',monospace; letter-spacing:.06em; }
+
+/* ── CHECKLIST ── */
+.checklist { display:flex; flex-direction:column; gap:6px; }
+.check-item { display:flex; align-items:flex-start; gap:12px; padding:11px 14px;
+  border-radius:9px; border:1px solid var(--border); background:var(--bg2);
+  cursor:pointer; transition:.15s; }
+.check-item:hover { border-color:rgba(93,224,206,.25); background:var(--bg3); }
+.check-item.done { opacity:.55; }
+.check-item.done .check-text { text-decoration:line-through; color:var(--text3); }
+.check-box { width:18px; height:18px; border-radius:5px; border:1.5px solid var(--border);
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  transition:.15s; margin-top:1px; }
+.check-item.done .check-box { background:var(--teal); border-color:var(--teal); }
+.check-tick { color:#000; font-size:11px; font-weight:800; display:none; }
+.check-item.done .check-tick { display:block; }
+.check-text { font-size:12px; color:var(--text2); line-height:1.5; flex:1; }
+.check-tag { font-family:'JetBrains Mono',monospace; font-size:8px;
+  color:var(--text3); letter-spacing:.08em; margin-top:3px; }
+.check-freq { font-family:'JetBrains Mono',monospace; font-size:8px;
+  padding:2px 8px; border-radius:4px; margin-left:auto; flex-shrink:0;
+  margin-top:1px; }
+.freq-w { background:rgba(93,224,206,.08); color:var(--teal); border:1px solid rgba(93,224,206,.2); }
+.freq-m { background:rgba(255,195,80,.08); color:var(--gold); border:1px solid rgba(255,195,80,.2); }
+.freq-q { background:rgba(201,184,240,.08); color:var(--purple); border:1px solid rgba(201,184,240,.2); }
+
+.check-reset { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3);
+  background:none; border:1px solid var(--border); border-radius:6px;
+  padding:5px 12px; cursor:pointer; transition:.15s; margin-top:10px; }
+.check-reset:hover { color:var(--teal); border-color:var(--teal); }
+
+/* ── HIRING TABLE ── */
+.hire-card { padding:16px 18px; border-radius:11px; border:1px solid var(--border);
+  background:var(--bg2); margin-bottom:10px; }
+.hire-top { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.hire-stage { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:var(--teal); }
+.hire-mrr { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); }
+.hire-role { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--text); }
+.hire-cost { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); margin-left:auto; }
+.hire-trigger { font-size:11px; color:var(--text2); line-height:1.5; }
+.hire-trigger b { color:var(--text); }
+
+/* ── SUMMARY BOX ── */
+.summary-box { padding:20px 22px; border-radius:12px; border:1px solid rgba(93,224,206,.25);
+  background:rgba(93,224,206,.04); margin-top:28px; }
+.summary-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700;
+  color:var(--teal); margin-bottom:10px; }
+.summary-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px;
+  font-size:12px; color:var(--text2); line-height:1.5; }
+.summary-dot { width:6px; height:6px; border-radius:50%; background:var(--teal);
+  flex-shrink:0; margin-top:5px; }
+
+/* ── TABS ── */
+.main-tabs { display:flex; gap:4px; margin-bottom:24px; overflow-x:auto; padding-bottom:4px; }
+.mtab { padding:8px 16px; border-radius:8px; font-size:12px; font-weight:600;
+  cursor:pointer; border:1px solid var(--border); color:var(--text3); background:var(--bg2);
+  white-space:nowrap; transition:.2s; font-family:'Syne',sans-serif; }
+.mtab.active { border-color:var(--teal); color:var(--teal); background:rgba(93,224,206,.07); }
+.mpanel { display:none; }
+.mpanel.active { display:block; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <svg class="hdr-logo" viewBox="0 0 38 38" fill="none">
+      <rect width="38" height="38" rx="9" fill="#1a3a2e"/>
+      <polyline points="3,19 8,19 11,12 14,26 17,15 20,23 22,19 35,19"
+        stroke="#5de0ce" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div>
+      <div class="hdr-title">KOVA · Panel Sistema</div>
+      <div class="hdr-sub">INFRAESTRUCTURA · ALERTAS · ESCALABILIDAD · SEGURIDAD</div>
+    </div>
+    <div class="hdr-badge">
+      <div class="pulse"></div>
+      MONITORING ACTIVO
+    </div>
+  </div>
+
+  <!-- MAIN TABS -->
+  <div class="main-tabs">
+    <div class="mtab active" onclick="switchMain('umbrales')">Umbrales por Nivel</div>
+    <div class="mtab" onclick="switchMain('alertas')">Alertas del Sistema</div>
+    <div class="mtab" onclick="switchMain('checklist')">Revisiones Preventivas</div>
+    <div class="mtab" onclick="switchMain('contrataciones')">Contrataciones</div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- TAB 1: UMBRALES               -->
+  <!-- ══════════════════════════════ -->
+  <div class="mpanel active" id="panel-umbrales">
+    <div class="sec-label">Nivel de crecimiento actual</div>
+
+    <div class="level-tabs">
+      <div class="ltab active" onclick="switchLevel(0)">Nivel 1 · 0–500 MAU</div>
+      <div class="ltab" onclick="switchLevel(1)">Nivel 2 · 500–2k MAU</div>
+      <div class="ltab" onclick="switchLevel(2)">Nivel 3 · 2k–5k MAU</div>
+      <div class="ltab" onclick="switchLevel(3)">Nivel 4 · 5k–15k MAU</div>
+      <div class="ltab" onclick="switchLevel(4)">Nivel 5 · 15k+ MAU</div>
+    </div>
+
+    <!-- NIVEL 1 -->
+    <div class="level-panel active" id="level-0">
+      <div style="padding:16px 18px; border-radius:11px; border:1px solid rgba(34,197,94,.25); background:rgba(34,197,94,.04); margin-bottom:16px;">
+        <div style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#22c55e; margin-bottom:6px;">Estado actual — Sin upgrades necesarios</div>
+        <div style="font-size:12px; color:rgba(240,237,230,.55); line-height:1.6;">Stack 100% suficiente. Costo infraestructura: ~EUR 45/mes. Margen neto &gt;97%.<br>Accion prioritaria: configurar spend limit EUR 150/mes en Anthropic Console.</div>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Vercel Backend</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">HOBBY FREE — 100 GB bandwidth</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:5%"></div></div></div>
+          <div class="pc-nums"><span>~5 GB uso estimado</span><span>100 GB limite</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Supabase DB</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">PRO USD 25 — 8 GB base de datos</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:3%"></div></div></div>
+          <div class="pc-nums"><span>~0.2 GB uso estimado</span><span>8 GB limite</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">RevenueCat</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">STARTER GRATIS — hasta USD 2.500 MRR</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:2%"></div></div></div>
+          <div class="pc-nums"><span>MRR actual: ~EUR 30</span><span>Limite: USD 2.500</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Anthropic API</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">PAY-PER-USE — sin spend limit configurado</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:60%"></div></div></div>
+          <div class="pc-nums"><span>Sin limite configurado</span><span>Riesgo de cargo inesperado</span></div>
+          <div class="pc-upgrade">⚠ ACCION: Configurar spend limit EUR 150/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">n8n Cloud</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">STARTER — 5 flujos · 2.500 ejecuciones/mes</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:20%"></div></div></div>
+          <div class="pc-nums"><span>5 flujos activos</span><span>5 flujos limite</span></div>
+          <div class="pc-ok">✓ En limite — monitorear ejecuciones</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">BetterStack</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">FREE — 3 monitores · intervalo 3 min</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:33%"></div></div></div>
+          <div class="pc-nums"><span>1 monitor activo</span><span>3 monitores limite</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIVEL 2 -->
+    <div class="level-panel" id="level-1">
+      <div style="padding:16px 18px; border-radius:11px; border:1px solid rgba(245,158,11,.25); background:rgba(245,158,11,.04); margin-bottom:16px;">
+        <div style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#f59e0b; margin-bottom:6px;">500–2.000 MAU · MRR EUR 2.000–8.000 — Primeros upgrades</div>
+        <div style="font-size:12px; color:rgba(240,237,230,.55); line-height:1.6;">Costo infraestructura estimado: USD 200-300/mes. Margen operativo &gt;85%. Activar Vercel Pro y RevenueCat Business antes de superar los limites.</div>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Vercel Backend</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">HOBBY — acercandose al limite de bandwidth</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:75%"></div></div></div>
+          <div class="pc-nums"><span>~75 GB estimado</span><span>100 GB limite</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Bandwidth &gt;80 GB/mes O rate limit frecuente</div>
+          <div class="pc-upgrade">UPGRADE: Vercel Pro — USD 20/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">RevenueCat</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">STARTER — proximo al limite gratuito</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:70%"></div></div></div>
+          <div class="pc-nums"><span>MRR ~USD 1.750</span><span>Limite: USD 2.500</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> MRR supera USD 2.500</div>
+          <div class="pc-upgrade">UPGRADE: Business — USD 119/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">BetterStack</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">FREE — sin log drain disponible</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:50%"></div></div></div>
+          <div class="pc-nums"><span>Debugging limitado</span><span>Log drain requiere plan pago</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Necesitas log drain de Vercel para produccion</div>
+          <div class="pc-upgrade">UPGRADE: Starter — USD 24/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">n8n Cloud</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">STARTER — limite de flujos alcanzado</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:100%"></div></div></div>
+          <div class="pc-nums"><span>5/5 flujos activos</span><span>5 flujos limite</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Necesitas mas de 5 flujos O &gt;2.000 ejecuciones/mes</div>
+          <div class="pc-upgrade">UPGRADE: Team — ~USD 50/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Supabase DB</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">PRO — todavia suficiente</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:25%"></div></div></div>
+          <div class="pc-nums"><span>~2 GB uso</span><span>8 GB limite</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Anthropic API</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">PAY-PER-USE — gestion correcta</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:40%"></div></div></div>
+          <div class="pc-nums"><span>~EUR 80/mes estimado</span><span>Limite: EUR 200/mes</span></div>
+          <div class="pc-ok">✓ Saludable — monitorear cada semana</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIVEL 3 -->
+    <div class="level-panel" id="level-2">
+      <div style="padding:16px 18px; border-radius:11px; border:1px solid rgba(245,158,11,.3); background:rgba(245,158,11,.05); margin-bottom:16px;">
+        <div style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#f59e0b; margin-bottom:6px;">2.000–5.000 MAU · MRR EUR 8.000–20.000 — Upgrade Supabase</div>
+        <div style="font-size:12px; color:rgba(240,237,230,.55); line-height:1.6;">Costo infraestructura estimado: USD 700-900/mes. Margen operativo &gt;90%. El upgrade critico es Supabase Team cuando la DB supere 6 GB.</div>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Supabase DB</span><span class="pc-status status-red"></span></div>
+          <div class="pc-plan">PRO — DB acercandose al limite critico</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-red" style="width:85%"></div></div></div>
+          <div class="pc-nums"><span>~6.8 GB uso</span><span>8 GB limite</span></div>
+          <div class="pc-trigger"><b>Disparador CRITICO:</b> DB &gt;6 GB O conexiones simultaneas &gt;200</div>
+          <div class="pc-upgrade">UPGRADE URGENTE: Team — USD 599/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Sentry</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">FREE — errores acercandose al limite</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:80%"></div></div></div>
+          <div class="pc-nums"><span>~4.000 errores/mes</span><span>5.000 limite</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Errores &gt;4.500/mes O necesitas &gt;7 dias retencion</div>
+          <div class="pc-upgrade">UPGRADE: Team — USD 26/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Anthropic API</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">PAY-PER-USE — costo creciendo</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:65%"></div></div></div>
+          <div class="pc-nums"><span>~EUR 520/mes</span><span>Umbral revision: EUR 800</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Gasto &gt;EUR 800/mes</div>
+          <div class="pc-upgrade">ACCION: Solicitar rate limit aumentado + activar prompt caching (-30%)</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Vercel Pro</span><span class="pc-status status-green"></span></div>
+          <div class="pc-plan">PRO — ya activo y suficiente</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-green" style="width:30%"></div></div></div>
+          <div class="pc-nums"><span>~300 GB uso</span><span>1 TB limite Pro</span></div>
+          <div class="pc-ok">✓ Saludable — sin accion necesaria</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIVEL 4 -->
+    <div class="level-panel" id="level-3">
+      <div style="padding:16px 18px; border-radius:11px; border:1px solid rgba(239,68,68,.25); background:rgba(239,68,68,.04); margin-bottom:16px;">
+        <div style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#ef4444; margin-bottom:6px;">5.000–15.000 MAU · MRR EUR 20.000–60.000 — Escala Enterprise</div>
+        <div style="font-size:12px; color:rgba(240,237,230,.55); line-height:1.6;">Contratar primer empleado tecnico. Evaluar contratos Enterprise con Supabase y Vercel. Integrar WhatsApp API para clientes Enterprise.</div>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Supabase Enterprise</span><span class="pc-status status-red"></span></div>
+          <div class="pc-plan">TEAM — llegando a limites de escala</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-red" style="width:80%"></div></div></div>
+          <div class="pc-nums"><span>Alta concurrencia</span><span>SLA Enterprise requerido</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Requisito SLA Enterprise O picos &gt;500 conexiones</div>
+          <div class="pc-upgrade">UPGRADE: Enterprise negociado — USD 1.000-2.000/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">WhatsApp Business API</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">NO INTEGRADO — alta demanda Enterprise</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:0%"></div></div></div>
+          <div class="pc-nums"><span>Diferenciador Enterprise</span><span>Alta demanda de clientes</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Demanda de integracion de clientes Enterprise</div>
+          <div class="pc-upgrade">IMPLEMENTAR: 360dialog Business — EUR 50/cliente/mes</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Anthropic API</span><span class="pc-status status-red"></span></div>
+          <div class="pc-plan">PAY-PER-USE — costo muy elevado</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-red" style="width:90%"></div></div></div>
+          <div class="pc-nums"><span>~EUR 2.700/mes</span><span>Umbral contrato: EUR 3.000</span></div>
+          <div class="pc-trigger"><b>Disparador:</b> Gasto &gt;EUR 3.000/mes</div>
+          <div class="pc-upgrade">ACCION: Contrato Enterprise volumen — descuento 15-20%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIVEL 5 -->
+    <div class="level-panel" id="level-4">
+      <div style="padding:16px 18px; border-radius:11px; border:1px solid var(--border); background:var(--bg3); margin-bottom:16px;">
+        <div style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--teal); margin-bottom:6px;">15.000+ MAU · MRR &gt;EUR 60.000 — Arquitectura dedicada</div>
+        <div style="font-size:12px; color:rgba(240,237,230,.55); line-height:1.6;">Evaluar migracion a arquitectura multi-tenant dedicada. CTO externo o Tech Lead senior. Auditoria de seguridad SOC 2 si Enterprise &gt;20 clientes.</div>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Arquitectura completa</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">Revision de arquitectura global requerida</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:100%"></div></div></div>
+          <div class="pc-nums"><span>Escala critica alcanzada</span><span>Arquitectura multi-tenant</span></div>
+          <div class="pc-trigger"><b>Accion:</b> Evaluar migracion cuando MRR &gt;EUR 80.000</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">Base de datos</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">Separar DB produccion y analytics</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:80%"></div></div></div>
+          <div class="pc-nums"><span>DB &gt;50 GB</span><span>Separacion necesaria</span></div>
+          <div class="pc-trigger"><b>Accion:</b> Separar cuando DB &gt;50 GB</div>
+        </div>
+        <div class="platform-card">
+          <div class="pc-top"><span class="pc-name">IA Propia</span><span class="pc-status status-amber"></span></div>
+          <div class="pc-plan">Evaluar fine-tuning modelo propio</div>
+          <div class="pc-bar-wrap"><div class="pc-bar-bg"><div class="pc-bar-fg bar-amber" style="width:70%"></div></div></div>
+          <div class="pc-nums"><span>Gasto API &gt;USD 5.000/mes</span><span>ROI fine-tuning positivo</span></div>
+          <div class="pc-trigger"><b>Accion:</b> Evaluar cuando gasto Anthropic &gt;USD 5.000/mes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- TAB 2: ALERTAS                -->
+  <!-- ══════════════════════════════ -->
+  <div class="mpanel" id="panel-alertas">
+    <div class="sec-label">Alertas de seguridad — accion requerida</div>
+    <table class="alert-table" style="margin-bottom:24px;">
+      <thead><tr><th>NIVEL</th><th>DISPARADOR</th><th>ACCION REQUERIDA</th><th>PLATAFORMA</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge-critico">CRITICO</span></td><td>Spike requests &gt;500/min misma IP</td><td>Activar IP ban en proxy.js + revisar rate limiting</td><td>Vercel</td></tr>
+        <tr><td><span class="badge-critico">CRITICO</span></td><td>Errores 401/403 masivos &gt;100 en 5 min</td><td>Revisar RLS Supabase + rotar service_role_key</td><td>Supabase</td></tr>
+        <tr><td><span class="badge-critico">CRITICO</span></td><td>Cargo Anthropic &gt;200% del promedio diario</td><td>Bloquear API key + investigar uso fraudulento</td><td>Anthropic</td></tr>
+        <tr><td><span class="badge-critico">CRITICO</span></td><td>Crash rate app &gt;5% en 1 hora</td><td>Rollback build + publicar hotfix en &lt;4 horas</td><td>Sentry / EAS</td></tr>
+        <tr><td><span class="badge-critico">CRITICO</span></td><td>Uptime &lt;99% — kova-api.vercel.app caido</td><td>Verificar deploy + revisar status.anthropic.com</td><td>BetterStack</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>Intentos login fallidos &gt;50 en 1h mismo usuario</td><td>Bloquear cuenta temporal + notificar usuario</td><td>Supabase Auth</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>Supabase DB &gt;90% de capacidad del plan</td><td>Upgrade inmediato O purgar chats &gt;90 dias</td><td>Supabase</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>Vercel bandwidth &gt;95% del limite mensual</td><td>Upgrade a Vercel Pro antes del corte de servicio</td><td>Vercel</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>RevenueCat MRR acercandose a USD 2.500</td><td>Migrar a Business antes de superar el limite</td><td>RevenueCat</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>n8n ejecuciones &gt;80% del limite mensual</td><td>Upgrade plan O reducir frecuencia de flujos</td><td>n8n Cloud</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>Latencia p95 Anthropic &gt;4 segundos</td><td>Reducir max_tokens + activar prompt caching</td><td>Anthropic</td></tr>
+        <tr><td><span class="badge-alerta">ALERTA</span></td><td>Push token invalido &gt;10% de la base</td><td>Re-solicitar permisos en siguiente apertura de app</td><td>Expo Notif.</td></tr>
+        <tr><td><span class="badge-info">INFO</span></td><td>Gasto Anthropic &gt;120% del mes anterior</td><td>Revisar patrones de uso + optimizar prompts</td><td>Anthropic</td></tr>
+        <tr><td><span class="badge-info">INFO</span></td><td>Nuevos usuarios/dia &gt;50 de forma sostenida</td><td>Preparar upgrade al siguiente nivel de infraestructura</td><td>Mixpanel</td></tr>
+        <tr><td><span class="badge-info">INFO</span></td><td>npm audit detecta vulnerabilidades</td><td>Actualizar paquetes afectados en siguiente sprint</td><td>GitHub</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-label">Controles de seguridad activos</div>
+    <table class="alert-table">
+      <thead><tr><th>CONTROL</th><th>ESTADO</th><th>DETALLE</th><th>UBICACION</th></tr></thead>
+      <tbody>
+        <tr><td>x-api-key en callAI()</td><td><span class="badge-info">ACTIVO</span></td><td>Autenticacion en todas las llamadas al proxy</td><td>social.html</td></tr>
+        <tr><td>Rate limiting 60 req/min por IP</td><td><span class="badge-info">ACTIVO</span></td><td>Map en memoria en api/proxy.js</td><td>Vercel</td></tr>
+        <tr><td>Autenticacion Enterprise plan check</td><td><span class="badge-info">ACTIVO</span></td><td>Login Supabase + verificacion plan=enterprise</td><td>enterprise.html</td></tr>
+        <tr><td>RLS chats y user_profiles</td><td><span class="badge-info">ACTIVO</span></td><td>Politicas service_role + authenticated activas</td><td>Supabase</td></tr>
+        <tr><td>Timeout 25s en agentes</td><td><span class="badge-info">ACTIVO</span></td><td>Promise.race en nova/alex/maia.js</td><td>Vercel</td></tr>
+        <tr><td>Error boundary app movil</td><td><span class="badge-info">ACTIVO</span></td><td>ErrorBoundary class en App.tsx</td><td>App movil</td></tr>
+        <tr><td>Monitor uptime BetterStack</td><td><span class="badge-info">ACTIVO</span></td><td>kova-api.vercel.app monitorizado</td><td>BetterStack</td></tr>
+        <tr><td>Alertas Sentry crashes produccion</td><td><span class="badge-info">ACTIVO</span></td><td>Notificacion email alta prioridad</td><td>Sentry</td></tr>
+        <tr><td>Flujo n8n alertas errores</td><td><span class="badge-info">ACTIVO</span></td><td>Email + push al fundador ante errores</td><td>n8n</td></tr>
+        <tr><td>Panel de umbrales en dashboard</td><td><span class="badge-alerta">ESTE PANEL</span></td><td>Implementado en esta version del dashboard</td><td>Sistema tab</td></tr>
+        <tr><td>Rotacion automatica de API keys</td><td><span class="badge-alerta">PENDIENTE</span></td><td>Proceso manual — ver checklist trimestral</td><td>Vercel</td></tr>
+        <tr><td>Verificacion backup mensual</td><td><span class="badge-alerta">PENDIENTE</span></td><td>Backup activo pero restauracion no verificada</td><td>Supabase</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- TAB 3: CHECKLIST              -->
+  <!-- ══════════════════════════════ -->
+  <div class="mpanel" id="panel-checklist">
+    <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
+      <span style="font-size:11px; color:var(--text2);">Marca las revisiones completadas. Se guardan en el navegador.</span>
+      <button class="check-reset" onclick="resetAll()">Resetear todas</button>
+    </div>
+
+    <div class="sec-label">Semanal — cada lunes, 30 min</div>
+    <div class="checklist" id="checklist-weekly">
+      <div class="check-item" onclick="toggleCheck(this,'w1')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar uptime y latencia en BetterStack — anomalias de la semana</div>
+          <div class="check-tag">BetterStack · betterstack.com</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'w2')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar Issues activos en Sentry — nuevos crashes no vistos</div>
+          <div class="check-tag">Sentry · sentry.io</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'w3')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar gasto Anthropic API vs. proyeccion semanal</div>
+          <div class="check-tag">Anthropic · console.anthropic.com · Settings → Billing</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'w4')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar ejecuciones n8n — errores en flujos activos</div>
+          <div class="check-tag">n8n Cloud · kovaa.app.n8n.cloud</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'w5')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar nuevos signups en Supabase — patron normal o anomalo</div>
+          <div class="check-tag">Supabase · Table Editor → user_profiles</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'w6')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar MRR y cancelaciones en RevenueCat</div>
+          <div class="check-tag">RevenueCat · app.revenuecat.com</div>
+        </div>
+        <span class="check-freq freq-w">SEMANAL</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:28px;">Mensual — primer lunes de cada mes, 2 horas</div>
+    <div class="checklist" id="checklist-monthly">
+      <div class="check-item" onclick="toggleCheck(this,'m1')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Comparar costo real Anthropic vs. proyeccion — ajustar spend limit si necesario</div>
+          <div class="check-tag">Anthropic Console · Settings → Usage limits</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m2')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Ejecutar npm audit en repositorio kova — parchear vulnerabilidades</div>
+          <div class="check-tag">PowerShell → cd C:\Users\danie\Desktop\KOVA\kova → npm audit</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m3')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar logs Supabase — queries lentas &gt;1s, errores recurrentes</div>
+          <div class="check-tag">Supabase · SQL Editor → Logs</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m4')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Verificar backup automatico Supabase activo y restaurable</div>
+          <div class="check-tag">Supabase · Settings → Backups</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m5')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar App Store Connect y Google Play Console — crashes, ANRs</div>
+          <div class="check-tag">App Store Connect · Google Play Console</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m6')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Test del flujo de compra completo en RevenueCat sandbox</div>
+          <div class="check-tag">RevenueCat · Sandbox testing</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m7')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar funnel en Mixpanel — onboarding, churn, agente mas usado</div>
+          <div class="check-tag">Mixpanel · mixpanel.com</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'m8')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Verificar si algun limite de plataforma supero el 70% — revisar tab Umbrales</div>
+          <div class="check-tag">Este panel → tab Umbrales por Nivel</div>
+        </div>
+        <span class="check-freq freq-m">MENSUAL</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:28px;">Trimestral — cada 3 meses, 4 horas</div>
+    <div class="checklist" id="checklist-quarterly">
+      <div class="check-item" onclick="toggleCheck(this,'q1')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Rotar ANTHROPIC_API_KEY: crear nueva → actualizar Vercel → revocar vieja</div>
+          <div class="check-tag">Anthropic Console + Vercel → Environment Variables</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q2')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Rotar SUPABASE_SERVICE_KEY si hubo sospecha de exposicion</div>
+          <div class="check-tag">Supabase → API Settings + Vercel → Environment Variables</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q3')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar politicas RLS — nuevas tablas tienen permisos correctos</div>
+          <div class="check-tag">Supabase → SQL Editor</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q4')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Simular restauracion de backup en entorno de prueba</div>
+          <div class="check-tag">Supabase → Backups → Restore to point in time</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q5')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Actualizar Expo SDK a version LTS estable mas reciente</div>
+          <div class="check-tag">PowerShell → cd kova → npx expo upgrade</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q6')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Revisar contratos de todas las plataformas — cambios de precio</div>
+          <div class="check-tag">Vercel, Supabase, n8n, RevenueCat, BetterStack, Sentry, Anthropic</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q7')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Evaluar si el nivel de infraestructura sigue siendo correcto</div>
+          <div class="check-tag">Este panel → comparar MAU actual con umbrales de nivel</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'q8')">
+        <div class="check-box"><span class="check-tick">✓</span></div>
+        <div style="flex:1;">
+          <div class="check-text">Actualizar Privacy Policy si cambio algun proveedor de datos</div>
+          <div class="check-tag">Termly → kova-app.net privacy policy</div>
+        </div>
+        <span class="check-freq freq-q">TRIMESTRAL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- TAB 4: CONTRATACIONES         -->
+  <!-- ══════════════════════════════ -->
+  <div class="mpanel" id="panel-contrataciones">
+    <div class="sec-label">Contrataciones por nivel de crecimiento</div>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:20px; line-height:1.6;">
+      Regla de oro: el costo total de equipo nunca debe superar el 30% del MRR. Todos los perfiles son remotos — Latam o Europa del Este para optimizar costo.
+    </p>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 1</div><div class="hire-mrr">0–500 MAU · EUR 0–2.000 MRR</div></div>
+        <div class="hire-cost">EUR 0/mes</div>
+      </div>
+      <div class="hire-role">Solo fundador</div>
+      <div class="hire-trigger" style="margin-top:6px;">Situacion actual. Las herramientas automatizan todo. Foco total en adquisicion de usuarios y primeras ventas.</div>
+    </div>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 2</div><div class="hire-mrr">500–2.000 MAU · EUR 2.000–8.000 MRR</div></div>
+        <div class="hire-cost">EUR 400–600/mes</div>
+      </div>
+      <div class="hire-role">Community Manager part-time (freelance)</div>
+      <div class="hire-trigger" style="margin-top:6px;"><b>Funcion:</b> Gestion RRSS, contenido, responder comentarios y DMs.<br><b>Disparador:</b> Cuando las redes sociales tomen mas de 10 horas semanales al fundador.</div>
+    </div>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 3</div><div class="hire-mrr">2.000–5.000 MAU · EUR 8.000–20.000 MRR</div></div>
+        <div class="hire-cost">EUR 600–900/mes</div>
+      </div>
+      <div class="hire-role">Soporte al cliente remoto (part-time)</div>
+      <div class="hire-trigger" style="margin-top:6px;"><b>Funcion:</b> Responder tickets, onboarding Enterprise, incidencias.<br><b>Disparador:</b> Cuando los tickets de soporte superen 20 por semana.</div>
+    </div>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 4</div><div class="hire-mrr">5.000–10.000 MAU · EUR 20.000–40.000 MRR</div></div>
+        <div class="hire-cost">EUR 1.500–2.500/mes</div>
+      </div>
+      <div class="hire-role">Desarrollador movil junior (remoto)</div>
+      <div class="hire-trigger" style="margin-top:6px;"><b>Funcion:</b> Features nuevas, correcciones de bugs, builds iOS/Android.<br><b>Disparador:</b> Cuando el backlog tecnico supere 3 meses sin resolver.</div>
+    </div>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 4b</div><div class="hire-mrr">10.000–20.000 MAU · EUR 40.000–80.000 MRR</div></div>
+        <div class="hire-cost">EUR 800 fijo + 15% comision</div>
+      </div>
+      <div class="hire-role">Sales rep Latam (comision)</div>
+      <div class="hire-trigger" style="margin-top:6px;"><b>Funcion:</b> Cierre de cuentas Enterprise, demos, seguimiento de leads.<br><b>Disparador:</b> Cuando haya mas de 10 leads Enterprise/mes sin cerrar.</div>
+    </div>
+
+    <div class="hire-card">
+      <div class="hire-top">
+        <div><div class="hire-stage">Nivel 5</div><div class="hire-mrr">20.000+ MAU · MRR &gt;EUR 80.000</div></div>
+        <div class="hire-cost">EUR 3.000–5.000/mes</div>
+      </div>
+      <div class="hire-role">CTO / Tech Lead senior (remoto)</div>
+      <div class="hire-trigger" style="margin-top:6px;"><b>Funcion:</b> Arquitectura, gestion del equipo tecnico, seguridad avanzada.<br><b>Disparador:</b> Cuando la deuda tecnica o la escala supere la capacidad del fundador.</div>
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-title">Proyeccion de costos totales por nivel</div>
+      <div class="summary-row"><div class="summary-dot"></div><span><b>Nivel 1 (0–500 MAU):</b> Infra ~EUR 45/mes · Equipo EUR 0 · Margen &gt;97%</span></div>
+      <div class="summary-row"><div class="summary-dot"></div><span><b>Nivel 2 (500–2k MAU):</b> Infra ~EUR 250 · Equipo EUR 500–600 · Total ~EUR 850 · Margen ~85%</span></div>
+      <div class="summary-row"><div class="summary-dot"></div><span><b>Nivel 3 (2k–5k MAU):</b> Infra ~EUR 800 · Equipo EUR 1.200–1.500 · Total ~EUR 2.300 · Margen ~85%</span></div>
+      <div class="summary-row"><div class="summary-dot"></div><span><b>Nivel 4 (5k–15k MAU):</b> Infra ~EUR 2.000 · Equipo EUR 3.000–5.000 · Total ~EUR 7.000 · Margen ~88%</span></div>
+      <div class="summary-row"><div class="summary-dot"></div><span><b>Nivel 5 (15k+ MAU):</b> Infra ~EUR 4.000 · Equipo EUR 8.000–12.000 · Total ~EUR 16.000 · Margen ~73%</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── MAIN TAB SWITCH ──
+function switchMain(id) {
+  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mpanel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── LEVEL TAB SWITCH ──
+function switchLevel(idx) {
+  document.querySelectorAll('.ltab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.level-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// ── CHECKLIST ──
+function toggleCheck(el, key) {
+  el.classList.toggle('done');
+  const done = el.classList.contains('done');
+  try { localStorage.setItem('kova_check_'+key, done ? '1' : '0'); } catch(e){}
+}
+
+function resetAll() {
+  document.querySelectorAll('.check-item').forEach(el => {
+    el.classList.remove('done');
+    const key = el.getAttribute('onclick').match(/'([^']+)'\)/)[1];
+    try { localStorage.removeItem('kova_check_'+key); } catch(e){}
+  });
+}
+
+// ── RESTORE CHECKLIST STATE ──
+document.querySelectorAll('.check-item').forEach(el => {
+  const match = el.getAttribute('onclick').match(/'([^']+)'\)/);
+  if (!match) return;
+  const key = match[1];
+  try {
+    if (localStorage.getItem('kova_check_'+key) === '1') el.classList.add('done');
+  } catch(e){}
+});
+</script>
+</body>
+</html>
