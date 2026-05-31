@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOVA · Cost Intelligence Center</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+:root{
+  --bg:#030712;--bg2:#0d1117;--bg3:#0a1628;
+  --border:#1e3a5f;--text:#e2e8f0;--muted:#64748b;--dim:#475569;
+  --cyan:#00D4FF;--orange:#FF6B35;--purple:#A855F7;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;gap:12px;padding:14px 28px;
+  background:linear-gradient(135deg,#0a0f1e,#0d1b2a);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;
+}
+.logo{background:linear-gradient(135deg,var(--cyan),#0066CC);border-radius:9px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:900;color:var(--bg);flex-shrink:0;}
+.t-title{font-size:15px;font-weight:800;}
+.t-title span{color:var(--cyan);}
+.t-sub{font-size:11px;color:var(--muted);}
+.t-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
+.nav-btn{background:transparent;border:1px solid transparent;cursor:pointer;
+  color:var(--muted);font-family:var(--sans);font-size:12px;
+  padding:6px 12px;border-radius:7px;transition:all .15s;}
+.nav-btn:hover,.nav-btn.active{background:var(--border);color:var(--text);font-weight:600;}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:var(--sans);font-size:12px;
+  padding:6px 12px;border-radius:7px;cursor:pointer;text-decoration:none;
+  transition:all .15s;
+}
+.back-btn:hover{background:var(--border);color:var(--text);}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── LAYOUT ── */
+.main{padding:22px 28px;max-width:1060px;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+.card-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;}
+
+/* ── METRICS ── */
+.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.metric{flex:1;min-width:120px;background:var(--bg2);border-radius:11px;padding:13px 15px;border:1px solid var(--border);}
+.m-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.m-value{font-family:var(--mono);font-size:19px;font-weight:700;}
+.m-sub{font-size:10px;color:var(--dim);margin-top:2px;}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ── SLIDERS ── */
+.sr{margin-bottom:12px;}
+.sh{display:flex;justify-content:space-between;margin-bottom:4px;}
+.sl{color:#94a3b8;font-size:12px;}
+.sv{font-family:var(--mono);font-size:12px;font-weight:700;}
+input[type=range]{width:100%;height:4px;cursor:pointer;border-radius:2px;}
+
+/* ── TABLES ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.tbl th{color:var(--dim);padding:7px 8px;text-align:right;font-weight:600;border-bottom:1px solid var(--border);}
+.tbl th:first-child{text-align:left;}
+.tbl td{padding:6px 8px;border-bottom:1px solid #0f1929;font-family:var(--mono);text-align:right;}
+.tbl td:first-child{text-align:left;color:var(--muted);}
+
+/* ── PROGRESS ── */
+.pw{background:var(--border);border-radius:4px;height:5px;}
+.pb{height:5px;border-radius:4px;transition:width .4s;}
+
+/* ── CODE ── */
+.code{background:#0a0f1e;border:1px solid var(--border);border-radius:8px;
+  padding:13px 15px;font-family:var(--mono);font-size:11px;line-height:1.9;
+  color:#a5b4fc;overflow-x:auto;white-space:pre;}
+.kw{color:#f472b6;}.str{color:#86efac;}.num{color:#fb923c;}.cm{color:#475569;}.fn{color:#67e8f9;}
+
+/* ── STEPS ── */
+.step{display:flex;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.snum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;margin-top:1px;}
+.sbody h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.sbody p{font-size:11.5px;color:var(--muted);line-height:1.7;margin-bottom:7px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}.main{padding:14px;}.t-nav .nav-btn{font-size:10px;padding:5px 8px;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">K</div>
+  <div>
+    <div class="t-title">KOVA <span>Cost Intelligence Center</span></div>
+    <div class="t-sub">Alfester Technologies OÜ · Token Cost Engine + Fair Use Control</div>
+  </div>
+  <div class="t-nav">
+    <button class="nav-btn active" onclick="showS('sim',this)">💰 Simulador</button>
+    <button class="nav-btn" onclick="showS('fu',this)">⚖️ Fair Use</button>
+    <button class="nav-btn" onclick="showS('impl',this)">🛠️ Implementación</button>
+    <button class="nav-btn" onclick="showS('mon',this)">📡 Monitoring</button>
+    <a href="/" class="back-btn">← Suite</a>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══ SIMULADOR ══ -->
+<div id="s-sim" class="section active">
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
+    <span style="color:var(--muted);font-size:11px;">Modelo:</span>
+    <button class="nav-btn active" id="btn-sonnet" onclick="setModel('sonnet',this)" style="border-color:var(--cyan);">Sonnet 4.6 · $3/$15 <span style="background:#00D4FF22;color:var(--cyan);border-radius:3px;padding:1px 4px;font-size:9px;margin-left:2px;">REC</span></button>
+    <button class="nav-btn" id="btn-haiku"  onclick="setModel('haiku',this)"  style="border-color:var(--border);">Haiku 4.5 · $1/$5</button>
+    <button class="nav-btn" id="btn-opus"   onclick="setModel('opus',this)"   style="border-color:var(--border);">Opus 4.7 · $5/$25</button>
+    <span class="pill" style="margin-left:auto;background:#00D4FF11;color:var(--cyan);border:1px solid #00D4FF33;">Mayo 2026</span>
+  </div>
+  <div class="metrics" id="top-m"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">👥 Usuarios</div>
+      <div class="sr"><div class="sh"><span class="sl">Free</span><span class="sv" id="v-fu" style="color:var(--muted)">200</span></div><input type="range" min="0" max="2000" step="10" value="200" style="accent-color:var(--muted)" oninput="document.getElementById('v-fu').textContent=this.value;recalc()"></div>
+      <div class="sr"><div class="sh"><span class="sl" style="color:var(--cyan)">Pro ($29/mes)</span><span class="sv" id="v-pu" style="color:var(--cyan)">80</span></div><input type="range" min="0" max="500" step="5" value="80" style="accent-color:var(--cyan)" oninput="document.getElementById('v-pu').textContent=this.value;recalc()"></div>
+      <div class="sr"><div class="sh"><span class="sl" style="color:var(--purple)">Enterprise ($99/mes)</span><span class="sv" id="v-eu" style="color:var(--purple)">20</span></div><input type="range" min="0" max="100" step="1" value="20" style="accent-color:var(--purple)" oninput="document.getElementById('v-eu').textContent=this.value;recalc()"></div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:2px;">
+        <div class="sr"><div class="sh"><span class="sl" style="color:var(--cyan)">Msgs/mes Pro</span><span class="sv" id="v-pm" style="color:var(--cyan)">120</span></div><input type="range" min="10" max="800" step="10" value="120" style="accent-color:var(--cyan)" oninput="document.getElementById('v-pm').textContent=this.value;recalc()"></div>
+        <div class="sr"><div class="sh"><span class="sl" style="color:var(--purple)">Msgs/mes Enterprise</span><span class="sv" id="v-em" style="color:var(--purple)">400</span></div><input type="range" min="50" max="3000" step="50" value="400" style="accent-color:var(--purple)" oninput="document.getElementById('v-em').textContent=this.value;recalc()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">💸 Desglose mensual</div>
+      <div id="breakdown"></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">🤖 Mix de agentes</div>
+      <div class="sr"><div class="sh"><span class="sl" style="color:#00D4FF">🔍 NOVA · Prospecting</span><span class="sv" id="v-no" style="color:#00D4FF">40%</span></div><input type="range" min="0" max="80" step="5" value="40" style="accent-color:#00D4FF" oninput="document.getElementById('v-no').textContent=this.value+'%';recalc()"></div>
+      <div class="sr"><div class="sh"><span class="sl" style="color:var(--orange)">🎯 ALEX · Sales Closing</span><span class="sv" id="v-al" style="color:var(--orange)">35%</span></div><input type="range" min="0" max="80" step="5" value="35" style="accent-color:var(--orange)" oninput="document.getElementById('v-al').textContent=this.value+'%';recalc()"></div>
+      <div class="sr"><div class="sh"><span class="sl" style="color:var(--purple)">✨ MAIA · Content</span><span class="sv" id="v-ma" style="color:var(--purple)">25%</span></div><input type="range" min="0" max="80" step="5" value="25" style="accent-color:var(--purple)" oninput="document.getElementById('v-ma').textContent=this.value+'%';recalc()"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Costo/msg por modelo</div>
+      <table class="tbl"><thead><tr><th style="text-align:left">Modelo</th><th>Sin caché</th><th>Con caché</th><th>Ahorro</th></tr></thead><tbody id="model-tbl"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FAIR USE ══ -->
+<div id="s-fu" class="section">
+  <div class="card" style="border-color:#1e3a5f;">
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:7px;">¿Por qué "ilimitado" necesita Fair Use?</div>
+    <p style="color:var(--muted);font-size:12px;line-height:1.8;">KOVA cobra precio plano mensual, pero paga la API de Anthropic <strong style="color:var(--text)">por cada token</strong>. Sin tope, un usuario abusivo consume más de lo que paga. El Fair Use establece el umbral donde el margen se mantiene positivo — sin afectar al usuario promedio (80–150 msgs/mes).</p>
+  </div>
+  <div class="g2">
+    <div class="card" style="border-color:#00D4FF33;">
+      <div style="font-size:13px;font-weight:800;color:var(--cyan);margin-bottom:3px;">PRO · $29/mes</div>
+      <span class="pill" style="background:#00D4FF11;color:var(--cyan);border:1px solid #00D4FF33;margin-bottom:12px;display:inline-block;">Fair Use: 500 msgs/mes</span>
+      <div id="pro-g"></div>
+    </div>
+    <div class="card" style="border-color:#A855F733;">
+      <div style="font-size:13px;font-weight:800;color:var(--purple);margin-bottom:3px;">ENTERPRISE · $99/mes</div>
+      <span class="pill" style="background:#A855F711;color:var(--purple);border:1px solid #A855F733;margin-bottom:12px;display:inline-block;">Fair Use: 2.000 msgs/mes</span>
+      <div id="ent-g"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 Valor real vs precio de plan</div>
+    <table class="tbl"><thead><tr><th style="text-align:left">Msgs/mes</th><th>COGS Pro</th><th>Precio Pro</th><th>Margen Pro</th><th>COGS Ent</th><th>Precio Ent</th><th>Margen Ent</th></tr></thead><tbody id="fu-tbl"></tbody></table>
+  </div>
+  <div class="card" style="border-color:#22c55e33;">
+    <div class="card-title" style="color:#22c55e;">🎯 Política Fair Use recomendada</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="policy"></div>
+  </div>
+</div>
+
+<!-- ══ IMPLEMENTACIÓN ══ -->
+<div id="s-impl" class="section">
+  <div class="card" style="border-color:#22c55e33;">
+    <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:5px;">🛡️ 4 pasos de implementación · Stack: Supabase + Vercel + Node.js</div>
+    <p style="color:var(--muted);font-size:11.5px;line-height:1.8;">Implementa en orden. Cada paso activa protección incremental. Sin reiniciar la app.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PASO 1 · Tabla en Supabase SQL Editor</div>
+    <div class="step">
+      <div class="snum" style="background:#00D4FF22;color:var(--cyan);">1</div>
+      <div class="sbody">
+        <h3>Crear tabla <code style="color:var(--cyan)">user_usage</code></h3>
+        <p>El month_key ("2026-06") cambia automáticamente cada mes — sin cron de reset.</p>
+        <div class="code"><span class="cm">-- Supabase → SQL Editor → New query</span>
+<span class="kw">CREATE TABLE</span> user_usage (
+  id           <span class="fn">uuid</span> <span class="kw">DEFAULT</span> <span class="fn">gen_random_uuid</span>() <span class="kw">PRIMARY KEY</span>,
+  user_id      <span class="fn">uuid</span> <span class="kw">REFERENCES</span> auth.users(id) <span class="kw">ON DELETE CASCADE</span>,
+  month_key    <span class="fn">text</span>    <span class="kw">NOT NULL</span>,
+  msg_count    <span class="fn">integer</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  token_input  <span class="fn">bigint</span>  <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  token_output <span class="fn">bigint</span>  <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  updated_at   <span class="fn">timestamptz</span> <span class="kw">DEFAULT</span> <span class="fn">now</span>(),
+  <span class="kw">UNIQUE</span>(user_id, month_key)
+);
+<span class="kw">ALTER TABLE</span> user_usage <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">CREATE POLICY</span> <span class="str">"read own"</span> <span class="kw">ON</span> user_usage <span class="kw">FOR SELECT USING</span>(auth.uid()=user_id);
+<span class="kw">CREATE INDEX</span> idx_usage <span class="kw">ON</span> user_usage(user_id, month_key);</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="snum" style="background:#FF6B3522;color:var(--orange);">2</div>
+      <div class="sbody">
+        <h3>Función RPC atómica</h3>
+        <p>Valida el límite Y suma en una transacción. Sin race conditions.</p>
+        <div class="code"><span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">check_and_increment_usage</span>(
+  p_user_id <span class="fn">uuid</span>, p_plan <span class="fn">text</span>,
+  p_tokens_in <span class="fn">integer</span> <span class="kw">DEFAULT</span> <span class="num">0</span>, p_tokens_out <span class="fn">integer</span> <span class="kw">DEFAULT</span> <span class="num">0</span>
+) <span class="kw">RETURNS</span> <span class="fn">jsonb</span> <span class="kw">LANGUAGE</span> plpgsql <span class="kw">SECURITY DEFINER AS</span> $$
+<span class="kw">DECLARE</span>
+  v_month text := <span class="fn">to_char</span>(<span class="fn">now</span>(),<span class="str">'YYYY-MM'</span>);
+  v_limit integer; v_count integer;
+<span class="kw">BEGIN</span>
+  v_limit := <span class="kw">CASE</span> p_plan
+    <span class="kw">WHEN</span> <span class="str">'free'</span> <span class="kw">THEN</span> <span class="num">15</span> <span class="kw">WHEN</span> <span class="str">'pro'</span> <span class="kw">THEN</span> <span class="num">500</span>
+    <span class="kw">WHEN</span> <span class="str">'enterprise'</span> <span class="kw">THEN</span> <span class="num">2000</span> <span class="kw">ELSE</span> <span class="num">15</span> <span class="kw">END</span>;
+  <span class="kw">INSERT INTO</span> user_usage(user_id,month_key,msg_count)
+    <span class="kw">VALUES</span>(p_user_id,v_month,<span class="num">0</span>) <span class="kw">ON CONFLICT</span>(user_id,month_key) <span class="kw">DO NOTHING</span>;
+  <span class="kw">SELECT</span> msg_count <span class="kw">INTO</span> v_count <span class="kw">FROM</span> user_usage
+    <span class="kw">WHERE</span> user_id=p_user_id <span class="kw">AND</span> month_key=v_month <span class="kw">FOR UPDATE</span>;
+  <span class="kw">IF</span> p_plan=<span class="str">'free'</span> <span class="kw">AND</span> v_count>=v_limit <span class="kw">THEN</span>
+    <span class="kw">RETURN</span> <span class="fn">jsonb_build_object</span>(<span class="str">'allowed'</span>,<span class="kw">false</span>,<span class="str">'count'</span>,v_count,<span class="str">'limit'</span>,v_limit);
+  <span class="kw">END IF</span>;
+  <span class="kw">UPDATE</span> user_usage <span class="kw">SET</span>
+    msg_count=msg_count+<span class="num">1</span>,token_input=token_input+p_tokens_in,
+    token_output=token_output+p_tokens_out,updated_at=<span class="fn">now</span>()
+    <span class="kw">WHERE</span> user_id=p_user_id <span class="kw">AND</span> month_key=v_month;
+  <span class="kw">RETURN</span> <span class="fn">jsonb_build_object</span>(<span class="str">'allowed'</span>,<span class="kw">true</span>,<span class="str">'count'</span>,v_count+<span class="num">1</span>,
+    <span class="str">'limit'</span>,v_limit,<span class="str">'throttle'</span>,(v_count+<span class="num">1</span>)>(v_limit*<span class="num">0.8</span>));
+<span class="kw">END</span>; $$;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PASO 2 · Middleware Vercel</div>
+    <div class="step">
+      <div class="snum" style="background:#A855F722;color:var(--purple);">3</div>
+      <div class="sbody">
+        <h3><code style="color:var(--purple)">middleware/fairUse.js</code> — antes de llamar a Claude</h3>
+        <div class="code"><span class="cm">// middleware/fairUse.js</span>
+<span class="kw">const</span> { createClient } = require(<span class="str">'@supabase/supabase-js'</span>)
+<span class="kw">const</span> THROTTLE = { free:<span class="num">0</span>, pro:<span class="num">2000</span>, enterprise:<span class="num">1000</span> }
+
+<span class="kw">async function</span> <span class="fn">checkFairUse</span>(req, res, next) {
+  <span class="kw">const</span> { id:userId, plan } = req.user
+  <span class="kw">const</span> sb = <span class="fn">createClient</span>(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  <span class="kw">const</span> { data, error } = <span class="kw">await</span> sb.<span class="fn">rpc</span>(<span class="str">'check_and_increment_usage'</span>,
+    { p_user_id:userId, p_plan:plan })
+  <span class="kw">if</span> (error) <span class="kw">return</span> <span class="fn">next</span>()  <span class="cm">// fail-open</span>
+  <span class="kw">if</span> (!data.allowed) <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">429</span>).<span class="fn">json</span>({
+    error:<span class="str">'monthly_limit_reached'</span>,
+    message:<span class="str">'Límite mensual alcanzado. Actualiza tu plan.'</span>,
+    upgrade:<span class="str">'https://app.kova.ai/upgrade'</span>
+  })
+  <span class="kw">if</span> (data.throttle && THROTTLE[plan]>0)
+    <span class="kw">await new</span> <span class="fn">Promise</span>(r=><span class="fn">setTimeout</span>(r,THROTTLE[plan]))
+  res.<span class="fn">setHeader</span>(<span class="str">'X-Usage-Count'</span>, data.count)
+  res.<span class="fn">setHeader</span>(<span class="str">'X-Usage-Limit'</span>, data.limit)
+  res.<span class="fn">setHeader</span>(<span class="str">'X-Usage-Pct'</span>, Math.<span class="fn">round</span>(data.count/data.limit*<span class="num">100</span>))
+  req.usage = data; <span class="kw">return</span> <span class="fn">next</span>()
+}
+module.exports = { checkFairUse }</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="snum" style="background:#22c55e22;color:var(--green);">4</div>
+      <div class="sbody">
+        <h3>Aplicar en <code style="color:var(--green)">api/chat.js</code></h3>
+        <div class="code"><span class="kw">const</span> { checkFairUse } = require(<span class="str">'../middleware/fairUse'</span>)
+<span class="kw">export default async function</span> <span class="fn">handler</span>(req, res) {
+  <span class="kw">await</span> <span class="fn">authMiddleware</span>(req, res, <span class="kw">async</span> () => {
+    <span class="kw">await</span> <span class="fn">checkFairUse</span>(req, res, <span class="kw">async</span> () => {
+      <span class="cm">// ✅ Solo llega aquí si tiene cupo</span>
+      <span class="kw">const</span> resp = <span class="kw">await</span> anthropic.messages.<span class="fn">create</span>({
+        model: <span class="str">'claude-sonnet-4-6'</span>, max_tokens:<span class="num">1000</span>,
+        system: req.body.systemPrompt, messages: req.body.messages,
+      })
+      res.<span class="fn">json</span>({ content: resp.content[<span class="num">0</span>].text })
+    })
+  })
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PASO 3 · Hook React Native</div>
+    <div class="step">
+      <div class="snum" style="background:#eab30822;color:var(--yellow);">5</div>
+      <div class="sbody">
+        <h3><code style="color:var(--yellow)">hooks/useUsageGuard.js</code></h3>
+        <p>Lee headers X-Usage del backend. Sin llamadas extra. Banner al 80%, bloqueo al 100%.</p>
+        <div class="code"><span class="kw">export function</span> <span class="fn">useUsageGuard</span>() {
+  <span class="kw">const</span> [usage, setUsage] = <span class="fn">useState</span>({count:<span class="num">0</span>,limit:<span class="num">500</span>,pct:<span class="num">0</span>})
+  <span class="kw">const</span> <span class="fn">updateFromHeaders</span> = <span class="fn">useCallback</span>(headers => {
+    <span class="fn">setUsage</span>({
+      count:<span class="fn">parseInt</span>(headers.<span class="fn">get</span>(<span class="str">'x-usage-count'</span>)||<span class="str">'0'</span>),
+      limit:<span class="fn">parseInt</span>(headers.<span class="fn">get</span>(<span class="str">'x-usage-limit'</span>)||<span class="str">'500'</span>),
+      pct:  <span class="fn">parseInt</span>(headers.<span class="fn">get</span>(<span class="str">'x-usage-pct'</span>)||<span class="str">'0'</span>),
+    })
+  },[])
+  <span class="kw">return</span> { usage, updateFromHeaders,
+    isNearLimit: usage.pct>=<span class="num">80</span>, isAtLimit: usage.pct>=<span class="num">100</span> }
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PASO 4 · Cron limpieza + View admin</div>
+    <div class="step">
+      <div class="snum" style="background:#64748b22;color:var(--muted);">6</div>
+      <div class="sbody">
+        <h3>pg_cron y view v_current_usage</h3>
+        <div class="code"><span class="cm">-- Supabase → Extensions → habilitar pg_cron</span>
+<span class="kw">SELECT</span> cron.<span class="fn">schedule</span>(<span class="str">'cleanup'</span>,<span class="str">'0 0 1 * *'</span>,$$
+  <span class="kw">DELETE FROM</span> user_usage
+  <span class="kw">WHERE</span> month_key&lt;<span class="fn">to_char</span>(<span class="fn">now</span>()-<span class="kw">INTERVAL</span> <span class="str">'3 months'</span>,<span class="str">'YYYY-MM'</span>);$$);
+
+<span class="kw">CREATE VIEW</span> v_current_usage <span class="kw">AS</span>
+<span class="kw">SELECT</span> p.email, p.plan, uu.msg_count,
+  <span class="fn">ROUND</span>(uu.msg_count::numeric/<span class="kw">CASE</span> p.plan
+    <span class="kw">WHEN</span> <span class="str">'free'</span> <span class="kw">THEN</span> <span class="num">15</span> <span class="kw">WHEN</span> <span class="str">'pro'</span> <span class="kw">THEN</span> <span class="num">500</span>
+    <span class="kw">WHEN</span> <span class="str">'enterprise'</span> <span class="kw">THEN</span> <span class="num">2000</span> <span class="kw">END</span>*<span class="num">100</span>,<span class="num">1</span>) <span class="kw">AS</span> usage_pct
+<span class="kw">FROM</span> user_usage uu <span class="kw">JOIN</span> profiles p <span class="kw">ON</span> p.id=uu.user_id
+<span class="kw">WHERE</span> uu.month_key=<span class="fn">to_char</span>(<span class="fn">now</span>(),<span class="str">'YYYY-MM'</span>);</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MONITORING ══ -->
+<div id="s-mon" class="section">
+  <div class="card" style="border-color:#eab30833;">
+    <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:7px;">📡 3 capas de protección — sin sorpresas de facturación</div>
+    <p style="color:var(--muted);font-size:12px;line-height:1.8;"><strong style="color:var(--text)">Capa 1</strong> (Anthropic Console): hard cap absoluto mensual. <strong style="color:var(--text)">Capa 2</strong> (n8n): alertas proactivas al 90% de uso. <strong style="color:var(--text)">Capa 3</strong> (Supabase): queries de anomalías en tiempo real.</p>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red);">🔴 Capa 1 · Hard Cap en Anthropic Console</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px;"><strong style="color:var(--text)">console.anthropic.com → Settings → Billing → Usage limits</strong></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="background:#ef444411;border:1px solid #ef444433;border-radius:8px;padding:12px 14px;flex:1;min-width:100px;">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Early 0–100 usuarios</div>
+        <div style="font-size:22px;font-weight:800;color:var(--red);font-family:var(--mono);">$50</div>
+        <div style="font-size:10px;color:var(--dim);">hard cap/mes</div>
+      </div>
+      <div style="background:#eab30811;border:1px solid #eab30833;border-radius:8px;padding:12px 14px;flex:1;min-width:100px;">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Growth 100–500</div>
+        <div style="font-size:22px;font-weight:800;color:var(--yellow);font-family:var(--mono);">$300</div>
+        <div style="font-size:10px;color:var(--dim);">hard cap/mes</div>
+      </div>
+      <div style="background:#22c55e11;border:1px solid #22c55e33;border-radius:8px;padding:12px 14px;flex:1;min-width:100px;">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Scale 500+</div>
+        <div style="font-size:22px;font-weight:800;color:var(--green);font-family:var(--mono);">$1.5K</div>
+        <div style="font-size:10px;color:var(--dim);">+ alertas 80%</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--yellow);">🟡 Capa 2 · n8n workflow — alerta diaria 09:00</div>
+    <div class="code"><span class="cm">// HTTP Request → Supabase REST API</span>
+GET /rest/v1/v_current_usage?usage_pct=gte.90
+Headers: apikey: <span class="str">${SUPABASE_SERVICE_KEY}</span>
+
+<span class="cm">// IF hay resultados → Slack/Email:</span>
+<span class="str">"⚠️ KOVA: {{$json.length}} usuarios al 90%+ de su límite"</span>
+<span class="str">"{{$json.map(u=>u.email+' — '+u.plan+' — '+u.usage_pct+'%').join('\n')}}"</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--green);">🟢 Capa 3 · Query de anomalías en Supabase</div>
+    <div class="code"><span class="kw">SELECT</span> p.email, p.plan, uu.msg_count,
+  <span class="fn">ROUND</span>((uu.token_input*<span class="num">0.000003</span>+uu.token_output*<span class="num">0.000015</span>)::numeric,<span class="num">4</span>) <span class="kw">AS</span> cost_usd
+<span class="kw">FROM</span> user_usage uu <span class="kw">JOIN</span> profiles p <span class="kw">ON</span> p.id=uu.user_id
+<span class="kw">WHERE</span> uu.month_key=<span class="fn">to_char</span>(<span class="fn">now</span>(),<span class="str">'YYYY-MM'</span>) <span class="kw">AND</span> uu.msg_count><span class="num">200</span>
+<span class="kw">ORDER BY</span> cost_usd <span class="kw">DESC LIMIT</span> <span class="num">20</span>;</div>
+  </div>
+  <div class="card">
+    <div class="card-title">✅ Checklist</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;" id="cl"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+const MD={haiku:{i:1.0,o:5.0},sonnet:{i:3.0,o:15.0},opus:{i:5.0,o:25.0}}
+const AG={NOVA:{s:1800,i:600,o:800,h:300,t:6},ALEX:{s:2200,i:500,o:700,h:250,t:8},MAIA:{s:1600,i:700,o:1200,h:400,t:5}}
+let model='sonnet'
+function c1(m,a,t,ca){const md=MD[m],ag=AG[a],hi=ag.h*(t-1);
+  const ic=ca?((ag.s+hi)*md.i*.1+ag.i*md.i)/1e6:((ag.s+hi+ag.i)*md.i)/1e6;
+  return ic+ag.o*md.o/1e6}
+function avg(m,mix,ca){let t=0;for(const[k,p] of Object.entries(mix)){const ag=AG[k];let s=0;
+  for(let i=1;i<=ag.t;i++)s+=c1(m,k,i,ca);t+=s/ag.t*(p/100)}return t}
+function sl(){
+  const r=q=>+document.querySelector(q)?.value||0
+  return{fu:r('input[oninput*="v-fu"]')||200,pu:r('input[oninput*="v-pu"]')||80,eu:r('input[oninput*="v-eu"]')||20,
+    pm:r('input[oninput*="v-pm"]')||120,em:r('input[oninput*="v-em"]')||400,
+    no:r('input[oninput*="v-no"]')||40,al:r('input[oninput*="v-al"]')||35,ma:r('input[oninput*="v-ma"]')||25}}
+const fd=n=>n<.001?'$'+(n*1000).toFixed(3)+'m':'$'+n.toFixed(4)
+const fD=n=>'$'+n.toFixed(2)
+const fP=n=>n.toFixed(1)+'%'
+const col=p=>p>60?'#22c55e':p>30?'#eab308':'#ef4444'
+
+function recalc(){
+  const s=sl(),mix={NOVA:s.no,ALEX:s.al,MAIA:s.ma}
+  const cC=avg(model,mix,true),cN=avg(model,mix,false),sv=(cN-cC)/cN*100
+  const fC=s.fu*15*cC,pC=s.pu*s.pm*cC,eC=s.eu*s.em*cC,tot=fC+pC+eC
+  const rev=s.pu*29+s.eu*99,mg=rev>0?(rev-tot)/rev*100:0
+  document.getElementById('top-m').innerHTML=
+    mc('Costo/msg',fd(cC),'con prompt caching','#00D4FF')+
+    mc('Sin caché',fd(cN),'ahorro: '+fP(sv),'#FF6B35')+
+    mc('MRR',fD(rev),s.pu+' Pro + '+s.eu+' Ent','#A855F7')+
+    mc('Margen',fP(mg),'COGS: '+fD(tot),col(mg))
+  document.getElementById('breakdown').innerHTML=
+    [['Free','#64748b',fC,s.fu,s.fu*15],['Pro','#00D4FF',pC,s.pu,s.pu*s.pm],
+     ['Enterprise','#A855F7',eC,s.eu,s.eu*s.em]].map(([l,c,cost,u,m])=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:7px;margin-bottom:6px;background:${c}0d;border:1px solid ${c}22;">
+        <div><span class="pill" style="background:${c}22;color:${c};border:1px solid ${c}44;">${l}</span>
+          <span style="color:#475569;font-size:10px;margin-left:6px;">${u.toLocaleString()} users · ${m.toLocaleString()} msgs</span></div>
+        <span style="color:${c};font-weight:700;font-family:var(--mono);">${fD(cost)}</span>
+      </div>`).join('')+
+    `<div style="border-top:1px solid var(--border);padding-top:9px;margin-top:2px;display:flex;justify-content:space-between;">
+      <span style="color:#94a3b8;font-size:12px;">Total COGS</span>
+      <span style="color:#ef4444;font-weight:800;font-family:var(--mono);">${fD(tot)}</span>
+    </div>
+    <div style="margin-top:6px;padding:8px 10px;border-radius:7px;background:${col(mg)}11;border:1px solid ${col(mg)}33;display:flex;justify-content:space-between;">
+      <span style="color:#94a3b8;font-size:12px;">Margen</span>
+      <span style="color:${col(mg)};font-weight:800;font-family:var(--mono);">${fD(rev-tot)} (${fP(mg)})</span>
+    </div>`
+  document.getElementById('model-tbl').innerHTML=
+    [['haiku','Haiku 4.5'],['sonnet','Sonnet 4.6'],['opus','Opus 4.7']].map(([id,label])=>{
+      const cNm=avg(id,mix,false),cCm=avg(id,mix,true),sv=(cNm-cCm)/cNm*100,cur=id===model
+      return`<tr style="opacity:${cur?1:.5}"><td style="color:${cur?'#e2e8f0':'var(--muted)'};text-align:left;">${cur?'▶ ':''}${label}</td>
+        <td>${fd(cNm)}</td><td style="color:#22c55e;">${fd(cCm)}</td><td style="color:#22c55e;">${fP(sv)}</td></tr>`}).join('')
+  // Fair Use
+  const pb=Math.floor(29/cC),eb=Math.floor(99/cC)
+  document.getElementById('pro-g').innerHTML=gauge(s.pm,500,29,cC,'#00D4FF',pb)
+  document.getElementById('ent-g').innerHTML=gauge(s.em,2000,99,cC,'#A855F7',eb)
+  document.getElementById('fu-tbl').innerHTML=[50,100,200,300,500,800,1000,2000,3000].map(n=>{
+    const cp=n*cC,mP=(29-cp)/29*100,mE=(99-cp)/99*100,hi=n===500||n===2000
+    const w=p=>p<0?'⚠️':p<30?'🟡':'✅'
+    return`<tr style="${hi?'background:#ffffff06':''}">
+      <td style="${hi?'color:#e2e8f0;font-weight:700':''}">${n}${n===500?' ← Pro':n===2000?' ← Ent':''}</td>
+      <td style="color:${mP>0?'#e2e8f0':'#ef4444'}">${fD(cp)}</td><td style="color:#00D4FF">$29.00</td>
+      <td style="color:${col(mP)};font-weight:${mP<0?700:400}">${fP(mP)} ${w(mP)}</td>
+      <td style="color:${mE>0?'#e2e8f0':'#ef4444'}">${fD(cp)}</td><td style="color:#A855F7">$99.00</td>
+      <td style="color:${col(mE)};font-weight:${mE<0?700:400}">${fP(mE)} ${w(mE)}</td></tr>`}).join('')
+  document.getElementById('policy').innerHTML=`
+    <div style="background:#00D4FF0a;border:1px solid #00D4FF22;border-radius:8px;padding:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--cyan);margin-bottom:7px;">PRO · Política</div>
+      <div style="font-size:11px;color:#94a3b8;line-height:2.0;">
+        ✅ <strong>0–400:</strong> velocidad plena<br>🟡 <strong>401–500:</strong> throttle 2s + banner<br>
+        🔴 <strong>500+:</strong> bloqueo + upgrade<br>💡 Break-even: <strong style="color:#e2e8f0">${pb.toLocaleString()} msgs</strong>
+      </div>
+    </div>
+    <div style="background:#A855F70a;border:1px solid #A855F722;border-radius:8px;padding:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:7px;">ENTERPRISE · Política</div>
+      <div style="font-size:11px;color:#94a3b8;line-height:2.0;">
+        ✅ <strong>0–1.600:</strong> velocidad plena<br>🟡 <strong>1.601–2.000:</strong> throttle 1s + banner<br>
+        🔴 <strong>2.000+:</strong> bloqueo + Enterprise+<br>💡 Break-even: <strong style="color:#e2e8f0">${eb.toLocaleString()} msgs</strong>
+      </div>
+    </div>`
+}
+function gauge(cur,lim,price,cpm,col2,bk){
+  const cost=cur*cpm,mg=(price-cost)/price*100,pct=Math.min(cur/lim*100,100),c=col(100-pct)
+  return`<div style="margin-bottom:9px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:3px;">
+      <span>Uso simulado</span><span style="color:${c};font-family:var(--mono);font-weight:700;">${cur.toLocaleString()}/${lim.toLocaleString()} (${pct.toFixed(0)}%)</span></div>
+    <div class="pw"><div class="pb" style="width:${pct}%;background:${c};"></div></div></div>
+    <div style="font-size:11px;color:#94a3b8;line-height:2.1;">
+      Break-even: <strong style="color:#e2e8f0">${bk.toLocaleString()} msgs</strong><br>
+      COGS @ ${cur}: <strong style="color:#e2e8f0">${fD(cost)}</strong><br>
+      Margen: <strong style="color:${col(mg)}">${fP(mg)}</strong>
+    </div>`
+}
+function mc(l,v,s,c){return`<div class="metric" style="border-color:${c}33;"><div class="m-label">${l}</div><div class="m-value" style="color:${c};">${v}</div><div class="m-sub">${s}</div></div>`}
+function showS(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'))
+  document.getElementById('s-'+id).classList.add('active')
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'))
+  btn.classList.add('active')
+}
+function setModel(id,btn){
+  model=id
+  document.querySelectorAll('[id^=btn-]').forEach(b=>{b.classList.remove('active');b.style.borderColor='var(--border)'})
+  btn.classList.add('active')
+  btn.style.borderColor=id==='haiku'?'#22c55e':id==='sonnet'?'var(--cyan)':'var(--purple)'
+  recalc()
+}
+document.getElementById('cl').innerHTML=[
+  ['Tabla user_usage en Supabase',false],['Función RPC check_and_increment_usage',false],
+  ['RLS policies activadas',false],['Middleware fairUse.js',false],
+  ['Headers X-Usage-* en responses',false],['Hook useUsageGuard en app',false],
+  ['Hard cap en Anthropic Console',false],['Alerta n8n al 90%',false],
+  ['View v_current_usage',false],['Cron pg_cron mensual',false],
+].map(([t,d])=>`<div style="display:flex;gap:7px;align-items:center;padding:6px 9px;border-radius:5px;background:${d?'#22c55e0a':'#1e3a5f22'};border:1px solid ${d?'#22c55e33':'#1e3a5f'};">
+  <span style="font-size:12px;">${d?'✅':'⬜'}</span>
+  <span style="font-size:10.5px;color:${d?'#86efac':'#94a3b8'}">${t}</span></div>`).join('')
+recalc()
+</script>
+</body>
+</html>
