@@ -972,7 +972,7 @@ Responde con estructura ejecutiva clara:
 Sé directo, usa los datos reales, no inventes métricas.`;
 
   try {
-    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500})});
+    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json','x-api-key':'kova-dashboard-2026'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500})});
     const d = await r.json();
     const txt = d.content?.[0]?.text || 'Error en la respuesta';
     out.innerHTML = `<div style="white-space:pre-wrap;font-size:14px;line-height:1.9;color:var(--text2);">${txt}</div>`;
@@ -994,7 +994,7 @@ async function askBI(q) {
 
   const prompt = `Eres ATLAS, Controller BI de KOVA. ${getDataSummary()} Responde a esta pregunta estratégica de forma directa y accionable: "${q}"`;
   try {
-    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:800})});
+    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json','x-api-key':'kova-dashboard-2026'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:800})});
     const d = await r.json();
     const txt = d.content?.[0]?.text || 'Error';
     out.innerHTML = `<div style="white-space:pre-wrap;font-size:14px;line-height:1.9;color:var(--text2);">${txt}</div>`;
@@ -1035,7 +1035,7 @@ Genera un ${types[type]} profesional y ejecutivo que incluya:
 Formato ejecutivo, directo, basado en datos reales.`;
 
   try {
-    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500})});
+    const r = await fetch(API, {method:'POST',headers:{'Content-Type':'application/json','x-api-key':'kova-dashboard-2026'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500})});
     const d = await r.json();
     const txt = d.content?.[0]?.text || 'Error';
     out.innerHTML = `<div style="white-space:pre-wrap;font-size:14px;line-height:1.9;color:var(--text2);">${txt}</div>`;
