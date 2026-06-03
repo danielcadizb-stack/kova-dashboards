@@ -388,7 +388,7 @@ var KPIDEFS = [
   {id:'engagement',n:'Engagement %',obj:5}
 ];
 
-var CAL = [
+var CAL_DEFAULT = = [
   {d:1,t:'Presentacion NOVA',pl:['TikTok','IG'],pub:true},
   {d:2,t:'Objeciones de ventas',pl:['TikTok','IG','LinkedIn'],pub:true},
   {d:3,t:'ALEX simulador demo',pl:['TikTok','IG'],pub:true},
@@ -418,6 +418,7 @@ var CAL = [
   {d:27,t:'Caso exito usuario',pl:['LinkedIn','IG'],pub:false},
   {d:28,t:'KOVA en accion',pl:['TikTok','IG'],pub:false}
 ];
+var CAL = JSON.parse(localStorage.getItem('kova_cal') || 'null') || CAL_DEFAULT.map(function(d) { return Object.assign({}, d); });
 
 var COLORS = {nova:'#25C48F',alex:'#ffc350',maia:'#f0ede6',kova:'#25C48F'};
 var currentSlides = [];
@@ -513,6 +514,7 @@ function openDay(d) {
 
 function markPub(d) {
   CAL[d - 1].pub = !CAL[d - 1].pub;
+  saveCAL();
   renderCal();
   renderOv();
 }
@@ -614,6 +616,9 @@ function syncMetrics() {
   KD.posts = METRICS.length;
   localStorage.setItem('kova_metrics', JSON.stringify(METRICS));
   localStorage.setItem('kova_kpis', JSON.stringify(KD));
+}
+function saveCAL() {
+  localStorage.setItem('kova_cal', JSON.stringify(CAL));
 }
 
 function saveAllMetrics() {
