@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — KOVA Engineering Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030508;
+  --bg2: #070c14;
+  --bg3: #0a1220;
+  --teal: #00d4ff;
+  --teal2: #00ffcc;
+  --gold: #ffc350;
+  --red: #ff4444;
+  --green: #00ff88;
+  --muted: #3a5570;
+  --text: #c8e0f0;
+  --text2: #6a8faa;
+  --border: rgba(0,212,255,0.15);
+  --border2: rgba(0,212,255,0.08);
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-main: 'Rajdhani', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-main);overflow:hidden}
+
+/* SCANLINE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;z-index:1000;
+}
+
+/* GRID BACKGROUND */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+.app{display:grid;grid-template-rows:56px 1fr;height:100vh;position:relative;z-index:1}
+
+/* TOP BAR */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  background:linear-gradient(90deg,var(--bg2),var(--bg3));
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--teal),var(--teal2),var(--teal),transparent);
+  animation:scanline 3s linear infinite;
+}
+@keyframes scanline{from{opacity:0.3}to{opacity:1}}
+
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:32px;height:32px;border:1.5px solid var(--teal);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:14px;color:var(--teal);
+  box-shadow:0 0 12px rgba(0,212,255,0.3);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(0,212,255,0.3)}50%{box-shadow:0 0 24px rgba(0,212,255,0.6)}}
+.logo-text{font-size:18px;font-weight:700;letter-spacing:3px;color:var(--teal);text-transform:uppercase}
+.logo-sub{font-size:10px;color:var(--text2);letter-spacing:2px;font-family:var(--font-mono)}
+
+.topbar-center{display:flex;align-items:center;gap:24px}
+.status-item{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--font-mono);color:var(--text2)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-dot.warn{background:var(--gold);box-shadow:0 0 6px var(--gold)}
+
+.topbar-right{display:flex;align-items:center;gap:16px}
+.clock{font-family:var(--font-mono);font-size:13px;color:var(--teal);letter-spacing:2px}
+.mode-badge{
+  font-family:var(--font-mono);font-size:10px;
+  padding:3px 10px;border:1px solid var(--teal);border-radius:3px;
+  color:var(--teal);letter-spacing:2px;
+  background:rgba(0,212,255,0.05);
+}
+
+/* MAIN LAYOUT */
+.main{display:grid;grid-template-columns:280px 1fr 260px;height:100%;overflow:hidden}
+
+/* LEFT PANEL */
+.left-panel{
+  background:var(--bg2);border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.panel-header{
+  padding:16px 20px 12px;
+  border-bottom:1px solid var(--border2);
+  font-size:10px;font-family:var(--font-mono);color:var(--teal);
+  letter-spacing:2px;text-transform:uppercase;
+}
+
+/* SYSTEM STATUS */
+.sys-grid{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.sys-item{display:flex;flex-direction:column;gap:4px}
+.sys-label{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px;display:flex;justify-content:space-between}
+.sys-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.sys-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+.sys-fill.green{background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.sys-fill.gold{background:linear-gradient(90deg,var(--gold),#ffaa00)}
+.sys-fill.red{background:linear-gradient(90deg,var(--red),#ff8800)}
+
+/* SERVICES */
+.services{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.svc-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:6px;cursor:pointer;transition:all 0.2s;
+}
+.svc-item:hover{border-color:var(--border);background:rgba(0,212,255,0.03)}
+.svc-left{display:flex;align-items:center;gap:8px}
+.svc-dot{width:5px;height:5px;border-radius:50%}
+.svc-dot.ok{background:var(--green);box-shadow:0 0 4px var(--green)}
+.svc-dot.warn{background:var(--gold);box-shadow:0 0 4px var(--gold)}
+.svc-name{font-size:12px;font-family:var(--font-mono);color:var(--text)}
+.svc-badge{font-size:9px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
+
+/* QUICK ACTIONS */
+.quick-actions{padding:12px 16px;display:flex;flex-direction:column;gap:6px;margin-top:auto}
+.qa-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:transparent;
+  border:1px solid var(--border2);border-radius:6px;
+  color:var(--text2);font-size:11px;font-family:var(--font-mono);
+  cursor:pointer;transition:all 0.2s;text-align:left;letter-spacing:1px;
+  width:100%;
+}
+.qa-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,212,255,0.03)}
+.qa-icon{font-size:13px}
+
+/* CHAT AREA */
+.chat-area{display:flex;flex-direction:column;overflow:hidden}
+
+.chat-header{
+  padding:14px 24px;border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg2);
+}
+.jarvis-identity{display:flex;align-items:center;gap:12px}
+.j-avatar{
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:12px;color:var(--teal);
+  background:radial-gradient(circle,rgba(0,212,255,0.1),transparent);
+  box-shadow:0 0 16px rgba(0,212,255,0.2);
+  animation:pulse 3s ease-in-out infinite;
+}
+.j-name{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:2px}
+.j-role{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
+.thinking-badge{
+  display:none;align-items:center;gap:6px;
+  font-size:10px;font-family:var(--font-mono);color:var(--gold);
+  letter-spacing:1px;
+}
+.thinking-badge.active{display:flex}
+.thinking-dots span{animation:tdot 1.4s infinite}
+.thinking-dots span:nth-child(2){animation-delay:0.2s}
+.thinking-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes tdot{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-track{background:transparent}
+.messages::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
+
+.msg{display:flex;flex-direction:column;gap:6px;max-width:88%}
+.msg.user{align-self:flex-end;align-items:flex-end}
+.msg.jarvis{align-self:flex-start;align-items:flex-start}
+.msg-meta{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
+.msg-bubble{
+  padding:12px 16px;border-radius:8px;
+  font-size:13px;line-height:1.6;
+}
+.msg.user .msg-bubble{
+  background:rgba(0,212,255,0.08);
+  border:1px solid rgba(0,212,255,0.2);
+  color:var(--text);border-radius:8px 8px 2px 8px;
+}
+.msg.jarvis .msg-bubble{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  color:var(--text);border-radius:2px 8px 8px 8px;
+  font-family:var(--font-mono);font-size:12px;line-height:1.7;
+}
+.msg.jarvis .msg-bubble.boot{
+  border-color:rgba(0,212,255,0.3);
+  background:rgba(0,212,255,0.03);
+}
+
+/* CODE BLOCKS */
+.code-block{
+  background:#010810;border:1px solid rgba(0,212,255,0.2);
+  border-radius:6px;padding:12px;margin:8px 0;
+  font-family:var(--font-mono);font-size:11px;color:#8bbfd4;
+  overflow-x:auto;white-space:pre;
+}
+.code-header{
+  font-size:10px;color:var(--teal2);letter-spacing:1px;
+  margin-bottom:8px;display:flex;justify-content:space-between;
+}
+
+/* SEVERITY BADGES */
+.severity{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-family:var(--font-mono);letter-spacing:1px;
+  padding:2px 8px;border-radius:3px;margin:4px 0;
+}
+.severity.critical{background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3)}
+.severity.warning{background:rgba(255,195,80,0.1);color:var(--gold);border:1px solid rgba(255,195,80,0.3)}
+.severity.info{background:rgba(0,212,255,0.1);color:var(--teal);border:1px solid rgba(0,212,255,0.3)}
+.severity.ok{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
+
+/* INPUT AREA */
+.input-area{
+  padding:16px 24px;border-top:1px solid var(--border2);
+  background:var(--bg2);
+}
+.input-row{display:flex;gap:10px;align-items:flex-end}
+.input-prefix{
+  font-family:var(--font-mono);font-size:13px;color:var(--teal);
+  padding-bottom:12px;
+}
+.chat-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;padding:12px 16px;
+  color:var(--text);font-family:var(--font-mono);font-size:13px;
+  resize:none;outline:none;min-height:44px;max-height:120px;
+  transition:border-color 0.2s;line-height:1.5;
+}
+.chat-input:focus{border-color:rgba(0,212,255,0.4)}
+.chat-input::placeholder{color:var(--text2)}
+.send-btn{
+  padding:12px 20px;
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,255,204,0.1));
+  border:1px solid var(--teal);border-radius:8px;
+  color:var(--teal);font-family:var(--font-mono);font-size:12px;
+  cursor:pointer;transition:all 0.2s;letter-spacing:1px;white-space:nowrap;
+}
+.send-btn:hover{background:rgba(0,212,255,0.2);box-shadow:0 0 16px rgba(0,212,255,0.2)}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* RIGHT PANEL */
+.right-panel{
+  background:var(--bg2);border-left:1px solid var(--border2);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.r-section{padding:12px 16px;border-bottom:1px solid var(--border2)}
+.r-title{font-size:10px;font-family:var(--font-mono);color:var(--teal);letter-spacing:2px;margin-bottom:10px}
+
+/* CONTEXT CHIPS */
+.ctx-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-family:var(--font-mono);
+  padding:3px 8px;border-radius:3px;margin:2px;
+  background:rgba(0,212,255,0.05);border:1px solid var(--border2);
+  color:var(--text2);letter-spacing:1px;
+}
+.ctx-chip.active{border-color:rgba(0,212,255,0.3);color:var(--teal)}
+
+/* RECENT LOG */
+.log-list{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
+.log-item{
+  font-size:10px;font-family:var(--font-mono);
+  padding:5px 8px;border-radius:4px;
+  border-left:2px solid var(--muted);
+  color:var(--text2);background:var(--bg3);
+  cursor:pointer;transition:all 0.15s;
+}
+.log-item:hover{color:var(--text);border-left-color:var(--teal)}
+.log-item.err{border-left-color:var(--red);color:#ff8888}
+.log-item.warn{border-left-color:var(--gold)}
+.log-item.ok{border-left-color:var(--green)}
+
+/* STACK INFO */
+.stack-list{display:flex;flex-direction:column;gap:4px}
+.stack-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 8px;background:var(--bg3);border-radius:4px;
+  font-size:10px;font-family:var(--font-mono);
+}
+.stack-key{color:var(--text2);letter-spacing:1px}
+.stack-val{color:var(--teal);font-weight:600}
+
+/* BOOT ANIMATION */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg{animation:fadeIn 0.3s ease}
+
+/* SCROLLBAR for panels */
+.left-panel::-webkit-scrollbar,.right-panel::-webkit-scrollbar{width:3px}
+.left-panel::-webkit-scrollbar-thumb,.right-panel::-webkit-scrollbar-thumb{background:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">J</div>
+    <div>
+      <div class="logo-text">JARVIS</div>
+      <div class="logo-sub">KOVA Engineering Intelligence v2.6</div>
+    </div>
+  </div>
+  <div class="topbar-center">
+    <div class="status-item"><div class="status-dot"></div>API ONLINE</div>
+    <div class="status-item"><div class="status-dot"></div>VERCEL OK</div>
+    <div class="status-item"><div class="status-dot"></div>SUPABASE OK</div>
+    <div class="status-item"><div class="status-dot warn"></div>RC SANDBOX</div>
+  </div>
+  <div class="topbar-right">
+    <div class="mode-badge">JARVIS MODE</div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="panel-header">// SYSTEM STATUS</div>
+  <div class="sys-grid">
+    <div class="sys-item">
+      <div class="sys-label"><span>API LATENCY</span><span style="color:var(--teal)">142ms</span></div>
+      <div class="sys-bar"><div class="sys-fill green" style="width:85%"></div></div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-label"><span>ANTHROPIC SPEND</span><span style="color:var(--gold)">$1.24/$50</span></div>
+      <div class="sys-bar"><div class="sys-fill gold" style="width:2%"></div></div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-label"><span>FAIR USE FREE</span><span style="color:var(--text2)">0/15</span></div>
+      <div class="sys-bar"><div class="sys-fill green" style="width:0%"></div></div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-label"><span>SUPABASE DB</span><span style="color:var(--green)">HEALTHY</span></div>
+      <div class="sys-bar"><div class="sys-fill green" style="width:12%"></div></div>
+    </div>
+  </div>
+
+  <div class="panel-header" style="margin-top:8px">// SERVICES</div>
+  <div class="services">
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">api.kova-app.net</span></div><span class="svc-badge">LIVE</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">Supabase Pro</span></div><span class="svc-badge">LIVE</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">n8n Cloud</span></div><span class="svc-badge">9 FLOWS</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">RevenueCat</span></div><span class="svc-badge">SANDBOX</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">BetterStack</span></div><span class="svc-badge">MONITORING</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">Sentry</span></div><span class="svc-badge">ACTIVE</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">App Store</span></div><span class="svc-badge">IN REVIEW</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">Google Play</span></div><span class="svc-badge">10/12 TEST</span></div>
+  </div>
+
+  <div class="panel-header" style="margin-top:8px">// QUICK ACTIONS</div>
+  <div class="quick-actions">
+    <button class="qa-btn" onclick="injectPrompt('Analiza el estado actual del sistema KOVA y reporta anomalías detectadas')">⚡ SYSTEM SCAN</button>
+    <button class="qa-btn" onclick="injectPrompt('Revisa los logs recientes de Vercel y Supabase. ¿Hay errores críticos?')">🔍 LOG ANALYSIS</button>
+    <button class="qa-btn" onclick="injectPrompt('Evalúa la arquitectura de KOVA y sugiere optimizaciones de rendimiento')">🏗️ ARCH REVIEW</button>
+    <button class="qa-btn" onclick="injectPrompt('Planifica la hoja de ruta técnica para la agencia de marketing IA de Alfester')">🚀 NEXT PROJECT</button>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="chat-area">
+  <div class="chat-header">
+    <div class="jarvis-identity">
+      <div class="j-avatar">J</div>
+      <div>
+        <div class="j-name">J.A.R.V.I.S</div>
+        <div class="j-role">Just A Rather Very Intelligent System — KOVA Engineering Core</div>
+      </div>
+    </div>
+    <div class="thinking-badge" id="thinkingBadge">
+      <span>PROCESANDO</span>
+      <div class="thinking-dots"><span>.</span><span>.</span><span>.</span></div>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="msg jarvis">
+      <div class="msg-meta">JARVIS // BOOT SEQUENCE COMPLETE // 2026-06-03</div>
+      <div class="msg-bubble boot">
+Sistemas en línea, Señor.<br><br>
+
+<span class="severity info">ℹ ESTADO DEL SISTEMA — NOMINAL</span><br><br>
+
+He completado el diagnóstico inicial de la arquitectura KOVA. Estado de los componentes críticos:<br><br>
+
+<span class="severity ok">✓ BACKEND</span> api.kova-app.net respondiendo. Latencia: 142ms. Los tres agentes (NOVA · ALEX · MAIA) operativos con Fair Use mensual activo.<br><br>
+
+<span class="severity warning">⚠ ATENCIÓN</span> iOS build 1.0.3 (build 46) en revisión Apple. ETA aprobación: 3-7 días hábiles. RevenueCat en modo sandbox — activar live mode post-aprobación.<br><br>
+
+<span class="severity ok">✓ INFRAESTRUCTURA</span> Supabase Pro · Vercel · n8n (9 flujos) · BetterStack · Sentry — todos operativos.<br><br>
+
+Stack técnico cargado en memoria:<br>
+<div class="code-block"><div class="code-header"><span>KOVA TECH STACK</span><span>v1.0.3</span></div>FRONTEND  : React Native + Expo SDK 53
+BACKEND   : Node.js + Vercel Serverless
+DATABASE  : Supabase Pro (PostgreSQL)
+AI ENGINE : Anthropic Claude Haiku (claude-haiku-4-5)
+PAYMENTS  : RevenueCat + App Store + Google Play
+AUTOMATION: n8n Cloud (9 workflows)
+MONITORING: BetterStack + Sentry
+INFRA     : api.kova-app.net + kova-app.net
+REPOS     : danielcadizb-stack/{kova,kova-api,kova-dashboards}</div>
+
+Estoy listo para diagnosticar, optimizar o construir cualquier componente del sistema. ¿Cuál es la primera incidencia que requiere atención hoy, Señor?
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <span class="input-prefix">&gt;_</span>
+      <textarea class="chat-input" id="chatInput" placeholder="Describa la incidencia o consulta técnica..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">EJECUTAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="r-section">
+    <div class="r-title">// CONTEXT LOADED</div>
+    <div>
+      <span class="ctx-chip active">React Native</span>
+      <span class="ctx-chip active">Expo SDK 53</span>
+      <span class="ctx-chip active">Supabase</span>
+      <span class="ctx-chip active">Vercel</span>
+      <span class="ctx-chip active">Anthropic API</span>
+      <span class="ctx-chip active">RevenueCat</span>
+      <span class="ctx-chip active">n8n</span>
+      <span class="ctx-chip active">TypeScript</span>
+      <span class="ctx-chip active">Node.js</span>
+      <span class="ctx-chip active">Fair Use System</span>
+      <span class="ctx-chip active">i18n ES/EN</span>
+      <span class="ctx-chip">Alfester Agency</span>
+    </div>
+  </div>
+
+  <div class="r-section">
+    <div class="r-title">// INCIDENT LOG</div>
+    <div class="log-list" id="logList">
+      <div class="log-item ok">BUILD 46 → App Store Review</div>
+      <div class="log-item ok">Fair Use RPC → DEPLOYED</div>
+      <div class="log-item ok">n8n EN flows → ACTIVE</div>
+      <div class="log-item ok">JARVIS → ONLINE</div>
+      <div class="log-item warn">RevenueCat → SANDBOX MODE</div>
+      <div class="log-item warn">Google Play → 10/12 testers</div>
+    </div>
+  </div>
+
+  <div class="r-section">
+    <div class="r-title">// ENVIRONMENT</div>
+    <div class="stack-list">
+      <div class="stack-item"><span class="stack-key">NODE</span><span class="stack-val">20.19.4</span></div>
+      <div class="stack-item"><span class="stack-key">EXPO SDK</span><span class="stack-val">53</span></div>
+      <div class="stack-item"><span class="stack-key">APP VERSION</span><span class="stack-val">1.0.3 (46)</span></div>
+      <div class="stack-item"><span class="stack-key">SUPABASE</span><span class="stack-val">Pro</span></div>
+      <div class="stack-item"><span class="stack-key">AI MODEL</span><span class="stack-val">Haiku 4.5</span></div>
+      <div class="stack-item"><span class="stack-key">SPEND CAP</span><span class="stack-val">$50/mo</span></div>
+    </div>
+  </div>
+
+  <div class="r-section" style="flex:1;overflow:hidden">
+    <div class="r-title">// NEXT MILESTONE</div>
+    <div class="stack-list">
+      <div class="stack-item"><span class="stack-key">Apple Approval</span><span class="stack-val" style="color:var(--gold)">~7d</span></div>
+      <div class="stack-item"><span class="stack-key">RC Live Mode</span><span class="stack-val" style="color:var(--text2)">PENDING</span></div>
+      <div class="stack-item"><span class="stack-key">OÜ Registration</span><span class="stack-val" style="color:var(--gold)">IN PROGRESS</span></div>
+      <div class="stack-item"><span class="stack-key">Android Launch</span><span class="stack-val" style="color:var(--text2)">~14d</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+const PROXY_URL = 'https://api.kova-app.net/api/proxy';
+const DASHBOARD_KEY = 'kova-dashboard-2026';
+
+const JARVIS_SYSTEM = `Eres JARVIS, la inteligencia artificial de ingeniería principal del sistema KOVA. Tu tono es impecablemente profesional, sofisticado, ligeramente ingenioso y extremadamente proactivo. Te diriges al usuario como "Señor".
+
+ARQUITECTURA KOVA QUE CONOCES EN PROFUNDIDAD:
+- App: React Native + Expo SDK 53, Node 20.19.4, TypeScript
+- Backend: Vercel Serverless (api.kova-app.net) - api/nova.js, api/alex.js, api/maia.js, api/proxy.js, api/referral.js
+- Database: Supabase Pro - tablas: user_profiles, chats, enterprise_configs, user_usage, referrals
+- AI: Anthropic Claude Haiku (claude-haiku-4-5-20251001)
+- Payments: RevenueCat + App Store (com.kovaapp.kova.starter/pro/enterprise.monthly)
+- Automation: n8n Cloud (9 flujos activos con bifurcación ES/EN)
+- Monitoring: BetterStack + Sentry
+- Repos: danielcadizb-stack/{kova, kova-api, kova-dashboards}
+- Entity: Alfester Technologies OÜ (Estonia e-Residency)
+
+SISTEMAS IMPLEMENTADOS:
+- Fair Use mensual: tabla user_usage + RPC check_and_increment_usage (free:15, starter:200, pro:500, enterprise:2000)
+- i18n ES/EN completo en 6 screens
+- Sistema de referidos: códigos únicos KOVA-XXXXXXXX, starter_trial 7 días
+- RLS activo en Supabase
+- Rate limiting 60 req/min, timeout 25s, JWT auth
+
+ESTADO ACTUAL:
+- iOS 1.0.3 (build 46) en revisión Apple
+- RevenueCat en sandbox (activar post-aprobación)
+- Google Play: 10/12 testers
+- OÜ en proceso de registro con Xolo
+
+PRÓXIMO PROYECTO (post-KOVA): Agencia de marketing digital con IA para Alfester Technologies - complemento de KOVA una vez consolidado. Stack similar pero con GoHighLevel + automatizaciones de marketing + generación de contenido IA.
+
+TUS PROTOCOLOS:
+1. Diagnóstico Predictivo: Analiza impacto colateral de cada solución
+2. Eficiencia: Especifica complejidad computacional cuando sea relevante
+3. Plan de Respaldo: Siempre presenta alternativa si la solución principal falla
+4. Formato: Código limpio en bloques markdown, explicaciones ejecutivas
+
+PROTOCOLO DE RESPUESTA ANTE FALLO:
+- Estado del Sistema (gravedad ejecutiva)
+- Análisis de Causa Raíz
+- Protocolo de Reparación (código exacto)
+- Control de Daños (efectos secundarios)
+
+Cuando des código, usa siempre Python scripts para modificar archivos .tsx/.js en Windows (NUNCA PowerShell Set-Content que corrompe a UTF-16). Los archivos del proyecto están en C:\\Users\\danie\\Desktop\\KOVA\\.
+
+Responde siempre en español salvo que el código requiera inglés. Sé conciso pero completo. Nunca des código sin antes diagnosticar.`;
+
+let conversationHistory = [];
+let isThinking = false;
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = 
+    now.toTimeString().split(' ')[0];
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function injectPrompt(text) {
+  document.getElementById('chatInput').value = text;
+  document.getElementById('chatInput').focus();
+}
+
+function addLog(text, type = '') {
+  const logList = document.getElementById('logList');
+  const item = document.createElement('div');
+  item.className = `log-item ${type}`;
+  const time = new Date().toTimeString().split(' ')[0];
+  item.textContent = `[${time}] ${text}`;
+  logList.insertBefore(item, logList.firstChild);
+  if (logList.children.length > 12) logList.removeChild(logList.lastChild);
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatJarvisResponse(text) {
+  // Code blocks
+  text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
+    const l = lang || 'code';
+    return `<div class="code-block"><div class="code-header"><span>${l.toUpperCase()}</span><span>JARVIS OUTPUT</span></div>${escapeHtml(code.trim())}</div>`;
+  });
+  // Inline code
+  text = text.replace(/`([^`]+)`/g, '<span style="color:var(--teal2);font-family:var(--font-mono)">$1</span>');
+  // Bold
+  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
+  // Severity tags
+  text = text.replace(/\[CRÍTICO\]/g, '<span class="severity critical">■ CRÍTICO</span>');
+  text = text.replace(/\[ADVERTENCIA\]/g, '<span class="severity warning">■ ADVERTENCIA</span>');
+  text = text.replace(/\[INFO\]/g, '<span class="severity info">● INFO</span>');
+  text = text.replace(/\[OK\]/g, '<span class="severity ok">✓ OK</span>');
+  // Line breaks
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+async function sendMessage() {
+  if (isThinking) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Add user message
+  addMessageToDOM('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+  addLog(text.substring(0, 40) + '...', '');
+
+  // Show thinking
+  isThinking = true;
+  document.getElementById('thinkingBadge').classList.add('active');
+  document.getElementById('sendBtn').disabled = true;
+
+  try {
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': DASHBOARD_KEY
+      },
+      body: JSON.stringify({
+        system: JARVIS_SYSTEM,
+        messages: conversationHistory,
+        max_tokens: 1500
+      })
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const content = data.content && data.content[0] ? data.content[0].text : 'Error de respuesta.';
+
+    conversationHistory.push({ role: 'assistant', content });
+    addMessageToDOM('jarvis', content, true);
+    addLog('JARVIS responded', 'ok');
+
+    // Keep history manageable
+    if (conversationHistory.length > 20) {
+      conversationHistory = conversationHistory.slice(-16);
+    }
+
+  } catch (err) {
+    addMessageToDOM('jarvis', `[CRÍTICO] Fallo en la conexión con el núcleo de IA.\n\nError: ${err.message}\n\nVerifique la conectividad con api.kova-app.net, Señor.`, true);
+    addLog('Connection error', 'err');
+  } finally {
+    isThinking = false;
+    document.getElementById('thinkingBadge').classList.remove('active');
+    document.getElementById('sendBtn').disabled = false;
+  }
+}
+
+function addMessageToDOM(role, text, isJarvis = false) {
+  const messages = document.getElementById('messages');
+  const time = new Date().toTimeString().split(' ')[0];
+  const meta = role === 'user' ? `SEÑOR // ${time}` : `JARVIS // ${time}`;
+  
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-meta">${meta}</div>
+    <div class="msg-bubble">${isJarvis ? formatJarvisResponse(text) : escapeHtml(text)}</div>
+  `;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+// Auto-resize textarea
+document.getElementById('chatInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+// Enter to send (Shift+Enter for newline)
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+</script>
+</body>
+</html>
