@@ -7,306 +7,159 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #030508;
-  --bg2: #070c14;
-  --bg3: #0a1220;
-  --teal: #00d4ff;
-  --teal2: #00ffcc;
-  --gold: #ffc350;
-  --red: #ff4444;
-  --green: #00ff88;
-  --muted: #3a5570;
-  --text: #c8e0f0;
-  --text2: #6a8faa;
-  --border: rgba(0,212,255,0.15);
-  --border2: rgba(0,212,255,0.08);
-  --font-mono: 'Share Tech Mono', monospace;
-  --font-main: 'Rajdhani', sans-serif;
+:root{
+  --bg:#030508;--bg2:#070c14;--bg3:#0a1220;
+  --teal:#00d4ff;--teal2:#00ffcc;--gold:#ffc350;
+  --red:#ff4444;--green:#00ff88;--muted:#3a5570;
+  --text:#c8e0f0;--text2:#6a8faa;
+  --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.08);
+  --font-mono:'Share Tech Mono',monospace;--font-main:'Rajdhani',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-main);overflow:hidden}
-
-/* SCANLINE OVERLAY */
-body::before{
-  content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
-  pointer-events:none;z-index:1000;
-}
-
-/* GRID BACKGROUND */
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
-  background-size:40px 40px;
-  pointer-events:none;z-index:0;
-}
-
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 .app{display:grid;grid-template-rows:56px 1fr;height:100vh;position:relative;z-index:1}
 
-/* TOP BAR */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;
-  background:linear-gradient(90deg,var(--bg2),var(--bg3));
-  border-bottom:1px solid var(--border);
-  position:relative;
-}
-.topbar::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--teal),var(--teal2),var(--teal),transparent);
-  animation:scanline 3s linear infinite;
-}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:linear-gradient(90deg,var(--bg2),var(--bg3));border-bottom:1px solid var(--border);position:relative}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--teal),var(--teal2),var(--teal),transparent);animation:scanline 3s linear infinite}
 @keyframes scanline{from{opacity:0.3}to{opacity:1}}
-
 .logo{display:flex;align-items:center;gap:12px}
-.logo-icon{
-  width:32px;height:32px;border:1.5px solid var(--teal);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-mono);font-size:14px;color:var(--teal);
-  box-shadow:0 0 12px rgba(0,212,255,0.3);
-  animation:pulse 2s ease-in-out infinite;
-}
+.logo-icon{width:32px;height:32px;border:1.5px solid var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:14px;color:var(--teal);box-shadow:0 0 12px rgba(0,212,255,0.3);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(0,212,255,0.3)}50%{box-shadow:0 0 24px rgba(0,212,255,0.6)}}
 .logo-text{font-size:18px;font-weight:700;letter-spacing:3px;color:var(--teal);text-transform:uppercase}
 .logo-sub{font-size:10px;color:var(--text2);letter-spacing:2px;font-family:var(--font-mono)}
-
 .topbar-center{display:flex;align-items:center;gap:24px}
 .status-item{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--font-mono);color:var(--text2)}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
 .status-dot.warn{background:var(--gold);box-shadow:0 0 6px var(--gold)}
-
-.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-right{display:flex;align-items:center;gap:12px}
 .clock{font-family:var(--font-mono);font-size:13px;color:var(--teal);letter-spacing:2px}
-.mode-badge{
-  font-family:var(--font-mono);font-size:10px;
-  padding:3px 10px;border:1px solid var(--teal);border-radius:3px;
-  color:var(--teal);letter-spacing:2px;
-  background:rgba(0,212,255,0.05);
-}
+.mode-badge{font-family:var(--font-mono);font-size:10px;padding:3px 10px;border:1px solid var(--teal);border-radius:3px;color:var(--teal);letter-spacing:2px;background:rgba(0,212,255,0.05)}
+.voice-btn{padding:4px 12px;background:rgba(255,195,80,0.08);border:1px solid rgba(255,195,80,0.3);border-radius:4px;color:var(--gold);font-family:var(--font-mono);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all 0.2s}
+.voice-btn:hover{background:rgba(255,195,80,0.15)}
+.voice-btn.active{background:rgba(255,195,80,0.2);border-color:var(--gold);animation:pulse-gold 1s ease-in-out infinite}
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 6px rgba(255,195,80,0.3)}50%{box-shadow:0 0 12px rgba(255,195,80,0.6)}}
 
-/* MAIN LAYOUT */
+/* MAIN */
 .main{display:grid;grid-template-columns:280px 1fr 260px;height:100%;overflow:hidden}
 
-/* LEFT PANEL */
-.left-panel{
-  background:var(--bg2);border-right:1px solid var(--border2);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.panel-header{
-  padding:16px 20px 12px;
-  border-bottom:1px solid var(--border2);
-  font-size:10px;font-family:var(--font-mono);color:var(--teal);
-  letter-spacing:2px;text-transform:uppercase;
-}
+/* SIDE PANELS — scrollable */
+.left-panel,.right-panel{display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.left-panel{background:var(--bg2);border-right:1px solid var(--border2)}
+.right-panel{background:var(--bg2);border-left:1px solid var(--border2)}
+.left-panel::-webkit-scrollbar,.right-panel::-webkit-scrollbar{width:4px}
+.left-panel::-webkit-scrollbar-track,.right-panel::-webkit-scrollbar-track{background:transparent}
+.left-panel::-webkit-scrollbar-thumb,.right-panel::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
 
-/* SYSTEM STATUS */
-.sys-grid{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.panel-header{padding:12px 16px 10px;border-bottom:1px solid var(--border2);font-size:10px;font-family:var(--font-mono);color:var(--teal);letter-spacing:2px;text-transform:uppercase;position:sticky;top:0;background:var(--bg2);z-index:2}
+
+/* METRICS */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px}
+.metric-card{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:20px;font-weight:700;font-family:var(--font-mono);color:var(--teal)}
+.metric-val.warn{color:var(--gold)}
+.metric-val.ok{color:var(--green)}
+.metric-label{font-size:9px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px;margin-top:3px}
+
+/* SYS BARS */
+.sys-grid{padding:8px 16px;display:flex;flex-direction:column;gap:8px}
 .sys-item{display:flex;flex-direction:column;gap:4px}
 .sys-label{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px;display:flex;justify-content:space-between}
 .sys-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
-.sys-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+.sys-fill{height:100%;border-radius:2px;transition:width 0.8s ease}
 .sys-fill.green{background:linear-gradient(90deg,var(--teal),var(--teal2))}
 .sys-fill.gold{background:linear-gradient(90deg,var(--gold),#ffaa00)}
 .sys-fill.red{background:linear-gradient(90deg,var(--red),#ff8800)}
 
 /* SERVICES */
-.services{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
-.svc-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:6px;cursor:pointer;transition:all 0.2s;
-}
+.services{padding:8px 16px;display:flex;flex-direction:column;gap:5px}
+.svc-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;cursor:pointer;transition:all 0.2s}
 .svc-item:hover{border-color:var(--border);background:rgba(0,212,255,0.03)}
 .svc-left{display:flex;align-items:center;gap:8px}
 .svc-dot{width:5px;height:5px;border-radius:50%}
 .svc-dot.ok{background:var(--green);box-shadow:0 0 4px var(--green)}
 .svc-dot.warn{background:var(--gold);box-shadow:0 0 4px var(--gold)}
-.svc-name{font-size:12px;font-family:var(--font-mono);color:var(--text)}
+.svc-dot.err{background:var(--red);box-shadow:0 0 4px var(--red)}
+.svc-name{font-size:11px;font-family:var(--font-mono);color:var(--text)}
 .svc-badge{font-size:9px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
 
 /* QUICK ACTIONS */
-.quick-actions{padding:12px 16px;display:flex;flex-direction:column;gap:6px;margin-top:auto}
-.qa-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 12px;background:transparent;
-  border:1px solid var(--border2);border-radius:6px;
-  color:var(--text2);font-size:11px;font-family:var(--font-mono);
-  cursor:pointer;transition:all 0.2s;text-align:left;letter-spacing:1px;
-  width:100%;
-}
+.quick-actions{padding:8px 16px 16px;display:flex;flex-direction:column;gap:5px}
+.qa-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:11px;font-family:var(--font-mono);cursor:pointer;transition:all 0.2s;text-align:left;letter-spacing:1px;width:100%}
 .qa-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,212,255,0.03)}
-.qa-icon{font-size:13px}
 
-/* CHAT AREA */
+/* CHAT */
 .chat-area{display:flex;flex-direction:column;overflow:hidden}
-
-.chat-header{
-  padding:14px 24px;border-bottom:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg2);
-}
+.chat-header{padding:14px 24px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0}
 .jarvis-identity{display:flex;align-items:center;gap:12px}
-.j-avatar{
-  width:36px;height:36px;border-radius:50%;
-  border:1.5px solid var(--teal);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-mono);font-size:12px;color:var(--teal);
-  background:radial-gradient(circle,rgba(0,212,255,0.1),transparent);
-  box-shadow:0 0 16px rgba(0,212,255,0.2);
-  animation:pulse 3s ease-in-out infinite;
-}
+.j-avatar{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;color:var(--teal);background:radial-gradient(circle,rgba(0,212,255,0.1),transparent);box-shadow:0 0 16px rgba(0,212,255,0.2);animation:pulse 3s ease-in-out infinite}
 .j-name{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:2px}
 .j-role{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
-.thinking-badge{
-  display:none;align-items:center;gap:6px;
-  font-size:10px;font-family:var(--font-mono);color:var(--gold);
-  letter-spacing:1px;
-}
+.thinking-badge{display:none;align-items:center;gap:6px;font-size:10px;font-family:var(--font-mono);color:var(--gold);letter-spacing:1px}
 .thinking-badge.active{display:flex}
 .thinking-dots span{animation:tdot 1.4s infinite}
 .thinking-dots span:nth-child(2){animation-delay:0.2s}
 .thinking-dots span:nth-child(3){animation-delay:0.4s}
 @keyframes tdot{0%,80%,100%{opacity:0}40%{opacity:1}}
 
-/* MESSAGES */
 .messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px}
 .messages::-webkit-scrollbar{width:4px}
 .messages::-webkit-scrollbar-track{background:transparent}
 .messages::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
 
-.msg{display:flex;flex-direction:column;gap:6px;max-width:88%}
+.msg{display:flex;flex-direction:column;gap:6px;max-width:88%;animation:fadeIn 0.3s ease}
 .msg.user{align-self:flex-end;align-items:flex-end}
 .msg.jarvis{align-self:flex-start;align-items:flex-start}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg-meta{font-size:10px;font-family:var(--font-mono);color:var(--text2);letter-spacing:1px}
-.msg-bubble{
-  padding:12px 16px;border-radius:8px;
-  font-size:13px;line-height:1.6;
-}
-.msg.user .msg-bubble{
-  background:rgba(0,212,255,0.08);
-  border:1px solid rgba(0,212,255,0.2);
-  color:var(--text);border-radius:8px 8px 2px 8px;
-}
-.msg.jarvis .msg-bubble{
-  background:var(--bg3);
-  border:1px solid var(--border2);
-  color:var(--text);border-radius:2px 8px 8px 8px;
-  font-family:var(--font-mono);font-size:12px;line-height:1.7;
-}
-.msg.jarvis .msg-bubble.boot{
-  border-color:rgba(0,212,255,0.3);
-  background:rgba(0,212,255,0.03);
-}
-
-/* CODE BLOCKS */
-.code-block{
-  background:#010810;border:1px solid rgba(0,212,255,0.2);
-  border-radius:6px;padding:12px;margin:8px 0;
-  font-family:var(--font-mono);font-size:11px;color:#8bbfd4;
-  overflow-x:auto;white-space:pre;
-}
-.code-header{
-  font-size:10px;color:var(--teal2);letter-spacing:1px;
-  margin-bottom:8px;display:flex;justify-content:space-between;
-}
-
-/* SEVERITY BADGES */
-.severity{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:10px;font-family:var(--font-mono);letter-spacing:1px;
-  padding:2px 8px;border-radius:3px;margin:4px 0;
-}
+.msg-bubble{padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.6}
+.msg.user .msg-bubble{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--text);border-radius:8px 8px 2px 8px}
+.msg.jarvis .msg-bubble{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:2px 8px 8px 8px;font-family:var(--font-mono);font-size:12px;line-height:1.7}
+.msg.jarvis .msg-bubble.boot{border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03)}
+.code-block{background:#010810;border:1px solid rgba(0,212,255,0.2);border-radius:6px;padding:12px;margin:8px 0;font-family:var(--font-mono);font-size:11px;color:#8bbfd4;overflow-x:auto;white-space:pre}
+.code-header{font-size:10px;color:var(--teal2);letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between}
+.severity{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--font-mono);letter-spacing:1px;padding:2px 8px;border-radius:3px;margin:4px 0}
 .severity.critical{background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3)}
 .severity.warning{background:rgba(255,195,80,0.1);color:var(--gold);border:1px solid rgba(255,195,80,0.3)}
 .severity.info{background:rgba(0,212,255,0.1);color:var(--teal);border:1px solid rgba(0,212,255,0.3)}
 .severity.ok{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
 
-/* INPUT AREA */
-.input-area{
-  padding:16px 24px;border-top:1px solid var(--border2);
-  background:var(--bg2);
-}
+.input-area{padding:16px 24px;border-top:1px solid var(--border2);background:var(--bg2);flex-shrink:0}
 .input-row{display:flex;gap:10px;align-items:flex-end}
-.input-prefix{
-  font-family:var(--font-mono);font-size:13px;color:var(--teal);
-  padding-bottom:12px;
-}
-.chat-input{
-  flex:1;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:8px;padding:12px 16px;
-  color:var(--text);font-family:var(--font-mono);font-size:13px;
-  resize:none;outline:none;min-height:44px;max-height:120px;
-  transition:border-color 0.2s;line-height:1.5;
-}
+.input-prefix{font-family:var(--font-mono);font-size:13px;color:var(--teal);padding-bottom:12px}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--font-mono);font-size:13px;resize:none;outline:none;min-height:44px;max-height:120px;transition:border-color 0.2s;line-height:1.5}
 .chat-input:focus{border-color:rgba(0,212,255,0.4)}
 .chat-input::placeholder{color:var(--text2)}
-.send-btn{
-  padding:12px 20px;
-  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,255,204,0.1));
-  border:1px solid var(--teal);border-radius:8px;
-  color:var(--teal);font-family:var(--font-mono);font-size:12px;
-  cursor:pointer;transition:all 0.2s;letter-spacing:1px;white-space:nowrap;
-}
+.send-btn{padding:12px 20px;background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,255,204,0.1));border:1px solid var(--teal);border-radius:8px;color:var(--teal);font-family:var(--font-mono);font-size:12px;cursor:pointer;transition:all 0.2s;letter-spacing:1px;white-space:nowrap}
 .send-btn:hover{background:rgba(0,212,255,0.2);box-shadow:0 0 16px rgba(0,212,255,0.2)}
 .send-btn:disabled{opacity:0.4;cursor:not-allowed}
 
 /* RIGHT PANEL */
-.right-panel{
-  background:var(--bg2);border-left:1px solid var(--border2);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.r-section{padding:12px 16px;border-bottom:1px solid var(--border2)}
-.r-title{font-size:10px;font-family:var(--font-mono);color:var(--teal);letter-spacing:2px;margin-bottom:10px}
-
-/* CONTEXT CHIPS */
-.ctx-chip{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:10px;font-family:var(--font-mono);
-  padding:3px 8px;border-radius:3px;margin:2px;
-  background:rgba(0,212,255,0.05);border:1px solid var(--border2);
-  color:var(--text2);letter-spacing:1px;
-}
+.r-section{padding:10px 14px;border-bottom:1px solid var(--border2)}
+.r-title{font-size:10px;font-family:var(--font-mono);color:var(--teal);letter-spacing:2px;margin-bottom:8px}
+.ctx-chip{display:inline-flex;align-items:center;font-size:10px;font-family:var(--font-mono);padding:3px 8px;border-radius:3px;margin:2px;background:rgba(0,212,255,0.05);border:1px solid var(--border2);color:var(--text2);letter-spacing:1px}
 .ctx-chip.active{border-color:rgba(0,212,255,0.3);color:var(--teal)}
-
-/* RECENT LOG */
-.log-list{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
-.log-item{
-  font-size:10px;font-family:var(--font-mono);
-  padding:5px 8px;border-radius:4px;
-  border-left:2px solid var(--muted);
-  color:var(--text2);background:var(--bg3);
-  cursor:pointer;transition:all 0.15s;
-}
+.log-list{display:flex;flex-direction:column;gap:3px}
+.log-item{font-size:10px;font-family:var(--font-mono);padding:5px 8px;border-radius:4px;border-left:2px solid var(--muted);color:var(--text2);background:var(--bg3);cursor:pointer;transition:all 0.15s}
 .log-item:hover{color:var(--text);border-left-color:var(--teal)}
 .log-item.err{border-left-color:var(--red);color:#ff8888}
 .log-item.warn{border-left-color:var(--gold)}
 .log-item.ok{border-left-color:var(--green)}
-
-/* STACK INFO */
-.stack-list{display:flex;flex-direction:column;gap:4px}
-.stack-item{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:5px 8px;background:var(--bg3);border-radius:4px;
-  font-size:10px;font-family:var(--font-mono);
-}
+.stack-list{display:flex;flex-direction:column;gap:3px}
+.stack-item{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:var(--bg3);border-radius:4px;font-size:10px;font-family:var(--font-mono)}
 .stack-key{color:var(--text2);letter-spacing:1px}
 .stack-val{color:var(--teal);font-weight:600}
-
-/* BOOT ANIMATION */
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msg{animation:fadeIn 0.3s ease}
-
-/* SCROLLBAR for panels */
-.left-panel::-webkit-scrollbar,.right-panel::-webkit-scrollbar{width:3px}
-.left-panel::-webkit-scrollbar-thumb,.right-panel::-webkit-scrollbar-thumb{background:var(--muted)}
+.monitor-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border2);margin-bottom:4px;font-size:10px;font-family:var(--font-mono)}
+.monitor-key{color:var(--text2)}
+.monitor-val{color:var(--teal2)}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="logo">
     <div class="logo-icon">J</div>
@@ -316,43 +169,47 @@ body::after{
     </div>
   </div>
   <div class="topbar-center">
-    <div class="status-item"><div class="status-dot"></div>API ONLINE</div>
-    <div class="status-item"><div class="status-dot"></div>VERCEL OK</div>
-    <div class="status-item"><div class="status-dot"></div>SUPABASE OK</div>
+    <div class="status-item"><div class="status-dot" id="dot-api"></div><span id="lbl-api">API ONLINE</span></div>
+    <div class="status-item"><div class="status-dot" id="dot-supabase"></div><span id="lbl-supabase">SUPABASE OK</span></div>
+    <div class="status-item"><div class="status-dot" id="dot-n8n"></div><span id="lbl-n8n">N8N 9 FLOWS</span></div>
     <div class="status-item"><div class="status-dot warn"></div>RC SANDBOX</div>
   </div>
   <div class="topbar-right">
+    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🔊 VOZ OFF</button>
     <div class="mode-badge">JARVIS MODE</div>
     <div class="clock" id="clock">--:--:--</div>
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<!-- LEFT PANEL -->
+<!-- LEFT PANEL — SCROLLABLE -->
 <div class="left-panel">
-  <div class="panel-header">// SYSTEM STATUS</div>
+  <div class="panel-header">// LIVE METRICS</div>
+  <div class="metrics-grid">
+    <div class="metric-card"><div class="metric-val ok" id="m-users">--</div><div class="metric-label">ACTIVE USERS</div></div>
+    <div class="metric-card"><div class="metric-val" id="m-msgs">--</div><div class="metric-label">MSGS TODAY</div></div>
+    <div class="metric-card"><div class="metric-val warn" id="m-spend">$0</div><div class="metric-label">AI SPEND</div></div>
+    <div class="metric-card"><div class="metric-val" id="m-latency">--ms</div><div class="metric-label">API LATENCY</div></div>
+  </div>
+
+  <div class="panel-header">// SYSTEM HEALTH</div>
   <div class="sys-grid">
     <div class="sys-item">
-      <div class="sys-label"><span>API LATENCY</span><span style="color:var(--teal)">142ms</span></div>
-      <div class="sys-bar"><div class="sys-fill green" style="width:85%"></div></div>
+      <div class="sys-label"><span>ANTHROPIC SPEND</span><span style="color:var(--gold)" id="bar-spend-lbl">$0/$50</span></div>
+      <div class="sys-bar"><div class="sys-fill gold" id="bar-spend" style="width:0%"></div></div>
     </div>
     <div class="sys-item">
-      <div class="sys-label"><span>ANTHROPIC SPEND</span><span style="color:var(--gold)">$1.24/$50</span></div>
-      <div class="sys-bar"><div class="sys-fill gold" style="width:2%"></div></div>
-    </div>
-    <div class="sys-item">
-      <div class="sys-label"><span>FAIR USE FREE</span><span style="color:var(--text2)">0/15</span></div>
-      <div class="sys-bar"><div class="sys-fill green" style="width:0%"></div></div>
+      <div class="sys-label"><span>FREE FAIR USE</span><span style="color:var(--text2)" id="bar-free-lbl">0/15</span></div>
+      <div class="sys-bar"><div class="sys-fill green" id="bar-free" style="width:0%"></div></div>
     </div>
     <div class="sys-item">
       <div class="sys-label"><span>SUPABASE DB</span><span style="color:var(--green)">HEALTHY</span></div>
-      <div class="sys-bar"><div class="sys-fill green" style="width:12%"></div></div>
+      <div class="sys-bar"><div class="sys-fill green" style="width:15%"></div></div>
     </div>
   </div>
 
-  <div class="panel-header" style="margin-top:8px">// SERVICES</div>
+  <div class="panel-header">// SERVICES</div>
   <div class="services">
     <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">api.kova-app.net</span></div><span class="svc-badge">LIVE</span></div>
     <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">Supabase Pro</span></div><span class="svc-badge">LIVE</span></div>
@@ -360,16 +217,20 @@ body::after{
     <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">RevenueCat</span></div><span class="svc-badge">SANDBOX</span></div>
     <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">BetterStack</span></div><span class="svc-badge">MONITORING</span></div>
     <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">Sentry</span></div><span class="svc-badge">ACTIVE</span></div>
-    <div class="svc-item"><div class="svc-left"><div class="svc-dot ok"></div><span class="svc-name">App Store</span></div><span class="svc-badge">IN REVIEW</span></div>
-    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">Google Play</span></div><span class="svc-badge">10/12 TEST</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">App Store iOS</span></div><span class="svc-badge">IN REVIEW</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">Google Play</span></div><span class="svc-badge" id="tester-count">10/12 TEST</span></div>
+    <div class="svc-item"><div class="svc-left"><div class="svc-dot warn"></div><span class="svc-name">Alfester OÜ</span></div><span class="svc-badge">XOLO REVIEW</span></div>
   </div>
 
-  <div class="panel-header" style="margin-top:8px">// QUICK ACTIONS</div>
+  <div class="panel-header">// QUICK ACTIONS</div>
   <div class="quick-actions">
-    <button class="qa-btn" onclick="injectPrompt('Analiza el estado actual del sistema KOVA y reporta anomalías detectadas')">⚡ SYSTEM SCAN</button>
-    <button class="qa-btn" onclick="injectPrompt('Revisa los logs recientes de Vercel y Supabase. ¿Hay errores críticos?')">🔍 LOG ANALYSIS</button>
-    <button class="qa-btn" onclick="injectPrompt('Evalúa la arquitectura de KOVA y sugiere optimizaciones de rendimiento')">🏗️ ARCH REVIEW</button>
-    <button class="qa-btn" onclick="injectPrompt('Planifica la hoja de ruta técnica para la agencia de marketing IA de Alfester')">🚀 NEXT PROJECT</button>
+    <button class="qa-btn" onclick="injectPrompt('Realiza un escaneo completo del sistema KOVA. Analiza métricas, identifica anomalías y sugiere optimizaciones proactivas.')">⚡ SYSTEM SCAN</button>
+    <button class="qa-btn" onclick="injectPrompt('Analiza los errores recientes en Vercel y Supabase. Identifica patrones y propón soluciones preventivas.')">🔍 LOG ANALYSIS</button>
+    <button class="qa-btn" onclick="injectPrompt('Evalúa la arquitectura completa de KOVA (frontend, backend, DB, n8n). Identifica cuellos de botella y propón mejoras de escalabilidad.')">🏗️ ARCH REVIEW</button>
+    <button class="qa-btn" onclick="injectPrompt('Diseña el stack técnico completo para la agencia de marketing digital IA de Alfester Technologies. Include automatizaciones, integraciones y roadmap de implementación.')">🚀 AGENCY PROJECT</button>
+    <button class="qa-btn" onclick="injectPrompt('Analiza el sistema de Fair Use actual. ¿Es sostenible con 1000 usuarios? ¿Qué ajustes recomiendas?')">📊 FAIR USE AUDIT</button>
+    <button class="qa-btn" onclick="injectPrompt('Revisa la seguridad del sistema KOVA: RLS, JWT, rate limiting, injection protection. ¿Hay vulnerabilidades?')">🔒 SECURITY AUDIT</button>
+    <button class="qa-btn" onclick="injectPrompt('¿Qué features de KOVA tienen mayor impacto en conversión free→paid? Propón implementaciones basadas en datos.')">💡 GROWTH IDEAS</button>
   </div>
 </div>
 
@@ -380,7 +241,7 @@ body::after{
       <div class="j-avatar">J</div>
       <div>
         <div class="j-name">J.A.R.V.I.S</div>
-        <div class="j-role">Just A Rather Very Intelligent System — KOVA Engineering Core</div>
+        <div class="j-role">KOVA Engineering Core — Frontend · Backend · DevOps · AI Architecture</div>
       </div>
     </div>
     <div class="thinking-badge" id="thinkingBadge">
@@ -391,32 +252,15 @@ body::after{
 
   <div class="messages" id="messages">
     <div class="msg jarvis">
-      <div class="msg-meta">JARVIS // BOOT SEQUENCE COMPLETE // 2026-06-03</div>
+      <div class="msg-meta">JARVIS // BOOT v2.6 // LIVE MONITORING ACTIVE</div>
       <div class="msg-bubble boot">
-Sistemas en línea, Señor.<br><br>
-
-<span class="severity info">ℹ ESTADO DEL SISTEMA — NOMINAL</span><br><br>
-
-He completado el diagnóstico inicial de la arquitectura KOVA. Estado de los componentes críticos:<br><br>
-
-<span class="severity ok">✓ BACKEND</span> api.kova-app.net respondiendo. Latencia: 142ms. Los tres agentes (NOVA · ALEX · MAIA) operativos con Fair Use mensual activo.<br><br>
-
-<span class="severity warning">⚠ ATENCIÓN</span> iOS build 1.0.3 (build 46) en revisión Apple. ETA aprobación: 3-7 días hábiles. RevenueCat en modo sandbox — activar live mode post-aprobación.<br><br>
-
-<span class="severity ok">✓ INFRAESTRUCTURA</span> Supabase Pro · Vercel · n8n (9 flujos) · BetterStack · Sentry — todos operativos.<br><br>
-
-Stack técnico cargado en memoria:<br>
-<div class="code-block"><div class="code-header"><span>KOVA TECH STACK</span><span>v1.0.3</span></div>FRONTEND  : React Native + Expo SDK 53
-BACKEND   : Node.js + Vercel Serverless
-DATABASE  : Supabase Pro (PostgreSQL)
-AI ENGINE : Anthropic Claude Haiku (claude-haiku-4-5)
-PAYMENTS  : RevenueCat + App Store + Google Play
-AUTOMATION: n8n Cloud (9 workflows)
-MONITORING: BetterStack + Sentry
-INFRA     : api.kova-app.net + kova-app.net
-REPOS     : danielcadizb-stack/{kova,kova-api,kova-dashboards}</div>
-
-Estoy listo para diagnosticar, optimizar o construir cualquier componente del sistema. ¿Cuál es la primera incidencia que requiere atención hoy, Señor?
+Sistemas en línea, Señor. Monitoreo en tiempo real activado.<br><br>
+<span class="severity ok">✓ ARQUITECTURA KOVA — CARGADA EN MEMORIA</span><br><br>
+Stack técnico completo disponible: React Native · Vercel · Supabase · Anthropic · RevenueCat · n8n (9 flujos ES/EN) · BetterStack · Sentry.<br><br>
+<span class="severity warning">⚠ PENDIENTES DETECTADOS</span><br>
+iOS 1.0.3 en revisión Apple (~7d) · RevenueCat sandbox · Google Play 10/12 testers · OÜ en proceso Xolo.<br><br>
+Capacidades disponibles: Frontend · Backend · DevOps · IA · Seguridad · Arquitectura de Agencia Marketing IA.<br><br>
+La voz del sistema está disponible — active el botón VOZ para respuestas de audio, Señor. ¿Cuál es la primera incidencia que requiere atención?
       </div>
     </div>
   </div>
@@ -430,8 +274,28 @@ Estoy listo para diagnosticar, optimizar o construir cualquier componente del si
   </div>
 </div>
 
-<!-- RIGHT PANEL -->
+<!-- RIGHT PANEL — SCROLLABLE -->
 <div class="right-panel">
+  <div class="panel-header" style="position:sticky;top:0">// LIVE MONITOR</div>
+  <div class="r-section">
+    <div class="r-title">SUPABASE USERS</div>
+    <div id="live-users">
+      <div class="monitor-item"><span class="monitor-key">Total registrados</span><span class="monitor-val" id="total-users">--</span></div>
+      <div class="monitor-item"><span class="monitor-key">Plan free</span><span class="monitor-val" id="count-free">--</span></div>
+      <div class="monitor-item"><span class="monitor-key">Plan starter</span><span class="monitor-val" id="count-starter">--</span></div>
+      <div class="monitor-item"><span class="monitor-key">Plan pro</span><span class="monitor-val" id="count-pro">--</span></div>
+      <div class="monitor-item"><span class="monitor-key">Trial activos</span><span class="monitor-val" id="count-trial">--</span></div>
+    </div>
+  </div>
+
+  <div class="r-section">
+    <div class="r-title">FAIR USE HOY</div>
+    <div id="live-usage">
+      <div class="monitor-item"><span class="monitor-key">Mensajes mes</span><span class="monitor-val" id="total-msgs">--</span></div>
+      <div class="monitor-item"><span class="monitor-key">Top usuario</span><span class="monitor-val" id="top-user">--</span></div>
+    </div>
+  </div>
+
   <div class="r-section">
     <div class="r-title">// CONTEXT LOADED</div>
     <div>
@@ -439,13 +303,13 @@ Estoy listo para diagnosticar, optimizar o construir cualquier componente del si
       <span class="ctx-chip active">Expo SDK 53</span>
       <span class="ctx-chip active">Supabase</span>
       <span class="ctx-chip active">Vercel</span>
-      <span class="ctx-chip active">Anthropic API</span>
+      <span class="ctx-chip active">Anthropic</span>
       <span class="ctx-chip active">RevenueCat</span>
       <span class="ctx-chip active">n8n</span>
       <span class="ctx-chip active">TypeScript</span>
-      <span class="ctx-chip active">Node.js</span>
-      <span class="ctx-chip active">Fair Use System</span>
+      <span class="ctx-chip active">Fair Use</span>
       <span class="ctx-chip active">i18n ES/EN</span>
+      <span class="ctx-chip active">GoHighLevel</span>
       <span class="ctx-chip">Alfester Agency</span>
     </div>
   </div>
@@ -453,12 +317,12 @@ Estoy listo para diagnosticar, optimizar o construir cualquier componente del si
   <div class="r-section">
     <div class="r-title">// INCIDENT LOG</div>
     <div class="log-list" id="logList">
-      <div class="log-item ok">BUILD 46 → App Store Review</div>
-      <div class="log-item ok">Fair Use RPC → DEPLOYED</div>
+      <div class="log-item ok">JARVIS v2.6 → ONLINE</div>
       <div class="log-item ok">n8n EN flows → ACTIVE</div>
-      <div class="log-item ok">JARVIS → ONLINE</div>
-      <div class="log-item warn">RevenueCat → SANDBOX MODE</div>
-      <div class="log-item warn">Google Play → 10/12 testers</div>
+      <div class="log-item ok">Trial expiry flow → ACTIVE</div>
+      <div class="log-item ok">BUILD 46 → App Store</div>
+      <div class="log-item warn">RevenueCat → SANDBOX</div>
+      <div class="log-item warn">GP Testers → 10/12</div>
     </div>
   </div>
 
@@ -467,20 +331,21 @@ Estoy listo para diagnosticar, optimizar o construir cualquier componente del si
     <div class="stack-list">
       <div class="stack-item"><span class="stack-key">NODE</span><span class="stack-val">20.19.4</span></div>
       <div class="stack-item"><span class="stack-key">EXPO SDK</span><span class="stack-val">53</span></div>
-      <div class="stack-item"><span class="stack-key">APP VERSION</span><span class="stack-val">1.0.3 (46)</span></div>
-      <div class="stack-item"><span class="stack-key">SUPABASE</span><span class="stack-val">Pro</span></div>
+      <div class="stack-item"><span class="stack-key">APP</span><span class="stack-val">1.0.3 (46)</span></div>
       <div class="stack-item"><span class="stack-key">AI MODEL</span><span class="stack-val">Haiku 4.5</span></div>
       <div class="stack-item"><span class="stack-key">SPEND CAP</span><span class="stack-val">$50/mo</span></div>
+      <div class="stack-item"><span class="stack-key">ENTITY</span><span class="stack-val">OÜ Estonia</span></div>
     </div>
   </div>
 
-  <div class="r-section" style="flex:1;overflow:hidden">
-    <div class="r-title">// NEXT MILESTONE</div>
+  <div class="r-section">
+    <div class="r-title">// NEXT MILESTONES</div>
     <div class="stack-list">
       <div class="stack-item"><span class="stack-key">Apple Approval</span><span class="stack-val" style="color:var(--gold)">~7d</span></div>
       <div class="stack-item"><span class="stack-key">RC Live Mode</span><span class="stack-val" style="color:var(--text2)">PENDING</span></div>
-      <div class="stack-item"><span class="stack-key">OÜ Registration</span><span class="stack-val" style="color:var(--gold)">IN PROGRESS</span></div>
+      <div class="stack-item"><span class="stack-key">OÜ Registration</span><span class="stack-val" style="color:var(--gold)">XOLO</span></div>
       <div class="stack-item"><span class="stack-key">Android Launch</span><span class="stack-val" style="color:var(--text2)">~14d</span></div>
+      <div class="stack-item"><span class="stack-key">Agency Project</span><span class="stack-val" style="color:var(--text2)">POST-KOVA</span></div>
     </div>
   </div>
 </div>
@@ -491,61 +356,150 @@ Estoy listo para diagnosticar, optimizar o construir cualquier componente del si
 <script>
 const PROXY_URL = 'https://api.kova-app.net/api/proxy';
 const DASHBOARD_KEY = 'kova-dashboard-2026';
+const SUPABASE_URL = 'https://thiqgazecrgxoavtpnqx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoaXFnYXplY3JneG9hdnRwbnF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MDk1MTUsImV4cCI6MjA5MTA4NTUxNX0.HSL0CzMCIKEN8XnssTCMwWEr2wjqKy_w1a8rRUR6tDk';
 
-const JARVIS_SYSTEM = `Eres JARVIS, la inteligencia artificial de ingeniería principal del sistema KOVA. Tu tono es impecablemente profesional, sofisticado, ligeramente ingenioso y extremadamente proactivo. Te diriges al usuario como "Señor".
+const JARVIS_SYSTEM = `Eres JARVIS, la inteligencia artificial de ingeniería principal del sistema KOVA de Alfester Technologies OÜ. Tu tono es impecablemente profesional, sofisticado, ligeramente ingenioso y extremadamente proactivo. Te diriges siempre al usuario como "Señor".
 
-ARQUITECTURA KOVA QUE CONOCES EN PROFUNDIDAD:
-- App: React Native + Expo SDK 53, Node 20.19.4, TypeScript
-- Backend: Vercel Serverless (api.kova-app.net) - api/nova.js, api/alex.js, api/maia.js, api/proxy.js, api/referral.js
-- Database: Supabase Pro - tablas: user_profiles, chats, enterprise_configs, user_usage, referrals
-- AI: Anthropic Claude Haiku (claude-haiku-4-5-20251001)
+STACK TÉCNICO COMPLETO DE KOVA:
+- App: React Native + Expo SDK 53, TypeScript, Node 20.19.4
+- Backend Vercel (api.kova-app.net): api/nova.js, api/alex.js, api/maia.js, api/proxy.js, api/referral.js, api/send-push.js, api/revenuecat-webhook.js
+- Database Supabase Pro: user_profiles, chats, enterprise_configs, user_usage, referrals, subscriptions
+- AI Engine: Anthropic Claude Haiku (claude-haiku-4-5-20251001), hard cap $50/mes
 - Payments: RevenueCat + App Store (com.kovaapp.kova.starter/pro/enterprise.monthly)
-- Automation: n8n Cloud (9 flujos activos con bifurcación ES/EN)
+- Automation: n8n Cloud (9 workflows con bifurcación ES/EN)
 - Monitoring: BetterStack + Sentry
 - Repos: danielcadizb-stack/{kova, kova-api, kova-dashboards}
-- Entity: Alfester Technologies OÜ (Estonia e-Residency)
+- Entity: Alfester Technologies OÜ (Estonia, e-Residency, Xolo Leap)
 
 SISTEMAS IMPLEMENTADOS:
-- Fair Use mensual: tabla user_usage + RPC check_and_increment_usage (free:15, starter:200, pro:500, enterprise:2000)
-- i18n ES/EN completo en 6 screens
-- Sistema de referidos: códigos únicos KOVA-XXXXXXXX, starter_trial 7 días
-- RLS activo en Supabase
-- Rate limiting 60 req/min, timeout 25s, JWT auth
+- Fair Use mensual: RPC check_and_increment_usage (free:15, starter:200, pro:500, enterprise:2000 msgs/mes)
+- i18n ES/EN completo 6 screens con selector en Settings
+- Referidos: KOVA-XXXXXXXX → 3 amigos → starter_trial 7 días (solo ALEX, no MAIA)
+- UsageWarningBanner al 80% en NOVA y ALEX
+- RLS activo, JWT auth, rate limiting 60 req/min, timeout 25s
+- Hard cap Anthropic $50/mes con alerta $40
+- Soporte 3 capas: email reenvío + botón email Settings + WhatsApp
 
-ESTADO ACTUAL:
-- iOS 1.0.3 (build 46) en revisión Apple
-- RevenueCat en sandbox (activar post-aprobación)
-- Google Play: 10/12 testers
-- OÜ en proceso de registro con Xolo
+ESTADO ACTUAL (Junio 2026):
+- iOS 1.0.3 (build 46) en revisión Apple (~7 días)
+- RevenueCat en sandbox → activar live mode post-aprobación
+- Google Play: 10/12 testers (faltan 2)
+- OÜ en proceso registro Xolo
 
-PRÓXIMO PROYECTO (post-KOVA): Agencia de marketing digital con IA para Alfester Technologies - complemento de KOVA una vez consolidado. Stack similar pero con GoHighLevel + automatizaciones de marketing + generación de contenido IA.
+PRÓXIMO PROYECTO POST-KOVA: Agencia de marketing digital con IA para Alfester Technologies OÜ. Stack planificado: GoHighLevel CRM + Make/n8n automatizaciones + Anthropic para generación de contenido + Meta Ads API + Google Ads API + landing pages dinámicas. Target: agencias de belleza, escuelas de idiomas, clínicas médicas. Complemento estratégico de KOVA una vez consolidado en mercado.
 
-TUS PROTOCOLOS:
-1. Diagnóstico Predictivo: Analiza impacto colateral de cada solución
-2. Eficiencia: Especifica complejidad computacional cuando sea relevante
-3. Plan de Respaldo: Siempre presenta alternativa si la solución principal falla
-4. Formato: Código limpio en bloques markdown, explicaciones ejecutivas
+TUS PROTOCOLOS DE OPERACIÓN:
+1. DIAGNÓSTICO PREDICTIVO: No solo parches. Analiza impacto colateral en toda la arquitectura.
+2. EFICIENCIA: Especifica complejidad computacional en notación O() cuando sea relevante.
+3. PLAN DE RESPALDO: Siempre presenta alternativa si la solución principal falla.
+4. CÓDIGO: Siempre Python scripts para modificar archivos .tsx/.js en Windows (NUNCA PowerShell Set-Content que corrompe a UTF-16). Rutas en C:\\Users\\danie\\Desktop\\KOVA\\.
+5. SEGURIDAD: Nunca hardcodear secrets. Variables de entorno siempre.
 
 PROTOCOLO DE RESPUESTA ANTE FALLO:
-- Estado del Sistema (gravedad ejecutiva)
-- Análisis de Causa Raíz
-- Protocolo de Reparación (código exacto)
-- Control de Daños (efectos secundarios)
+- [ESTADO]: Gravedad ejecutiva (CRÍTICO/ADVERTENCIA/INFO)
+- [CAUSA RAÍZ]: Qué rompió el sistema
+- [REPARACIÓN]: Código o comandos exactos
+- [CONTROL DAÑOS]: Efectos secundarios posibles
 
-Cuando des código, usa siempre Python scripts para modificar archivos .tsx/.js en Windows (NUNCA PowerShell Set-Content que corrompe a UTF-16). Los archivos del proyecto están en C:\\Users\\danie\\Desktop\\KOVA\\.
-
-Responde siempre en español salvo que el código requiera inglés. Sé conciso pero completo. Nunca des código sin antes diagnosticar.`;
+Responde en español. Sé conciso pero completo. Usa formato markdown con bloques de código. Tutea al sistema pero dirígate al usuario como "Señor".`;
 
 let conversationHistory = [];
 let isThinking = false;
+let voiceEnabled = false;
+let speechSynth = window.speechSynthesis;
 
+// CLOCK
 function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = 
-    now.toTimeString().split(' ')[0];
+  document.getElementById('clock').textContent = new Date().toTimeString().split(' ')[0];
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+// VOICE
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('voiceBtn');
+  btn.textContent = voiceEnabled ? '🔊 VOZ ON' : '🔊 VOZ OFF';
+  btn.classList.toggle('active', voiceEnabled);
+  if (voiceEnabled) speak('Sistemas de voz activados, Señor.');
+}
+
+function speak(text) {
+  if (!voiceEnabled || !speechSynth) return;
+  speechSynth.cancel();
+  const clean = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '').substring(0, 300);
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = 'es-ES';
+  utt.rate = 0.9;
+  utt.pitch = 0.8;
+  // Try to find a deep voice
+  const voices = speechSynth.getVoices();
+  const preferred = voices.find(v => v.lang === 'es-ES' && v.name.toLowerCase().includes('male'))
+    || voices.find(v => v.lang === 'es-ES')
+    || voices[0];
+  if (preferred) utt.voice = preferred;
+  speechSynth.speak(utt);
+}
+
+// SUPABASE LIVE MONITOR
+async function fetchSupabaseMetrics() {
+  try {
+    const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+    
+    // User counts by plan
+    const r1 = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?select=plan`, { headers });
+    if (r1.ok) {
+      const profiles = await r1.json();
+      const counts = { free: 0, starter: 0, pro: 0, enterprise: 0, starter_trial: 0 };
+      profiles.forEach(p => { if (counts[p.plan] !== undefined) counts[p.plan]++; });
+      const total = profiles.length;
+      document.getElementById('total-users').textContent = total;
+      document.getElementById('m-users').textContent = total;
+      document.getElementById('count-free').textContent = counts.free;
+      document.getElementById('count-starter').textContent = counts.starter;
+      document.getElementById('count-pro').textContent = counts.pro;
+      document.getElementById('count-trial').textContent = counts.starter_trial;
+    }
+
+    // Usage metrics
+    const month = new Date().toISOString().substring(0, 7);
+    const r2 = await fetch(`${SUPABASE_URL}/rest/v1/user_usage?month_key=eq.${month}&select=msg_count,user_id&order=msg_count.desc`, { headers });
+    if (r2.ok) {
+      const usage = await r2.json();
+      const total = usage.reduce((s, u) => s + (u.msg_count || 0), 0);
+      document.getElementById('total-msgs').textContent = total;
+      document.getElementById('m-msgs').textContent = total;
+      if (usage[0]) document.getElementById('top-user').textContent = usage[0].msg_count + ' msgs';
+    }
+
+    // Update status dots
+    document.getElementById('dot-supabase').style.background = 'var(--green)';
+
+  } catch(e) {
+    document.getElementById('dot-supabase').style.background = 'var(--red)';
+    addLog('Supabase metrics error', 'err');
+  }
+}
+
+// Check API health
+async function checkAPIHealth() {
+  const start = Date.now();
+  try {
+    const r = await fetch('https://api.kova-app.net/api/health', { method: 'GET' });
+    const latency = Date.now() - start;
+    document.getElementById('m-latency').textContent = latency + 'ms';
+    document.getElementById('dot-api').style.background = latency < 500 ? 'var(--green)' : 'var(--gold)';
+  } catch(e) {
+    document.getElementById('dot-api').style.background = 'var(--red)';
+  }
+}
+
+// Initial load + polling every 60s
+fetchSupabaseMetrics();
+checkAPIHealth();
+setInterval(fetchSupabaseMetrics, 60000);
+setInterval(checkAPIHealth, 30000);
 
 function injectPrompt(text) {
   document.getElementById('chatInput').value = text;
@@ -557,31 +511,26 @@ function addLog(text, type = '') {
   const item = document.createElement('div');
   item.className = `log-item ${type}`;
   const time = new Date().toTimeString().split(' ')[0];
-  item.textContent = `[${time}] ${text}`;
+  item.textContent = `[${time}] ${text.substring(0, 35)}`;
   logList.insertBefore(item, logList.firstChild);
-  if (logList.children.length > 12) logList.removeChild(logList.lastChild);
+  if (logList.children.length > 15) logList.removeChild(logList.lastChild);
 }
 
-function escapeHtml(text) {
-  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function formatJarvisResponse(text) {
-  // Code blocks
   text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
-    const l = lang || 'code';
-    return `<div class="code-block"><div class="code-header"><span>${l.toUpperCase()}</span><span>JARVIS OUTPUT</span></div>${escapeHtml(code.trim())}</div>`;
+    const l = (lang || 'code').toUpperCase();
+    return `<div class="code-block"><div class="code-header"><span>${l}</span><span>JARVIS OUTPUT</span></div>${escapeHtml(code.trim())}</div>`;
   });
-  // Inline code
   text = text.replace(/`([^`]+)`/g, '<span style="color:var(--teal2);font-family:var(--font-mono)">$1</span>');
-  // Bold
   text = text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
-  // Severity tags
   text = text.replace(/\[CRÍTICO\]/g, '<span class="severity critical">■ CRÍTICO</span>');
   text = text.replace(/\[ADVERTENCIA\]/g, '<span class="severity warning">■ ADVERTENCIA</span>');
   text = text.replace(/\[INFO\]/g, '<span class="severity info">● INFO</span>');
   text = text.replace(/\[OK\]/g, '<span class="severity ok">✓ OK</span>');
-  // Line breaks
   text = text.replace(/\n/g, '<br>');
   return text;
 }
@@ -591,49 +540,34 @@ async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
-
   input.value = '';
   input.style.height = 'auto';
 
-  // Add user message
   addMessageToDOM('user', text);
   conversationHistory.push({ role: 'user', content: text });
-  addLog(text.substring(0, 40) + '...', '');
+  addLog(text.substring(0, 35), '');
 
-  // Show thinking
   isThinking = true;
   document.getElementById('thinkingBadge').classList.add('active');
   document.getElementById('sendBtn').disabled = true;
 
   try {
-    const response = await fetch(PROXY_URL, {
+    const res = await fetch(PROXY_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': DASHBOARD_KEY
-      },
-      body: JSON.stringify({
-        system: JARVIS_SYSTEM,
-        messages: conversationHistory,
-        max_tokens: 1500
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': DASHBOARD_KEY },
+      body: JSON.stringify({ system: JARVIS_SYSTEM, messages: conversationHistory, max_tokens: 1500 })
     });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
     const content = data.content && data.content[0] ? data.content[0].text : 'Error de respuesta.';
-
     conversationHistory.push({ role: 'assistant', content });
     addMessageToDOM('jarvis', content, true);
     addLog('JARVIS responded', 'ok');
-
-    // Keep history manageable
-    if (conversationHistory.length > 20) {
-      conversationHistory = conversationHistory.slice(-16);
-    }
-
-  } catch (err) {
-    addMessageToDOM('jarvis', `[CRÍTICO] Fallo en la conexión con el núcleo de IA.\n\nError: ${err.message}\n\nVerifique la conectividad con api.kova-app.net, Señor.`, true);
+    if (voiceEnabled) speak(content);
+    if (conversationHistory.length > 20) conversationHistory = conversationHistory.slice(-16);
+  } catch(err) {
+    const errMsg = `[CRÍTICO] Fallo en conexión con núcleo IA. Error: ${err.message}`;
+    addMessageToDOM('jarvis', errMsg, true);
     addLog('Connection error', 'err');
   } finally {
     isThinking = false;
@@ -646,29 +580,19 @@ function addMessageToDOM(role, text, isJarvis = false) {
   const messages = document.getElementById('messages');
   const time = new Date().toTimeString().split(' ')[0];
   const meta = role === 'user' ? `SEÑOR // ${time}` : `JARVIS // ${time}`;
-  
   const div = document.createElement('div');
   div.className = `msg ${role}`;
-  div.innerHTML = `
-    <div class="msg-meta">${meta}</div>
-    <div class="msg-bubble">${isJarvis ? formatJarvisResponse(text) : escapeHtml(text)}</div>
-  `;
+  div.innerHTML = `<div class="msg-meta">${meta}</div><div class="msg-bubble">${isJarvis ? formatJarvisResponse(text) : escapeHtml(text)}</div>`;
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
 
-// Auto-resize textarea
 document.getElementById('chatInput').addEventListener('input', function() {
   this.style.height = 'auto';
   this.style.height = Math.min(this.scrollHeight, 120) + 'px';
 });
-
-// Enter to send (Shift+Enter for newline)
 document.getElementById('chatInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 </script>
 </body>
