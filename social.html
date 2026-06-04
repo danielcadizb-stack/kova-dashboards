@@ -1072,8 +1072,7 @@ function exportData() {
 function callAI(prompt, onSuccess, onError) {
   fetch(API, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY,
-        'x-api-key': 'kova-dashboard-2026'},
+    headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
     body: JSON.stringify({
       messages: [{role: 'user', content: prompt}],
       max_tokens: 1200
