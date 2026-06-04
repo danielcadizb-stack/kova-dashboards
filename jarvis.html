@@ -428,7 +428,19 @@ function toggleVoice() {
 function speak(text) {
   if (!voiceEnabled || !speechSynth) return;
   speechSynth.cancel();
-  const clean = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '').substring(0, 300);
+  let clean = text;
+  clean = clean.replace(/<[^>]*>/g, '');         // HTML tags
+  clean = clean.replace(/\[.*?\]/g, '');          // [CRÍTICO] etc
+  clean = clean.replace(/```[\s\S]*?```/g, ' código adjunto. '); // code blocks
+  clean = clean.replace(/`[^`]+`/g, '');          // inline code
+  clean = clean.replace(/\*\*/g, '');             // bold markers
+  clean = clean.replace(/[#*_~>|\\]/g, '');       // markdown symbols
+  clean = clean.replace(/https?:\/\/\S+/g, '');   // URLs
+  clean = clean.replace(/[\(\)\[\]\{\}]/g, '');   // brackets
+  clean = clean.replace(/[→←↑↓■●✓✗⚠⚡🔍🏗🚀📊🔒💡⭐🔥]/g, ''); // emojis/symbols
+  clean = clean.replace(/\s{2,}/g, ' ');          // multiple spaces
+  clean = clean.replace(/\n+/g, '. ');            // newlines to pauses
+  clean = clean.trim().substring(0, 400);
   const utt = new SpeechSynthesisUtterance(clean);
   utt.lang = 'es-ES';
   utt.rate = 0.9;
@@ -535,6 +547,42 @@ function formatJarvisResponse(text) {
   return text;
 }
 
+function buildLiveContext() {
+  const now = new Date();
+  const users = document.getElementById('total-users')?.textContent || '--';
+  const msgs = document.getElementById('total-msgs')?.textContent || '--';
+  const latency = document.getElementById('m-latency')?.textContent || '--';
+  const free = document.getElementById('count-free')?.textContent || '--';
+  const starter = document.getElementById('count-starter')?.textContent || '--';
+  const pro = document.getElementById('count-pro')?.textContent || '--';
+  const trial = document.getElementById('count-trial')?.textContent || '--';
+  const topUser = document.getElementById('top-user')?.textContent || '--';
+
+  return `
+
+--- ESTADO EN TIEMPO REAL DEL SISTEMA (${now.toLocaleString('es-ES')}) ---
+MÉTRICAS SUPABASE LIVE:
+- Total usuarios registrados: ${users}
+- Plan free: ${free} | starter: ${starter} | pro: ${pro} | trial: ${trial}
+- Mensajes totales este mes: ${msgs}
+- Top usuario: ${topUser}
+- Latencia API: ${latency}
+
+ESTADO SERVICIOS:
+- iOS 1.0.3 build 46: EN REVISIÓN APPLE (~7 días desde 1 junio)
+- RevenueCat: SANDBOX (activar post-aprobación Apple)
+- Google Play: 10/12 testers
+- Alfester OÜ: EN PROCESO Xolo
+- Anthropic spend cap: $50/mes activo
+- n8n: 9 flujos activos (ES+EN)
+- npm audit: 12 moderate (kova-api) + 14 moderate (kova) — pendiente Expo upgrade
+- RLS: ACTIVO en todas las tablas
+- Security score: 85/100
+
+USA ESTOS DATOS REALES en tu respuesta. Si el dato muestra '--' significa que aún no se ha cargado desde Supabase.
+---`;
+}
+
 async function sendMessage() {
   if (isThinking) return;
   const input = document.getElementById('chatInput');
@@ -552,10 +600,14 @@ async function sendMessage() {
   document.getElementById('sendBtn').disabled = true;
 
   try {
+    // Inject real-time system context
+    const liveContext = buildLiveContext();
+    const systemWithContext = JARVIS_SYSTEM + liveContext;
+
     const res = await fetch(PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': DASHBOARD_KEY },
-      body: JSON.stringify({ system: JARVIS_SYSTEM, messages: conversationHistory, max_tokens: 1500 })
+      body: JSON.stringify({ system: systemWithContext, messages: conversationHistory, max_tokens: 1500 })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
