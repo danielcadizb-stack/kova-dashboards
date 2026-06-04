@@ -355,7 +355,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
 
 <script>
 // ─── API ───────────────────────────────────────────────────────────────────
-var API = 'https://kova-api.vercel.app/api/proxy';
+var API = 'https://api.kova-app.net/api/proxy';
+var API_KEY = 'kova-dashboard-2026';
 
 // ─── DATA ──────────────────────────────────────────────────────────────────
 var PD = JSON.parse(localStorage.getItem('kova_plat') || JSON.stringify({
@@ -1071,7 +1072,7 @@ function exportData() {
 function callAI(prompt, onSuccess, onError) {
   fetch(API, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json',
+    headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY,
         'x-api-key': 'kova-dashboard-2026'},
     body: JSON.stringify({
       messages: [{role: 'user', content: prompt}],
