@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfester — Panel de Resultados</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0b08;--bg2:#111510;--bg3:#1a1a14;--bg4:#2a2a20;
+  --teal:#5de0ce;--gold:#ffc350;--red:#ef4444;--green:#22c55e;
+  --text:#f0ede6;--text2:#a09b91;--text3:#4a4a3a;--border:#1a1a14;
+  --font-head:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-head);min-height:100vh}
+
+/* HEADER */
+.header{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg2)}
+.logo-area{display:flex;align-items:center;gap:14px}
+.logo{font-size:18px;font-weight:800;color:var(--teal);letter-spacing:3px}
+.divider{width:1px;height:20px;background:var(--border)}
+.client-name{font-size:14px;color:var(--text2)}
+.header-right{display:flex;align-items:center;gap:16px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--teal);border:1px solid rgba(93,224,206,0.3);border-radius:20px;padding:4px 12px;font-family:var(--font-mono)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.period-selector{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text2);font-size:13px;font-family:var(--font-mono);cursor:pointer}
+.powered{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px}
+.kova-chip{background:rgba(93,224,206,0.08);border:1px solid rgba(93,224,206,0.2);border-radius:5px;padding:2px 8px;font-size:10px;color:var(--teal);font-weight:700}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 28px}
+.tab{padding:14px 20px;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font-mono);letter-spacing:.5px}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* CONTENT */
+.container{padding:24px 28px;max-width:1400px;margin:0 auto}
+.section{display:none}
+.section.active{display:block}
+
+/* GRIDS */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.g1{margin-bottom:20px}
+
+/* CARDS */
+.card{background:var(--bg2);border-radius:14px;padding:18px;border:1px solid var(--border)}
+.card-title{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:var(--font-mono)}
+.metric-big{font-size:32px;font-weight:700;color:var(--text);font-family:var(--font-mono);line-height:1}
+.metric-label{font-size:12px;color:var(--text2);margin-top:6px}
+.metric-change{font-size:11px;margin-top:6px;font-family:var(--font-mono)}
+.up{color:var(--green)}.down{color:var(--red)}.neutral{color:var(--text3)}
+
+/* HIGHLIGHT CARD */
+.card.highlight-teal{border-color:rgba(93,224,206,0.25);background:rgba(93,224,206,0.03)}
+.card.highlight-gold{border-color:rgba(255,195,80,0.25);background:rgba(255,195,80,0.03)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-weight:400}
+.data-table td{padding:12px 12px;border-bottom:1px solid rgba(26,26,20,0.6);font-size:13px}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--bg3)}
+.td-main{color:var(--text);font-weight:600}
+.td-mono{font-family:var(--font-mono);color:var(--teal)}
+.td-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* STATUS BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--font-mono)}
+.badge-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.badge-gold{background:rgba(255,195,80,.1);color:var(--gold);border:1px solid rgba(255,195,80,.2)}
+.badge-red{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.badge-teal{background:rgba(93,224,206,.1);color:var(--teal);border:1px solid rgba(93,224,206,.2)}
+
+/* PROGRESS BAR */
+.prog-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:8px}
+.prog-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.prog-teal{background:linear-gradient(90deg,var(--teal),#00d4aa)}
+.prog-gold{background:linear-gradient(90deg,var(--gold),#ff8c00)}
+.prog-green{background:var(--green)}
+
+/* FUNNEL */
+.funnel-step{display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg3);border-radius:10px;margin-bottom:8px;border:1px solid var(--border)}
+.funnel-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.funnel-label{flex:1}
+.funnel-name{font-size:13px;color:var(--text);font-weight:600}
+.funnel-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.funnel-val{font-family:var(--font-mono);font-size:16px;font-weight:700}
+.funnel-arrow{color:var(--text3);font-size:12px;text-align:center;padding:4px;font-family:var(--font-mono)}
+
+/* KOVA SECTION */
+.kova-agent-row{display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg3);border-radius:10px;margin-bottom:8px;border:1px solid var(--border)}
+.agent-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--bg);flex-shrink:0}
+.agent-info{flex:1}
+.agent-name{font-size:13px;font-weight:700;color:var(--text)}
+.agent-desc{font-size:11px;color:var(--text3);margin-top:2px}
+.agent-usage{font-family:var(--font-mono);font-size:13px;text-align:right}
+
+/* AUTOMATION LOG */
+.log-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg3);border-radius:8px;margin-bottom:6px;border-left:3px solid var(--teal)}
+.log-time{font-family:var(--font-mono);font-size:11px;color:var(--text3);min-width:80px}
+.log-text{font-size:12px;color:var(--text2);flex:1}
+.log-item.warn{border-left-color:var(--gold)}
+.log-item.ok{border-left-color:var(--green)}
+
+/* SECTION HEADER */
+.sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sec-title{font-size:20px;font-weight:800}
+.sec-sub{font-size:13px;color:var(--text3);font-family:var(--font-mono)}
+
+/* CONFIG PANEL */
+.config-field{margin-bottom:16px}
+.config-label{font-size:11px;color:var(--text3);font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.config-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--font-mono);font-size:13px;outline:none}
+.config-input:focus{border-color:rgba(93,224,206,.4)}
+.save-btn{background:var(--teal);color:var(--bg);padding:10px 24px;border-radius:8px;border:none;font-family:var(--font-head);font-size:14px;font-weight:700;cursor:pointer}
+.save-btn:hover{opacity:.85}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-area">
+    <div class="logo">ALFESTER</div>
+    <div class="divider"></div>
+    <div class="client-name" id="client-display">Panel de Resultados</div>
+  </div>
+  <div class="header-right">
+    <select class="period-selector" onchange="changePeriod(this.value)">
+      <option value="7">Últimos 7 días</option>
+      <option value="30" selected>Últimos 30 días</option>
+      <option value="90">Últimos 90 días</option>
+    </select>
+    <div class="live-badge"><div class="live-dot"></div> EN VIVO</div>
+    <div class="powered">Incluye <span class="kova-chip">KOVA ENTERPRISE</span></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('overview')">RESUMEN</div>
+  <div class="tab" onclick="showTab('ads')">CAMPAÑAS</div>
+  <div class="tab" onclick="showTab('funnel')">EMBUDO</div>
+  <div class="tab" onclick="showTab('automation')">AUTOMATIZACIÓN</div>
+  <div class="tab" onclick="showTab('kova')">KOVA</div>
+  <div class="tab" onclick="showTab('config')">CONFIGURAR</div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div class="container">
+<div id="overview" class="section active">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title" id="overview-title">Resumen del mes</div>
+      <div class="sec-sub" id="business-type">Centro de Estética · Madrid</div>
+    </div>
+  </div>
+
+  <!-- KPIs PRINCIPALES -->
+  <div class="g4">
+    <div class="card highlight-teal">
+      <div class="card-title">Leads generados</div>
+      <div class="metric-big" id="kpi-leads">127</div>
+      <div class="metric-label">este período</div>
+      <div class="metric-change up" id="kpi-leads-change">↑ +34% vs período anterior</div>
+      <div class="prog-bar"><div class="prog-fill prog-teal" style="width:73%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Coste por Lead</div>
+      <div class="metric-big" id="kpi-cpl">€3.20</div>
+      <div class="metric-label">promedio del sector: €8-12</div>
+      <div class="metric-change up" id="kpi-cpl-change">↓ -28% vs mes anterior</div>
+      <div class="prog-bar"><div class="prog-fill prog-green" style="width:85%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" id="kpi3-label">Conversiones</div>
+      <div class="metric-big" id="kpi-conv">43</div>
+      <div class="metric-label" id="kpi3-sub">citas agendadas automáticamente</div>
+      <div class="metric-change up" id="kpi-conv-change">↑ +22% vs mes anterior</div>
+      <div class="prog-bar"><div class="prog-fill prog-teal" style="width:61%"></div></div>
+    </div>
+    <div class="card highlight-gold">
+      <div class="card-title">ROI estimado</div>
+      <div class="metric-big" id="kpi-roi" style="color:var(--gold)">4.2x</div>
+      <div class="metric-label">€<span id="roi-amount">5.040</span> generados / €1.200 invertidos</div>
+      <div class="metric-change up">↑ Rentabilidad positiva</div>
+      <div class="prog-bar"><div class="prog-fill prog-gold" style="width:92%"></div></div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Tiempo respuesta a leads</div>
+      <div class="metric-big" style="color:var(--green)">1:42</div>
+      <div class="metric-label">minutos · respuesta automática IA</div>
+      <div class="metric-change up">↑ 720x más rápido que promedio humano</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reseñas Google generadas</div>
+      <div class="metric-big" id="kpi-reviews">18</div>
+      <div class="metric-label">solicitudes automáticas post-servicio</div>
+      <div class="metric-change up">↑ +180% vs mes anterior (manual: 2-3)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Tasa de conversión</div>
+      <div class="metric-big" id="kpi-cr">33.8%</div>
+      <div class="metric-label">lead → cliente</div>
+      <div class="metric-change up">↑ Sector promedio: 12-18%</div>
+    </div>
+  </div>
+
+  <!-- RESUMEN CAMPAÑAS -->
+  <div class="g1 card">
+    <div class="card-title">Rendimiento de campañas activas</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Campaña</th>
+          <th>Canal</th>
+          <th>Inversión</th>
+          <th>Leads</th>
+          <th>CPL</th>
+          <th>ROAS</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="campaigns-table">
+        <tr>
+          <td><div class="td-main">Captación Primavera 2026</div><div class="td-sub">Tratamientos faciales + depilación</div></td>
+          <td><span class="badge badge-teal">META ADS</span></td>
+          <td class="td-mono">€450</td>
+          <td class="td-mono">89</td>
+          <td class="td-mono">€5.06</td>
+          <td class="td-mono" style="color:var(--green)">3.8x</td>
+          <td><span class="badge badge-green">✓ ACTIVA</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-main">Búsqueda Google Local</div><div class="td-sub">centro de estética + ciudad</div></td>
+          <td><span class="badge badge-gold">GOOGLE ADS</span></td>
+          <td class="td-mono">€280</td>
+          <td class="td-mono">38</td>
+          <td class="td-mono">€7.37</td>
+          <td class="td-mono" style="color:var(--green)">5.2x</td>
+          <td><span class="badge badge-green">✓ ACTIVA</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-main">Retargeting visitantes web</div><div class="td-sub">Audiencia: visitaron página servicios</div></td>
+          <td><span class="badge badge-teal">META ADS</span></td>
+          <td class="td-mono">€120</td>
+          <td class="td-mono">22</td>
+          <td class="td-mono">€5.45</td>
+          <td class="td-mono" style="color:var(--teal)">4.1x</td>
+          <td><span class="badge badge-green">✓ ACTIVA</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CAMPAIGNS TAB -->
+<div id="ads" class="section">
+  <div class="sec-header">
+    <div><div class="sec-title">Campañas publicitarias</div><div class="sec-sub">Rendimiento detallado por plataforma</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Meta Ads — Este mes</div>
+      <div class="g2" style="margin-bottom:12px">
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">INVERSIÓN</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono)">€570</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">LEADS</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono);color:var(--teal)">111</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">CPL</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono)">€5.14</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">ROAS</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono);color:var(--green)">3.9x</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px">CTR PROMEDIO</div>
+      <div class="prog-bar"><div class="prog-fill prog-teal" style="width:68%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-top:4px"><span>0%</span><span style="color:var(--teal)">3.4%</span><span>5%</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Google Ads — Este mes</div>
+      <div class="g2" style="margin-bottom:12px">
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">INVERSIÓN</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono)">€280</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">LEADS</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono);color:var(--gold)">38</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">CPL</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono)">€7.37</div></div>
+        <div><div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">ROAS</div><div style="font-size:24px;font-weight:700;font-family:var(--font-mono);color:var(--green)">5.2x</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px">POSICIÓN MEDIA</div>
+      <div class="prog-bar"><div class="prog-fill prog-gold" style="width:80%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-top:4px"><span>Pos.1</span><span style="color:var(--gold)">1.4</span><span>Pos.5</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FUNNEL TAB -->
+<div id="funnel" class="section">
+  <div class="sec-header">
+    <div><div class="sec-title">Embudo de conversión</div><div class="sec-sub">De impresión a cliente pagante</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Embudo completo — Este mes</div>
+      <div class="funnel-step">
+        <div class="funnel-icon" style="background:rgba(93,224,206,.1)">👁️</div>
+        <div class="funnel-label"><div class="funnel-name">Impresiones</div><div class="funnel-sub">Personas que vieron el anuncio</div></div>
+        <div class="funnel-val" style="color:var(--text)">48.200</div>
+      </div>
+      <div class="funnel-arrow">↓ 0.84% CTR</div>
+      <div class="funnel-step">
+        <div class="funnel-icon" style="background:rgba(93,224,206,.1)">🖱️</div>
+        <div class="funnel-label"><div class="funnel-name">Clics al anuncio</div><div class="funnel-sub">Visitaron la landing page</div></div>
+        <div class="funnel-val" style="color:var(--teal)">405</div>
+      </div>
+      <div class="funnel-arrow">↓ 31.4% conversión</div>
+      <div class="funnel-step">
+        <div class="funnel-icon" style="background:rgba(93,224,206,.15)">📋</div>
+        <div class="funnel-label"><div class="funnel-name">Leads captados</div><div class="funnel-sub">Dejaron sus datos de contacto</div></div>
+        <div class="funnel-val" style="color:var(--teal)">127</div>
+      </div>
+      <div class="funnel-arrow">↓ 1:42 min respuesta IA automática</div>
+      <div class="funnel-step">
+        <div class="funnel-icon" style="background:rgba(34,197,94,.1)">📅</div>
+        <div class="funnel-label"><div class="funnel-name">Citas agendadas</div><div class="funnel-sub">Proceso automático GoHighLevel</div></div>
+        <div class="funnel-val" style="color:var(--green)">43</div>
+      </div>
+      <div class="funnel-arrow">↓ 67.4% asistencia</div>
+      <div class="funnel-step">
+        <div class="funnel-icon" style="background:rgba(255,195,80,.1)">💰</div>
+        <div class="funnel-label"><div class="funnel-name">Clientes atendidos</div><div class="funnel-sub">Generaron ingresos reales</div></div>
+        <div class="funnel-val" style="color:var(--gold)">29</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Métricas de conversión</div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--text2)">Impresión → Lead</span>
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--teal)">0.26%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill prog-teal" style="width:52%"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--text2)">Lead → Cita</span>
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--teal)">33.8%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill prog-teal" style="width:67%"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--text2)">Cita → Cliente pagante</span>
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--green)">67.4%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill prog-green" style="width:67%"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--text2)">Lead → Cliente (total)</span>
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--gold)">22.8%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill prog-gold" style="width:45%"></div></div>
+      </div>
+      <div style="margin-top:20px;padding:14px;background:var(--bg3);border-radius:10px;border-left:3px solid var(--teal)">
+        <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px">INSIGHT ALFESTER</div>
+        <div style="font-size:13px;color:var(--text2)">La tasa lead→cita del 33.8% está <strong style="color:var(--teal)">2.8x por encima del sector</strong> (promedio 12%). El flujo de respuesta automática en &lt;2 min es el factor clave.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTOMATION TAB -->
+<div id="automation" class="section">
+  <div class="sec-header">
+    <div><div class="sec-title">Automatizaciones activas</div><div class="sec-sub">Flujos trabajando 24/7</div></div>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Respuesta instantánea leads</div>
+      <div class="metric-big" style="color:var(--green)">100%</div>
+      <div class="metric-label">leads respondidos en &lt;2 min</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">Lead entra → WhatsApp automático → Cualificación IA → Agenda cita</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recordatorios de cita</div>
+      <div class="metric-big" style="color:var(--teal)">43</div>
+      <div class="metric-label">recordatorios enviados este mes</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">24h antes + 2h antes. No-show reducido al 8%</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Solicitudes de reseña</div>
+      <div class="metric-big" style="color:var(--gold)">29</div>
+      <div class="metric-label">enviadas automáticamente post-servicio</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">18 reseñas recibidas (62% tasa de respuesta)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Log de automatizaciones — Últimas 24h</div>
+    <div id="automation-log">
+      <div class="log-item ok"><div class="log-time">09:47</div><div class="log-text">Lead "María G." cualificado → cita agendada para mañana 11:00</div><span class="badge badge-green">✓</span></div>
+      <div class="log-item ok"><div class="log-time">09:12</div><div class="log-text">Recordatorio enviado a "Carlos M." para cita de las 11:00</div><span class="badge badge-green">✓</span></div>
+      <div class="log-item ok"><div class="log-time">08:33</div><div class="log-text">Solicitud de reseña enviada a "Ana P." post-tratamiento facial</div><span class="badge badge-green">✓</span></div>
+      <div class="log-item"><div class="log-time">Ayer 19:22</div><div class="log-text">Lead "Pedro L." no cualificado (fuera de zona) → descartado automáticamente</div><span class="badge badge-teal">INFO</span></div>
+      <div class="log-item ok"><div class="log-time">Ayer 16:05</div><div class="log-text">Reactivación enviada a 12 clientes inactivos +30 días</div><span class="badge badge-green">✓</span></div>
+      <div class="log-item warn"><div class="log-time">Ayer 14:30</div><div class="log-text">Lead "Laura K." no respondió en 24h → secuencia de seguimiento activada</div><span class="badge badge-gold">SEGUIMIENTO</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- KOVA TAB -->
+<div id="kova" class="section">
+  <div class="sec-header">
+    <div><div class="sec-title">KOVA Enterprise</div><div class="sec-sub">Rendimiento del equipo comercial con IA</div></div>
+    <span class="badge badge-teal">INCLUIDO EN TU PLAN</span>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Mensajes con NOVA este mes</div>
+      <div class="metric-big" style="color:var(--teal)">847</div>
+      <div class="metric-label">consultas respondidas por la IA</div>
+      <div class="metric-change up">↑ Valor equivalente: €847 si fuera ChatGPT Pro</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Simulaciones con ALEX</div>
+      <div class="metric-big" style="color:var(--gold)">34</div>
+      <div class="metric-label">prácticas de venta realizadas</div>
+      <div class="metric-change up">↑ Equipo más preparado para objeciones</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Planes MAIA generados</div>
+      <div class="metric-big" style="color:var(--red)">4</div>
+      <div class="metric-label">estrategias semanales de venta</div>
+      <div class="metric-change up">↑ Pipeline revisado cada semana</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Agentes KOVA Enterprise — Uso del equipo</div>
+    <div class="kova-agent-row">
+      <div class="agent-avatar" style="background:var(--teal)">N</div>
+      <div class="agent-info">
+        <div class="agent-name">NOVA — Asistente de Ventas</div>
+        <div class="agent-desc">Objeciones, scripts de cierre, seguimiento, mensajes en frío</div>
+      </div>
+      <div class="agent-usage"><div style="color:var(--teal)">847/2000</div><div style="font-size:10px;color:var(--text3)">msgs este mes</div></div>
+    </div>
+    <div class="kova-agent-row">
+      <div class="agent-avatar" style="background:var(--gold)">A</div>
+      <div class="agent-info">
+        <div class="agent-name">ALEX — Simulador de Prospectos</div>
+        <div class="agent-desc">Práctica con 7 tipos de compradores difíciles antes de reuniones reales</div>
+      </div>
+      <div class="agent-usage"><div style="color:var(--gold)">34 sesiones</div><div style="font-size:10px;color:var(--text3)">este mes</div></div>
+    </div>
+    <div class="kova-agent-row">
+      <div class="agent-avatar" style="background:var(--red)">M</div>
+      <div class="agent-info">
+        <div class="agent-name">MAIA — Estratega de Negocio</div>
+        <div class="agent-desc">Plan de acción semanal, análisis de pipeline, estrategia de crecimiento</div>
+      </div>
+      <div class="agent-usage"><div style="color:var(--red)">4 planes</div><div style="font-size:10px;color:var(--text3)">este mes</div></div>
+    </div>
+    <div style="margin-top:16px;padding:14px;background:var(--bg3);border-radius:10px;border:1px solid rgba(93,224,206,.15)">
+      <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px">VALOR DE MERCADO KOVA ENTERPRISE</div>
+      <div style="font-size:13px;color:var(--text2)">€79.99/mes — <strong style="color:var(--teal)">incluido sin coste adicional</strong> en tu plan Alfester Full Stack.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIG TAB -->
+<div id="config" class="section">
+  <div class="sec-header">
+    <div><div class="sec-title">Configuración del panel</div><div class="sec-sub">Personaliza según tu negocio</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Información de tu negocio</div>
+      <div class="config-field">
+        <div class="config-label">Nombre de empresa</div>
+        <input class="config-input" id="cfg-name" placeholder="Tu empresa" value="Centro de Estética Lumière">
+      </div>
+      <div class="config-field">
+        <div class="config-label">Sector / Rubro</div>
+        <select class="config-input" id="cfg-sector">
+          <option value="estetica">Estética y Belleza</option>
+          <option value="formacion">Escuela de Idiomas / Formación</option>
+          <option value="salud">Clínica Médica / Dental</option>
+          <option value="inmobiliaria">Inmobiliaria</option>
+          <option value="legal">Despacho Jurídico</option>
+          <option value="b2b">Empresa B2B</option>
+          <option value="restaurante">Restaurante / Hostelería</option>
+          <option value="otro">Otro sector</option>
+        </select>
+      </div>
+      <div class="config-field">
+        <div class="config-label">Ciudad / Mercado</div>
+        <input class="config-input" id="cfg-city" placeholder="Madrid, España" value="Madrid, España">
+      </div>
+      <div class="config-field">
+        <div class="config-label">Ticket medio (€)</div>
+        <input class="config-input" id="cfg-ticket" type="number" placeholder="80" value="80">
+      </div>
+      <button class="save-btn" onclick="saveConfig()">Guardar cambios</button>
+    </div>
+    <div class="card">
+      <div class="card-title">KPIs personalizados</div>
+      <div class="config-field">
+        <div class="config-label">Objetivo de leads/mes</div>
+        <input class="config-input" id="cfg-goal-leads" type="number" placeholder="100" value="150">
+      </div>
+      <div class="config-field">
+        <div class="config-label">Nombre de conversión principal</div>
+        <input class="config-input" id="cfg-conv-name" placeholder="Citas / Matrículas / Reuniones" value="Citas agendadas">
+      </div>
+      <div class="config-field">
+        <div class="config-label">Objetivo conversiones/mes</div>
+        <input class="config-input" id="cfg-goal-conv" type="number" placeholder="50" value="60">
+      </div>
+      <div class="config-field">
+        <div class="config-label">Paquete Alfester</div>
+        <select class="config-input" id="cfg-plan">
+          <option value="esencial">Esencial (€500/mes)</option>
+          <option value="growth">Growth (€1.200/mes)</option>
+          <option value="fullstack" selected>Full Stack + KOVA (€2.500/mes)</option>
+        </select>
+      </div>
+      <button class="save-btn" onclick="saveConfig()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// Tab navigation
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Save config and update dashboard labels
+function saveConfig() {
+  const name = document.getElementById('cfg-name').value;
+  const city = document.getElementById('cfg-city').value;
+  const sector = document.getElementById('cfg-sector').value;
+  const ticket = parseFloat(document.getElementById('cfg-ticket').value) || 80;
+  const convName = document.getElementById('cfg-conv-name').value;
+  const goalLeads = parseInt(document.getElementById('cfg-goal-leads').value) || 100;
+  const goalConv = parseInt(document.getElementById('cfg-goal-conv').value) || 50;
+
+  // Update display
+  document.getElementById('client-display').textContent = name;
+  document.getElementById('business-type').textContent = getSectorLabel(sector) + ' · ' + city;
+  document.getElementById('overview-title').textContent = 'Resumen del mes — ' + name;
+  document.getElementById('kpi3-label').textContent = convName;
+  document.getElementById('kpi3-sub').textContent = convName.toLowerCase() + ' este período';
+
+  // Recalculate ROI with ticket
+  const leads = parseInt(document.getElementById('kpi-leads').textContent);
+  const conv = parseInt(document.getElementById('kpi-conv').textContent);
+  const revenue = Math.round(conv * ticket * 0.6);
+  const invest = getPlanCost(document.getElementById('cfg-plan').value);
+  document.getElementById('roi-amount').textContent = revenue.toLocaleString();
+  document.getElementById('kpi-roi').textContent = (revenue/invest).toFixed(1) + 'x';
+
+  localStorage.setItem('alfester_config', JSON.stringify({name,city,sector,ticket,convName,goalLeads,goalConv}));
+  alert('✅ Configuración guardada');
+}
+
+function getSectorLabel(s) {
+  const m = {estetica:'Estética y Belleza',formacion:'Escuela de Formación',salud:'Clínica Médica',inmobiliaria:'Inmobiliaria',legal:'Despacho Jurídico',b2b:'Empresa B2B',restaurante:'Restaurante',otro:'Empresa'};
+  return m[s] || 'Empresa';
+}
+
+function getPlanCost(p) {
+  return {esencial:500,growth:1200,fullstack:2500}[p] || 1200;
+}
+
+function changePeriod(days) {
+  // Simulate data change for demo
+  const multiplier = days === '7' ? 0.25 : days === '90' ? 3.1 : 1;
+  document.getElementById('kpi-leads').textContent = Math.round(127 * multiplier);
+  document.getElementById('kpi-conv').textContent = Math.round(43 * multiplier);
+}
+
+// Load saved config
+window.onload = () => {
+  const cfg = localStorage.getItem('alfester_config');
+  if (cfg) {
+    const c = JSON.parse(cfg);
+    document.getElementById('cfg-name').value = c.name || '';
+    document.getElementById('cfg-city').value = c.city || '';
+    document.getElementById('cfg-ticket').value = c.ticket || 80;
+    document.getElementById('cfg-conv-name').value = c.convName || '';
+    document.getElementById('client-display').textContent = c.name || 'Panel de Resultados';
+  }
+};
+</script>
+</body>
+</html>
