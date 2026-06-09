@@ -3,124 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Alfester Agency — Marketing Digital, Automatización con IA y Consultoría de Ventas para pymes hispanohablantes. KOVA Enterprise incluido.">
+<meta name="description" content="Alfester Agency — Marketing Digital, Automatización con IA y Consultoría de Ventas para pymes hispanohablantes.">
 <title>Alfester Agency — Marketing Digital & IA para tu Negocio</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --teal:#5de0ce;--teal-d:#00a896;--gold:#ffc350;--purp:#a78bfa;
-  --bg:#0d0b08;--bg2:#111410;--card:#181c15;--card2:#1e2219;
-  --white:#f0ede6;--gray:#a09b91;--border:rgba(93,224,206,.14);
-  --green:#34d296;--red:#ef4444;
-}
+:root{--teal:#5de0ce;--teal-d:#00a896;--gold:#ffc350;--purp:#a78bfa;--bg:#0d0b08;--bg2:#111410;--card:#181c15;--card2:#1e2219;--white:#f0ede6;--gray:#a09b91;--border:rgba(93,224,206,.14);--green:#34d296;--red:#ef4444}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);line-height:1.6;overflow-x:hidden}
-
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 6%;height:64px;
-  background:rgba(13,11,8,.92);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 6%;height:64px;background:rgba(13,11,8,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo .ek{width:34px;height:34px;background:#0f2820;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  border:1px solid rgba(93,224,206,.25)}
+.nav-logo .ek{width:34px;height:34px;background:#0f2820;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(93,224,206,.25)}
 .nav-logo span{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)}
 .nav-links{display:flex;align-items:center;gap:28px}
 .nav-links a{font-size:13px;color:var(--gray);text-decoration:none;transition:.2s}
 .nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--teal);color:var(--bg)!important;font-weight:700!important;
-  padding:8px 18px;border-radius:8px;font-size:13px!important}
-.nav-cta:hover{background:#4ecfc0!important}
-.badge-live{display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;color:var(--teal);background:rgba(93,224,206,.08);
-  border:1px solid rgba(93,224,206,.2);padding:3px 10px;border-radius:20px;margin-left:12px}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
-  animation:pulse 2s infinite}
+.nav-cta{background:var(--teal);color:var(--bg)!important;font-weight:700!important;padding:8px 18px;border-radius:8px;font-size:13px!important}
+.badge-live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--teal);background:rgba(93,224,206,.08);border:1px solid rgba(93,224,206,.2);padding:3px 10px;border-radius:20px;margin-left:12px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* ── SECTIONS ── */
 section{padding:96px 6%}
-.section-label{font-size:11px;font-weight:600;letter-spacing:.18em;
-  color:var(--teal);text-transform:uppercase;margin-bottom:12px}
-h1{font-size:clamp(36px,5vw,58px);font-weight:700;line-height:1.12;
-  color:var(--white);margin-bottom:20px}
-h2{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.2;
-  color:var(--white);margin-bottom:16px}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--teal);text-transform:uppercase;margin-bottom:12px}
+h1{font-size:clamp(36px,5vw,58px);font-weight:700;line-height:1.12;color:var(--white);margin-bottom:20px}
+h2{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.2;color:var(--white);margin-bottom:16px}
 h3{font-size:18px;font-weight:600;color:var(--white);margin-bottom:8px}
 p{color:var(--gray);font-size:15px}
-
-/* ── HERO ── */
-#hero{padding-top:140px;padding-bottom:80px;text-align:center;
-  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(93,224,206,.08) 0%,transparent 70%)}
+#hero{padding-top:140px;padding-bottom:80px;text-align:center;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(93,224,206,.08) 0%,transparent 70%)}
 #hero h1 em{font-style:normal;color:var(--teal)}
 #hero .sub{font-size:17px;color:var(--gray);max-width:580px;margin:0 auto 36px}
 .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
-.btn-primary{background:var(--teal);color:var(--bg);font-weight:700;font-size:15px;
-  padding:14px 28px;border-radius:10px;text-decoration:none;transition:.2s;border:none;cursor:pointer}
+.btn-primary{background:var(--teal);color:var(--bg);font-weight:700;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none;transition:.2s;border:none;cursor:pointer}
 .btn-primary:hover{background:#4ecfc0;transform:translateY(-1px)}
-.btn-secondary{background:transparent;color:var(--white);font-weight:600;font-size:15px;
-  padding:14px 28px;border-radius:10px;text-decoration:none;border:1px solid var(--border);transition:.2s}
+.btn-secondary{background:transparent;color:var(--white);font-weight:600;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none;border:1px solid var(--border);transition:.2s}
 .btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
-
-/* ── DEMO DASHBOARD ── */
-.demo-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:24px;max-width:700px;margin:0 auto;text-align:left}
-.demo-header{display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:20px;font-size:13px}
+.demo-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:700px;margin:0 auto;text-align:left}
+.demo-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:13px}
 .demo-title{font-weight:600;color:var(--white)}
 .demo-sub{color:var(--gray);font-size:12px}
-.demo-badge{font-size:11px;background:rgba(52,210,150,.12);color:var(--green);
-  border:1px solid rgba(52,210,150,.25);padding:3px 10px;border-radius:20px;
-  display:flex;align-items:center;gap:5px}
+.demo-badge{font-size:11px;background:rgba(52,210,150,.12);color:var(--green);border:1px solid rgba(52,210,150,.25);padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
 .kpi{background:var(--card2);border-radius:10px;padding:12px;text-align:center}
 .kpi-val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal)}
 .kpi-lbl{font-size:10px;color:var(--gray);margin-top:2px;line-height:1.3}
-.funnel-bar{background:rgba(93,224,206,.06);border:1px solid rgba(93,224,206,.15);
-  border-radius:10px;padding:12px 16px;font-size:12px;color:var(--gray);
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.funnel-bar{background:rgba(93,224,206,.06);border:1px solid rgba(93,224,206,.15);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--gray);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .funnel-step{color:var(--white);font-weight:500}
 .funnel-arrow{color:var(--teal);font-size:10px}
-
-/* ── WHY ── */
 #why{background:var(--bg2)}
 .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px}
 .why-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:.2s}
 .why-card:hover{border-color:rgba(93,224,206,.3);transform:translateY(-2px)}
 .why-icon{font-size:28px;margin-bottom:12px}
-.why-tag{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--teal);
-  text-transform:uppercase;margin-top:10px;opacity:.7}
-
-/* ── SERVICES ── */
+.why-tag{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-top:10px;opacity:.7}
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:40px}
 .svc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
-.svc-num{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;
-  color:rgba(93,224,206,.2);margin-bottom:10px}
+.svc-num{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:rgba(93,224,206,.2);margin-bottom:10px}
 .svc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-.tag{font-size:10px;padding:3px 8px;border-radius:4px;
-  background:rgba(93,224,206,.08);color:var(--teal);border:1px solid rgba(93,224,206,.15)}
-
-/* ── SECTORS ── */
+.tag{font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(93,224,206,.08);color:var(--teal);border:1px solid rgba(93,224,206,.15)}
 #sectors{background:var(--bg2)}
 .sectors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:40px}
 .sector-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:.2s}
 .sector-card:hover{border-color:rgba(93,224,206,.25)}
 .sector-icon{font-size:32px;margin-bottom:12px}
-.sector-result{font-size:13px;color:var(--teal);font-weight:600;margin-top:12px;
-  padding-top:12px;border-top:1px solid var(--border)}
-
-/* ── PRICING ── */
+.sector-result{font-size:13px;color:var(--teal);font-weight:600;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:40px;align-items:start}
 .price-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;position:relative}
 .price-card.popular{border-color:var(--teal);background:linear-gradient(135deg,rgba(93,224,206,.06) 0%,var(--card) 60%)}
-.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  background:var(--teal);color:var(--bg);font-size:11px;font-weight:700;
-  padding:4px 14px;border-radius:20px;letter-spacing:.06em;white-space:nowrap}
-.plan-name{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;
-  color:var(--teal);text-transform:uppercase;margin-bottom:8px}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--teal);color:var(--bg);font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;letter-spacing:.06em;white-space:nowrap}
+.plan-name{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--teal);text-transform:uppercase;margin-bottom:8px}
 .plan-price{font-size:42px;font-weight:700;color:var(--white);line-height:1}
 .plan-price span{font-size:16px;color:var(--gray);font-weight:400}
 .plan-min{font-size:12px;color:var(--gray);margin-top:4px;margin-bottom:20px}
@@ -129,8 +78,7 @@ p{color:var(--gray);font-size:15px}
 .plan-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
 .plan-features li.star::before{content:'⭐';font-size:12px}
 .plan-features li.highlight{color:var(--white);font-weight:500}
-.plan-btn{display:block;text-align:center;padding:13px;border-radius:10px;
-  font-weight:700;font-size:14px;text-decoration:none;transition:.2s;cursor:pointer;border:none;width:100%}
+.plan-btn{display:block;text-align:center;padding:13px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;transition:.2s;cursor:pointer;border:none;width:100%}
 .plan-btn-outline{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
 .plan-btn-outline:hover{background:rgba(93,224,206,.1)}
 .plan-btn-fill{background:var(--teal);color:var(--bg)}
@@ -138,88 +86,38 @@ p{color:var(--gray);font-size:15px}
 .plan-btn-dark{background:var(--card2);color:var(--white);border:1px solid var(--border)}
 .plan-btn-dark:hover{border-color:var(--teal);color:var(--teal)}
 
-/* ── GUARANTEE ── */
-.guarantee-box{background:linear-gradient(135deg,rgba(93,224,206,.06),rgba(93,224,206,.02));
-  border:1px solid rgba(93,224,206,.2);border-radius:18px;padding:36px;
-  text-align:center;max-width:700px;margin:0 auto}
-.guarantee-box h3{font-size:22px;color:var(--teal);margin-bottom:10px}
+/* Servicios adicionales — sin precios */
+.addons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:20px}
+.addon-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:.2s}
+.addon-item:hover{border-color:rgba(93,224,206,.25)}
+.addon-name{font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px}
+.addon-desc{font-size:11px;color:var(--gray);line-height:1.4}
+.addon-tag{font-size:10px;color:var(--teal);margin-top:6px;letter-spacing:.06em;font-weight:600}
 
-/* ── KOVA SECTION ── */
+.guarantee-box{background:linear-gradient(135deg,rgba(93,224,206,.06),rgba(93,224,206,.02));border:1px solid rgba(93,224,206,.2);border-radius:18px;padding:36px;text-align:center;max-width:700px;margin:0 auto}
+.guarantee-box h3{font-size:22px;color:var(--teal);margin-bottom:10px}
 #kova-advantage{background:linear-gradient(135deg,rgba(93,224,206,.04) 0%,var(--bg2) 100%)}
 .kova-agents{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
 .agent-card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
-.agent-letter{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-  font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:10px}
+.agent-letter{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:10px}
 .al-n{background:rgba(93,224,206,.12);color:var(--teal);border:1px solid rgba(93,224,206,.25)}
 .al-a{background:rgba(255,195,80,.12);color:var(--gold);border:1px solid rgba(255,195,80,.25)}
 .al-m{background:rgba(167,139,250,.12);color:var(--purp);border:1px solid rgba(167,139,250,.25)}
-.agent-msgs{font-size:11px;color:var(--teal);background:rgba(93,224,206,.08);
-  padding:2px 8px;border-radius:4px;display:inline-block;margin-top:8px;font-family:'Space Mono',monospace}
-.kova-value{text-align:center;margin-top:24px;padding:16px;
-  background:rgba(255,195,80,.06);border:1px solid rgba(255,195,80,.15);border-radius:10px}
-
-/* ── ROI TABLE ── */
-.roi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:32px}
-.roi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.roi-header{background:rgba(93,224,206,.08);border-bottom:1px solid var(--border);
-  padding:14px 20px;font-weight:600;font-size:14px}
-.roi-rows{padding:0}
-.roi-row{display:flex;justify-content:space-between;padding:10px 20px;
-  border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
-.roi-row:last-child{border:none}
-.roi-val{color:var(--teal);font-weight:600;font-family:'Space Mono',monospace;font-size:12px}
-.roi-final{background:rgba(93,224,206,.06);border-top:1px solid var(--border)!important;
-  font-weight:600;color:var(--green)!important}
-.roi-final .roi-val{color:var(--green)!important}
-
-/* ── CTA FINAL ── */
+.kova-value{text-align:center;margin-top:24px;padding:16px;background:rgba(255,195,80,.06);border:1px solid rgba(255,195,80,.15);border-radius:10px}
 #cta-final{text-align:center;background:radial-gradient(ellipse 60% 60% at 50% 100%,rgba(93,224,206,.07) 0%,transparent 70%)}
-
-/* ── FOOTER ── */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
-  display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px}
 .footer-left .fl-name{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal);margin-bottom:4px}
 .footer-left p{font-size:11px;color:var(--gray);line-height:1.8}
 .footer-links{display:flex;gap:20px;flex-wrap:wrap}
 .footer-links a{font-size:12px;color:var(--gray);text-decoration:none}
 .footer-links a:hover{color:var(--teal)}
-
-/* ── COMPARISON TABLE ── */
-.comp-table{width:100%;border-collapse:collapse;margin-top:28px;font-size:13px}
-.comp-table th{background:rgba(93,224,206,.08);color:var(--teal);padding:12px 16px;
-  text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;border-bottom:1px solid var(--border)}
-.comp-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--gray)}
-.comp-table tr:last-child td{border:none}
-.comp-table .yes{color:var(--green);font-weight:600}
-.comp-table .no{color:rgba(160,155,145,.4)}
-.comp-table .alfester-col{color:var(--teal)!important;font-weight:700!important;
-  background:rgba(93,224,206,.04)!important}
-.comp-table th.alfester-col{background:rgba(93,224,206,.15)!important}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  nav{padding:0 5%}
-  .nav-links{display:none}
-  section{padding:64px 5%}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .kova-agents{grid-template-columns:1fr}
-  .pricing-grid{grid-template-columns:1fr}
-  .comp-table{font-size:11px}
-  footer{flex-direction:column}
-}
+@media(max-width:768px){nav{padding:0 5%}.nav-links{display:none}section{padding:64px 5%}.kpis{grid-template-columns:repeat(3,1fr)}.kova-agents{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr}footer{flex-direction:column}}
 </style>
 </head>
 <body>
-
-<!-- ── NAV ── -->
 <nav>
   <a href="#" class="nav-logo">
-    <div class="ek">
-      <svg viewBox="0 0 28 17" fill="none" width="22" height="13">
-        <polyline points="0,8.5 3.5,8.5 6.5,2 9.5,15 12.5,2 15.5,8.5 19,8.5 23,8.5 28,8.5"
-          stroke="#5de0ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="ek"><svg viewBox="0 0 28 17" fill="none" width="22" height="13"><polyline points="0,8.5 3.5,8.5 6.5,2 9.5,15 12.5,2 15.5,8.5 19,8.5 23,8.5 28,8.5" stroke="#5de0ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <span>ALFESTER</span>
     <div class="badge-live"><div class="live-dot"></div>Agencia activa</div>
   </a>
@@ -232,23 +130,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
   </div>
 </nav>
 
-<!-- ── HERO ── -->
 <section id="hero">
-  <div class="section-label">Alfester Technologies OÜ — Estonia, EU</div>
+  <div class="section-label">Alfester Technologies OÜ — Estonia, EU · Reg. 16250313527</div>
   <h1>Marketing digital<br>con <em>IA que vende</em><br>para tu negocio</h1>
   <p class="sub">Automatizamos tu captación de clientes, campañas y seguimiento con inteligencia artificial. Resultados medibles desde el primer mes — o te devolvemos el dinero.</p>
   <div class="hero-btns">
     <a href="mailto:hola@kova-app.net?subject=Consulta gratuita Alfester" class="btn-primary">Solicitar consulta gratis →</a>
     <a href="#precios" class="btn-secondary">Ver paquetes</a>
   </div>
-
-  <!-- Demo Dashboard -->
   <div class="demo-card">
     <div class="demo-header">
-      <div>
-        <div class="demo-title">Panel de resultados — Cliente activo</div>
-        <div class="demo-sub">Centro de Estética · Madrid · Paquete Growth</div>
-      </div>
+      <div><div class="demo-title">Panel de resultados — Cliente activo</div><div class="demo-sub">Centro de Estética · Madrid · Paquete Growth</div></div>
       <div class="demo-badge"><div class="live-dot"></div>En tiempo real</div>
     </div>
     <div class="kpis">
@@ -269,132 +161,24 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
   </div>
 </section>
 
-<!-- ── WHY ── -->
-<section id="why">
-  <div class="section-label">Por qué Alfester</div>
-  <h2>No somos otra agencia.<br>Somos tu sistema de ventas automatizado.</h2>
-  <p style="max-width:560px">Mientras otras agencias te venden servicios sueltos, nosotros construimos ecosistemas que trabajan solos — captan, cualifican y convierten leads sin que tú muevas un dedo.</p>
-
-  <div class="why-grid">
-    <div class="why-card">
-      <div class="why-icon">🤖</div>
-      <h3>Automatización total del funnel</h3>
-      <p>Desde el primer contacto hasta la factura. Flujos de IA que responden, cualifican y agendan en menos de 2 minutos, 24/7.</p>
-      <div class="why-tag">Powered by n8n + IA</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">⭐</div>
-      <h3>KOVA Enterprise incluido</h3>
-      <p>Solo Alfester puede ofrecerte esto: tu equipo comercial vende con la misma IA que gestionamos tus campañas. Exclusivo mundo.</p>
-      <div class="why-tag">Exclusivo Alfester</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">📊</div>
-      <h3>Dashboard en tiempo real</h3>
-      <p>Todos tus KPIs accesibles 24/7: coste por lead, ROAS, conversiones, pipeline. Sin esperar el informe mensual.</p>
-      <div class="why-tag">Transparencia total</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">🎯</div>
-      <h3>Contenido IA adaptado a tu sector</h3>
-      <p>Copy de ads, posts y landing pages generados con IA entrenada en tu negocio específico. Suenan humanos, convierten como máquinas.</p>
-      <div class="why-tag">Personalizado</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">🏛️</div>
-      <h3>Empresa europea certificada</h3>
-      <p>Alfester Technologies OÜ, Estonia (UE). RGPD nativo, facturación en euros, máxima solvencia legal para clientes europeos y LATAM.</p>
-      <div class="why-tag">Reg. 16250313527 · EU</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">🛡️</div>
-      <h3>Garantía de resultados</h3>
-      <p>Si en el primer mes no hay mejoras medibles en tus KPIs acordados, te devolvemos el importe íntegro. Sin letra pequeña.</p>
-      <div class="why-tag">Garantía 30 días</div>
-    </div>
-  </div>
-
-  <!-- Comparison -->
-  <div style="margin-top:48px">
-    <h3 style="margin-bottom:8px;color:var(--gray);font-size:14px;font-weight:500;letter-spacing:.1em;text-transform:uppercase">Alfester vs. la competencia</h3>
-    <table class="comp-table">
-      <tr>
-        <th>Capacidad</th>
-        <th>Agencias tradicionales</th>
-        <th>Herramientas DIY</th>
-        <th>Consultoras grandes</th>
-        <th class="alfester-col">ALFESTER ✓</th>
-      </tr>
-      <tr><td>Estrategia digital completa</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>Automatización con IA (n8n)</td><td class="no">Raro</td><td class="no">Parcial</td><td class="yes">✓ (caro)</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>App de IA para ventas propia</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="alfester-col yes">✓ KOVA</td></tr>
-      <tr><td>WhatsApp Business + bot</td><td class="no">Raro</td><td class="no">✗</td><td class="yes">✓ (caro)</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>Dashboard cliente tiempo real</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓ (caro)</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>Precio accesible pymes</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>Sin permanencia larga</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="alfester-col yes">✓</td></tr>
-      <tr><td>Garantía de devolución</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="alfester-col yes">✓</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ── SERVICES ── -->
 <section id="servicios">
   <div class="section-label">Servicios</div>
   <h2>Todo lo que necesitas<br>para crecer con IA</h2>
   <div class="services-grid">
-    <div class="svc-card">
-      <div class="svc-num">01</div>
-      <h3>Captación de leads con IA</h3>
-      <p>Campañas en Meta Ads y Google Ads con optimización automática. El sistema pausa lo que no funciona y escala lo que convierte.</p>
-      <div class="svc-tags"><span class="tag">Meta Ads</span><span class="tag">Google Ads</span><span class="tag">TikTok Ads</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">02</div>
-      <h3>Automatización de procesos</h3>
-      <p>Flujos inteligentes con n8n: respuesta a leads en &lt;2 min, seguimiento automático, recordatorios de cita y reactivación de clientes inactivos.</p>
-      <div class="svc-tags"><span class="tag">n8n Flows</span><span class="tag">WhatsApp</span><span class="tag">Email</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">03</div>
-      <h3>Contenido y redes sociales IA</h3>
-      <p>Calendario editorial de 30 días, copy para ads, posts y reels generados con IA. Coherencia de marca en todos los canales.</p>
-      <div class="svc-tags"><span class="tag">Instagram</span><span class="tag">LinkedIn</span><span class="tag">TikTok</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">04</div>
-      <h3>CRM setup y gestión</h3>
-      <p>Implementación y configuración de CRM adaptado a tu proceso de ventas. Pipelines, secuencias y seguimiento automatizado.</p>
-      <div class="svc-tags"><span class="tag">CRM</span><span class="tag">Pipeline</span><span class="tag">Formación</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">05</div>
-      <h3>Gestión de reseñas y reputación</h3>
-      <p>Solicitud automática de reseñas Google post-servicio. Monitoreo y respuesta a reseñas negativas. Fundamental para negocios locales.</p>
-      <div class="svc-tags"><span class="tag">Google Reviews</span><span class="tag">Reputación</span><span class="tag">Automatizado</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">06</div>
-      <h3>Dashboard y analítica ejecutiva</h3>
-      <p>Panel personalizado con todos tus KPIs en tiempo real. Informes claros sin tecnicismos. Siempre sabes qué genera tu ROI.</p>
-      <div class="svc-tags"><span class="tag">Tiempo real</span><span class="tag">KPIs</span><span class="tag">Semanal</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">07</div>
-      <h3>Landing pages y funnels</h3>
-      <p>Páginas de captura optimizadas para conversión, integradas con automatizaciones y con seguimiento de todo el funnel.</p>
-      <div class="svc-tags"><span class="tag">Conversión</span><span class="tag">A/B Testing</span><span class="tag">Integrado</span></div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">08</div>
-      <h3>Consultoría de ventas + KOVA</h3>
-      <p>Metodologías B2B probadas (SPIN, Challenger, BANT) adaptadas a tu equipo comercial. Con KOVA para practicar y ejecutar.</p>
-      <div class="svc-tags"><span class="tag">SPIN Selling</span><span class="tag">KOVA</span><span class="tag">Formación</span></div>
-    </div>
+    <div class="svc-card"><div class="svc-num">01</div><h3>Captación de leads con IA</h3><p>Campañas en Meta Ads y Google Ads con optimización automática. El sistema pausa lo que no funciona y escala lo que convierte.</p><div class="svc-tags"><span class="tag">Meta Ads</span><span class="tag">Google Ads</span><span class="tag">TikTok Ads</span></div></div>
+    <div class="svc-card"><div class="svc-num">02</div><h3>Automatización de procesos con IA</h3><p>Flujos inteligentes con n8n: respuesta a leads en menos de 2 minutos, seguimiento automático, recordatorios y reactivación de clientes inactivos 24/7.</p><div class="svc-tags"><span class="tag">n8n Flows</span><span class="tag">WhatsApp</span><span class="tag">Email</span></div></div>
+    <div class="svc-card"><div class="svc-num">03</div><h3>Contenido y redes sociales IA</h3><p>Calendario editorial mensual, copy para ads, posts y reels generados con IA entrenada en tu negocio. Coherencia de marca en todos los canales.</p><div class="svc-tags"><span class="tag">Instagram</span><span class="tag">LinkedIn</span><span class="tag">TikTok</span></div></div>
+    <div class="svc-card"><div class="svc-num">04</div><h3>CRM setup y gestión</h3><p>Implementación de CRM adaptado a tu proceso de ventas. Pipelines, secuencias de seguimiento y automatización completa del ciclo comercial.</p><div class="svc-tags"><span class="tag">CRM</span><span class="tag">Pipeline</span><span class="tag">Formación</span></div></div>
+    <div class="svc-card"><div class="svc-num">05</div><h3>Gestión de reseñas y reputación</h3><p>Solicitud automática de reseñas Google post-servicio. Monitoreo y respuesta a reseñas negativas. Fundamental para negocios locales.</p><div class="svc-tags"><span class="tag">Google Reviews</span><span class="tag">Reputación</span><span class="tag">Automatizado</span></div></div>
+    <div class="svc-card"><div class="svc-num">06</div><h3>Dashboard y analítica ejecutiva</h3><p>Panel personalizado con todos tus KPIs en tiempo real. Informes claros sin tecnicismos. Siempre sabes exactamente qué genera tu ROI.</p><div class="svc-tags"><span class="tag">Tiempo real</span><span class="tag">KPIs</span><span class="tag">Semanal</span></div></div>
+    <div class="svc-card"><div class="svc-num">07</div><h3>Landing pages y funnels de conversión</h3><p>Páginas de captura optimizadas para convertir, integradas con automatizaciones y con seguimiento completo del funnel de ventas.</p><div class="svc-tags"><span class="tag">Conversión</span><span class="tag">A/B Testing</span><span class="tag">Integrado</span></div></div>
+    <div class="svc-card"><div class="svc-num">08</div><h3>Consultoría de ventas + KOVA</h3><p>Metodologías B2B probadas (SPIN, Challenger, BANT) adaptadas a tu equipo. Con KOVA Enterprise para practicar y ejecutar en tiempo real.</p><div class="svc-tags"><span class="tag">SPIN Selling</span><span class="tag">KOVA</span><span class="tag">Formación</span></div></div>
+    <div class="svc-card"><div class="svc-num">09</div><h3>Email marketing automatizado</h3><p>Secuencias de email personalizadas con IA para nurturing, onboarding y reactivación. Integradas con tu CRM y segmentadas por comportamiento.</p><div class="svc-tags"><span class="tag">Email IA</span><span class="tag">Nurturing</span><span class="tag">Segmentación</span></div></div>
+    <div class="svc-card"><div class="svc-num">10</div><h3>SEO local y posicionamiento Google</h3><p>Optimización de ficha Google Business, estrategia de palabras clave locales y contenido optimizado. Primeros resultados en 60-90 días.</p><div class="svc-tags"><span class="tag">SEO</span><span class="tag">Google Business</span><span class="tag">Local</span></div></div>
   </div>
 </section>
 
-<!-- ── SECTORS ── -->
-<section id="sectores">
+<section id="sectores" style="background:var(--bg2)">
   <div class="section-label">Sectores</div>
   <h2>Expertos en los sectores<br>que más venden</h2>
   <div class="sectors-grid">
@@ -405,54 +189,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
     <div class="sector-card"><div class="sector-icon">⚖️</div><h3>Despachos Jurídicos</h3><p>Captación de consultas, cualificación automática por tipo de caso, secuencias de seguimiento y gestión de reputación.</p><div class="sector-result">→ Promedio: 2x más consultas cualificadas</div></div>
     <div class="sector-card"><div class="sector-icon">🏗️</div><h3>Cualquier empresa B2B</h3><p>Outreach en LinkedIn, secuencias de email en frío, lead scoring con IA y automatización del pipeline de ventas B2B.</p><div class="sector-result">→ Sistema adaptado a tu sector</div></div>
   </div>
-
-  <!-- ROI Tables -->
-  <div style="margin-top:48px">
-    <h3 style="margin-bottom:24px;text-align:center">ROI estimado por sector con Alfester</h3>
-    <div class="roi-grid">
-      <div class="roi-card">
-        <div class="roi-header">💆 Centro de Estética — Paquete Growth (€897/mes)</div>
-        <div class="roi-rows">
-          <div class="roi-row"><span>Coste por nueva cita</span><span class="roi-val">€3–8 (vs €15–25)</span></div>
-          <div class="roi-row"><span>Citas agendadas/mes</span><span class="roi-val">45–60 (vs 15–20)</span></div>
-          <div class="roi-row"><span>Reseñas Google/mes</span><span class="roi-val">8–15 automáticas</span></div>
-          <div class="roi-row roi-final"><span>ROI estimado</span><span class="roi-val">€3.600+ en citas</span></div>
-        </div>
-      </div>
-      <div class="roi-card">
-        <div class="roi-header">🎓 Escuela de Idiomas — Paquete Growth (€897/mes)</div>
-        <div class="roi-rows">
-          <div class="roi-row"><span>Coste por alumno nuevo</span><span class="roi-val">€20–45 (vs €80–150)</span></div>
-          <div class="roi-row"><span>Conversión lead→matrícula</span><span class="roi-val">22–35% (vs 8–12%)</span></div>
-          <div class="roi-row"><span>Alumnos nuevos/mes</span><span class="roi-val">18–25 (vs 5–8)</span></div>
-          <div class="roi-row roi-final"><span>ROI estimado</span><span class="roi-val">€2.700–3.750</span></div>
-        </div>
-      </div>
-      <div class="roi-card">
-        <div class="roi-header">🏥 Clínica Dental — Full Stack (€1.497/mes)</div>
-        <div class="roi-rows">
-          <div class="roi-row"><span>Primeras consultas/mes</span><span class="roi-val">15–22 (vs 5–8)</span></div>
-          <div class="roi-row"><span>No-show reducido</span><span class="roi-val">8–12% (vs 25–30%)</span></div>
-          <div class="roi-row"><span>Conversión con KOVA</span><span class="roi-val">50–60% (vs 35%)</span></div>
-          <div class="roi-row roi-final"><span>ROI estimado</span><span class="roi-val">€9.600–14.400</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- ── PRICING ── -->
-<section id="precios" style="background:var(--bg2)">
+<section id="precios">
   <div class="section-label">Paquetes</div>
   <h2>Escala cuando estés listo</h2>
   <p>Sin contratos largos. Sin letra pequeña. Solo resultados medibles desde el día 1.</p>
-
   <div class="pricing-grid">
-    <!-- ESENCIAL -->
     <div class="price-card">
       <div class="plan-name">Esencial</div>
       <div class="plan-price">€497<span>/mes</span></div>
-      <div class="plan-min">Mínimo 3 meses · Cancela cuando quieras después</div>
+      <div class="plan-min">Mínimo 3 meses · Cancela después cuando quieras</div>
       <ul class="plan-features">
         <li>Diagnóstico inicial de negocio</li>
         <li>Gestión 1 red social (8 posts/mes)</li>
@@ -463,10 +210,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
         <li>Soporte por email (48h)</li>
         <li>2 reuniones/mes</li>
       </ul>
-      <a href="mailto:hola@kova-app.net?subject=Paquete Esencial — Alfester" class="plan-btn plan-btn-outline">Empezar →</a>
+      <a href="mailto:hola@kova-app.net?subject=Paquete Esencial" class="plan-btn plan-btn-outline">Empezar →</a>
     </div>
-
-    <!-- GROWTH -->
     <div class="price-card popular">
       <div class="popular-badge">MÁS POPULAR</div>
       <div class="plan-name">Growth</div>
@@ -475,145 +220,104 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 6%;
       <ul class="plan-features">
         <li>Todo lo de Esencial, más:</li>
         <li class="highlight">Google + Meta Ads gestionados</li>
-        <li>Gestión 2 redes sociales (16 posts/mes)</li>
+        <li>Gestión 2 redes (16 posts/mes)</li>
         <li class="highlight">Funnel de captación completo</li>
         <li>Bot WhatsApp con IA</li>
         <li>CRM setup + formación</li>
+        <li>Email marketing automatizado</li>
         <li>Informe quincenal con KPIs</li>
-        <li>Soporte WhatsApp prioritario (24h)</li>
+        <li>Soporte WhatsApp prioritario</li>
         <li>4 reuniones/mes</li>
-        <li>1 consultoría comercial/mes</li>
       </ul>
-      <a href="mailto:hola@kova-app.net?subject=Paquete Growth — Alfester" class="plan-btn plan-btn-fill">Empezar →</a>
+      <a href="mailto:hola@kova-app.net?subject=Paquete Growth" class="plan-btn plan-btn-fill">Empezar →</a>
     </div>
-
-    <!-- FULL STACK -->
     <div class="price-card">
       <div class="plan-name">Full Stack + KOVA</div>
       <div class="plan-price">€1.497<span>/mes</span></div>
       <div class="plan-min">Contrato flexible · Personalizable</div>
       <ul class="plan-features">
         <li>Todo lo de Growth, más:</li>
-        <li class="star highlight">KOVA Enterprise incluido (€79.99/mes valor)</li>
+        <li class="star highlight">KOVA Enterprise incluido</li>
         <li class="highlight">Tu equipo cierra ventas con IA</li>
         <li>TikTok Ads + LinkedIn Ads</li>
         <li>Automatización ilimitada n8n</li>
+        <li>SEO local completo</li>
         <li>Dashboard personalizado tiempo real</li>
         <li>Consultoría estratégica semanal</li>
-        <li>Formación mensual al equipo</li>
-        <li>Soporte prioritario 24/5</li>
         <li>Account manager dedicado</li>
       </ul>
-      <a href="mailto:hola@kova-app.net?subject=Paquete Full Stack — Alfester" class="plan-btn plan-btn-dark">Contactar →</a>
+      <a href="mailto:hola@kova-app.net?subject=Paquete Full Stack" class="plan-btn plan-btn-dark">Contactar →</a>
     </div>
   </div>
 
-  <!-- Servicios adicionales -->
+  <!-- Servicios adicionales SIN precios -->
   <div style="margin-top:40px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px">
-    <h3 style="margin-bottom:16px;font-size:15px">Servicios adicionales (precio por proyecto)</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Auditoría digital (bonificable)</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€197</span>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Landing page / web one-page</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€497–997</span>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Bot WhatsApp Business</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€297–597</span>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Chatbot IA para web</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€597–1.497</span>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Formación ventas IA (equipo)</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€497/sesión</span>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--gray)">Pack contenido premium (30 posts)</span>
-        <span style="font-size:12px;color:var(--teal);font-family:'Space Mono',monospace">€297</span>
-      </div>
+    <h3 style="margin-bottom:6px">Servicios adicionales</h3>
+    <p style="font-size:13px;margin-bottom:20px">Soluciones puntuales adaptadas a lo que necesitas. <a href="mailto:hola@kova-app.net?subject=Presupuesto servicio adicional" style="color:var(--teal);text-decoration:none">Solicita presupuesto personalizado →</a></p>
+    <div class="addons-grid">
+      <div class="addon-item"><div class="addon-name">Auditoría digital 360°</div><div class="addon-desc">Análisis completo de tu presencia digital con plan de acción priorizado</div><div class="addon-tag">DIAGNÓSTICO</div></div>
+      <div class="addon-item"><div class="addon-name">Landing page / web one-page</div><div class="addon-desc">Página de alta conversión integrada con tus automatizaciones</div><div class="addon-tag">DISEÑO WEB</div></div>
+      <div class="addon-item"><div class="addon-name">Bot WhatsApp Business con IA</div><div class="addon-desc">Respuesta automática 24/7, cualificación de leads y agendado de citas</div><div class="addon-tag">AUTOMATIZACIÓN</div></div>
+      <div class="addon-item"><div class="addon-name">Chatbot IA para web</div><div class="addon-desc">Agente conversacional entrenado con la información de tu negocio</div><div class="addon-tag">IA CONVERSACIONAL</div></div>
+      <div class="addon-item"><div class="addon-name">Setup CRM + integración</div><div class="addon-desc">Implementación, configuración y formación completa del equipo</div><div class="addon-tag">CRM</div></div>
+      <div class="addon-item"><div class="addon-name">Pack contenido premium</div><div class="addon-desc">30 posts optimizados con IA, diseño y calendario editorial incluidos</div><div class="addon-tag">CONTENIDO</div></div>
+      <div class="addon-item"><div class="addon-name">Formación ventas con IA</div><div class="addon-desc">Taller práctico para tu equipo comercial usando KOVA y metodologías B2B</div><div class="addon-tag">FORMACIÓN</div></div>
+      <div class="addon-item"><div class="addon-name">Automatización de procesos internos</div><div class="addon-desc">Mapeo y automatización de flujos repetitivos con n8n. Ahorro 20-40h/mes</div><div class="addon-tag">AUTOMATIZACIÓN</div></div>
+      <div class="addon-item"><div class="addon-name">Agentes IA a medida</div><div class="addon-desc">Desarrollo de agentes conversacionales específicos para tu negocio o sector</div><div class="addon-tag">IA AVANZADA</div></div>
+      <div class="addon-item"><div class="addon-name">Email marketing automatizado</div><div class="addon-desc">Setup completo de secuencias de nurturing, onboarding y reactivación</div><div class="addon-tag">EMAIL</div></div>
+      <div class="addon-item"><div class="addon-name">SEO local completo</div><div class="addon-desc">Google Business, palabras clave locales y contenido optimizado para búsqueda</div><div class="addon-tag">SEO</div></div>
+      <div class="addon-item"><div class="addon-name">Consultoría estratégica</div><div class="addon-desc">Sesión de estrategia comercial y digital con hoja de ruta personalizada</div><div class="addon-tag">CONSULTORÍA</div></div>
     </div>
   </div>
 
-  <!-- Guarantee -->
   <div style="margin-top:36px">
     <div class="guarantee-box">
       <div style="font-size:36px;margin-bottom:12px">🛡️</div>
       <h3>Garantía de resultados — 30 días</h3>
-      <p style="color:rgba(240,237,230,.7);margin-top:8px;font-size:15px;max-width:500px;margin-left:auto;margin-right:auto">
-        Si en el primer mes no hay mejoras medibles en los KPIs acordados, te devolvemos el importe íntegro. Sin letra pequeña. Trabajamos con objetivos concretos desde el día 1.
-      </p>
+      <p style="color:rgba(240,237,230,.7);margin-top:8px;font-size:15px;max-width:500px;margin-left:auto;margin-right:auto">Si en el primer mes no hay mejoras medibles en los KPIs acordados, te devolvemos el importe íntegro. Sin letra pequeña.</p>
     </div>
   </div>
 </section>
 
-<!-- ── KOVA ADVANTAGE ── -->
 <section id="kova-advantage">
   <div class="section-label">Ventaja exclusiva</div>
-  <h2>La única agencia que incluye<br>un equipo de ventas con IA</h2>
-  <p style="max-width:580px">Alfester es la empresa detrás de KOVA — la app de IA para ventas B2B más avanzada en español. Nuestros clientes Full Stack obtienen acceso Enterprise para que su equipo comercial también venda con inteligencia artificial. <strong style="color:var(--white)">Ninguna otra agencia en el mundo hispanohablante puede ofrecerte esto.</strong></p>
-
+  <h2>La única agencia con<br>su propio equipo de ventas con IA</h2>
+  <p style="max-width:580px">Alfester es la empresa detrás de KOVA — la app de IA para ventas B2B más avanzada en español. Nuestros clientes Full Stack obtienen acceso Enterprise para que su equipo comercial venda con inteligencia artificial. <strong style="color:var(--white)">Ninguna otra agencia en el mundo hispanohablante puede ofrecerte esto.</strong></p>
   <div class="kova-agents">
-    <div class="agent-card">
-      <div class="agent-letter al-n">N</div>
-      <h3>NOVA — Agente de Ventas</h3>
-      <p>Responde cualquier objeción al instante. Scripts de cierre, seguimiento y manejo de clientes difíciles.</p>
-      <div class="agent-msgs">∞ mensajes</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-letter al-a">A</div>
-      <h3>ALEX — Simulador de Prospectos</h3>
-      <p>Practica con 7 tipos de compradores difíciles antes de la reunión real. Feedback constructivo tras cada simulación.</p>
-      <div class="agent-msgs">Enterprise</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-letter al-m">M</div>
-      <h3>MAIA — Estratega de Negocio</h3>
-      <p>Plan de acción semanal basado en tu pipeline. Análisis de situación y 3 acciones concretas cada lunes.</p>
-      <div class="agent-msgs">Enterprise</div>
-    </div>
+    <div class="agent-card"><div class="agent-letter al-n">N</div><h3>NOVA — Agente de Ventas</h3><p>Responde cualquier objeción al instante. Scripts de cierre, seguimiento y manejo de clientes difíciles.</p></div>
+    <div class="agent-card"><div class="agent-letter al-a">A</div><h3>ALEX — Simulador de Prospectos</h3><p>Practica con 7 tipos de compradores difíciles antes de la reunión real. Feedback constructivo tras cada simulación.</p></div>
+    <div class="agent-card"><div class="agent-letter al-m">M</div><h3>MAIA — Estratega de Negocio</h3><p>Plan de acción semanal basado en tu pipeline. Análisis de situación y 3 acciones concretas cada semana.</p></div>
   </div>
-
-  <div class="kova-value">
+  <div class="kova-value" style="margin-top:24px">
     <strong style="color:var(--gold)">Valor de mercado KOVA Enterprise: €79.99/mes</strong>
     <span style="color:var(--gray);font-size:13px;margin-left:8px">— incluido sin coste adicional en el paquete Full Stack</span>
   </div>
-
-  <div style="text-align:center;margin-top:24px">
+  <div style="text-align:center;margin-top:20px">
     <a href="https://kova-app.net" target="_blank" class="btn-secondary" style="display:inline-block">Ver KOVA App →</a>
   </div>
 </section>
 
-<!-- ── CTA FINAL ── -->
 <section id="cta-final">
   <div class="section-label">Empieza hoy</div>
   <h2>¿Listo para que tu negocio<br>crezca en piloto automático?</h2>
   <p style="max-width:500px;margin:0 auto 36px">Primera consulta gratuita. Sin compromisos. Te mostramos exactamente qué sistema montaríamos para tu negocio en 30 minutos.</p>
   <div class="hero-btns">
     <a href="mailto:hola@kova-app.net?subject=Consulta gratuita Alfester" class="btn-primary">Solicitar consulta gratuita →</a>
-    <a href="https://wa.me/353838330290?text=Hola%2C%20quiero%20información%20sobre%20los%20servicios%20de%20Alfester" target="_blank" class="btn-secondary">WhatsApp directo</a>
+    <a href="https://wa.me/353838330290?text=Hola%2C%20quiero%20información%20sobre%20Alfester%20Agency" target="_blank" class="btn-secondary">WhatsApp directo</a>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-left">
     <div class="fl-name">ALFESTER TECHNOLOGIES OÜ</div>
-    <p>Reg. Nr. 16250313527 · Estonia, European Union<br>
-    Marketing Digital & Automatización con IA<br>
-    Producto: <a href="https://kova-app.net" style="color:var(--teal);text-decoration:none">KOVA — Ventas con IA</a></p>
+    <p>Reg. Nr. 16250313527 · Estonia, European Union<br>Marketing Digital & Automatización con IA<br>Producto: <a href="https://kova-app.net" style="color:var(--teal);text-decoration:none">KOVA — Ventas con IA</a></p>
   </div>
   <div class="footer-links">
     <a href="https://kova-app.net">KOVA App</a>
     <a href="mailto:hola@kova-app.net">hola@kova-app.net</a>
-    <a href="https://wa.me/353838330270">WhatsApp</a>
+    <a href="https://wa.me/353838330290">WhatsApp</a>
     <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=97ce687b-dc94-469b-90c1-01b00629de65">Privacidad</a>
   </div>
 </footer>
-
 </body>
 </html>
