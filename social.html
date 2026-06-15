@@ -360,7 +360,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM San
 <div class="panel" id="panel-design">
   <div class="card">
     <div class="sl">Generador de diseños visuales</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div class="cm-fl"><div class="cm-lb">Marca</div>
+        <select class="cm-sl" id="ds-brand" onchange="dsBrandChange(this.value)">
+          <option value="kova">KOVA</option>
+          <option value="alfester">ALFESTER</option>
+        </select>
+      </div>
       <div class="cm-fl"><div class="cm-lb">Tipo de formato</div>
         <select class="cm-sl" id="ds-ty">
           <optgroup label="── INSTAGRAM ──">
@@ -494,7 +500,7 @@ var CAL_DEFAULT = [
 ];
 var CAL = JSON.parse(localStorage.getItem('kova_cal') || 'null') || CAL_DEFAULT.map(function(d) { return Object.assign({}, d); });
 
-var COLORS = {nova:'#25C48F',alex:'#ffc350',maia:'#f0ede6',kova:'#25C48F'};
+var COLORS = {nova:'#25C48F',alex:'#ffc350',maia:'#f0ede6',kova:'#25C48F',alfester:'#005B5B',marketing:'#C8860A',automation:'#005B5B',crm:'#C8860A',beauty:'#b06aff'};
 var currentSlides = [];
 var currentSlideIdx = 0;
 
@@ -525,6 +531,9 @@ var currentBrand = 'kova';
 
 function switchBrand(brand) {
   currentBrand = brand;
+  // Sync Diseños brand selector
+  var dsSel = document.getElementById('ds-brand');
+  if (dsSel && dsSel.value !== brand && brand !== 'ambas') { dsSel.value = brand; dsBrandChange(brand); }
   var cfg = BRAND_CONFIG[brand];
   // Actualizar color accent en CSS
   document.documentElement.style.setProperty('--brand-color', cfg.color);
@@ -1067,6 +1076,26 @@ function makeSlide(title, content, accent, w, h) {
 }
 
 
+function dsBrandChange(brand) {
+  var agentSel = document.getElementById('ds-agent');
+  if (!agentSel) return;
+  if (brand === 'alfester') {
+    agentSel.innerHTML = '<option value="alfester">Alfester Agency</option>' +
+      '<option value="marketing">Marketing Digital</option>' +
+      '<option value="automation">Automatización IA</option>' +
+      '<option value="crm">CRM y Ventas</option>' +
+      '<option value="beauty">Centros de estética</option>';
+  } else {
+    agentSel.innerHTML = '<option value="nova">NOVA</option>' +
+      '<option value="alex">ALEX</option>' +
+      '<option value="maia">MAIA</option>' +
+      '<option value="kova">KOVA</option>';
+  }
+  // Sincronizar selector global
+  var globalSel = document.getElementById('brand-sel');
+  if (globalSel) { globalSel.value = brand; switchBrand(brand); }
+}
+
 function genDesign() {
   var ty = document.getElementById('ds-ty').value;
   var agent = document.getElementById('ds-agent').value;
@@ -1084,9 +1113,21 @@ function genDesign() {
 
   var prompt;
   if (slideCount > 1) {
-    prompt = 'INSTRUCCION CRITICA: responde UNICAMENTE con JSON valido sin markdown ni texto extra. Genera exactamente ' + slideCount + ' slides sobre KOVA app ventas IA, agente ' + agent.toUpperCase() + (ctx ? ', tema: ' + ctx : '') + '. JSON requerido: {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"T2","contenido":"C2"},{"titulo":"T3","contenido":"C3"},{"titulo":"T4","contenido":"C4"},{"titulo":"DESCARGA KOVA","contenido":"kova-app.net gratis"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip horario publicacion"}';
+    var dsBrand2 = (document.getElementById('ds-brand') || {value:'kova'}).value;
+    var dsCtx2 = getBrandContext ? getBrandContext() : '';
+    if (dsBrand2 === 'alfester') {
+      prompt = 'INSTRUCCION CRITICA: responde UNICAMENTE con JSON valido sin markdown ni texto extra. Genera exactamente ' + slideCount + ' slides para ALFESTER AGENCY (agencia marketing digital e IA). ' + dsCtx2 + '. Tema: ' + agent.toUpperCase() + (ctx ? ', ' + ctx : '') + '. JSON requerido: {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"T2","contenido":"C2"},{"titulo":"T3","contenido":"C3"},{"titulo":"T4","contenido":"C4"},{"titulo":"CONTACTA ALFESTER","contenido":"agencia.kova-app.net"}],"caption":"caption con emojis","hashtags":"#Alfester #marketing #automatizacion","instrucciones":"tip horario publicacion"}';
+    } else {
+      prompt = 'INSTRUCCION CRITICA: responde UNICAMENTE con JSON valido sin markdown ni texto extra. Genera exactamente ' + slideCount + ' slides sobre KOVA app ventas IA, agente ' + agent.toUpperCase() + (ctx ? ', tema: ' + ctx : '') + '. JSON requerido: {"slides":[{"titulo":"MAX 4 PALABRAS","contenido":"MAX 6 PALABRAS"},{"titulo":"T2","contenido":"C2"},{"titulo":"T3","contenido":"C3"},{"titulo":"T4","contenido":"C4"},{"titulo":"DESCARGA KOVA","contenido":"kova-app.net gratis"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip horario publicacion"}';
+    }
   } else {
-    prompt = 'Eres CM de KOVA (app ventas IA). Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + (ctx ? '. Tema: ' + ctx : '') + '. Responde SOLO JSON: {"slides":[{"titulo":"TITULO CORTO","contenido":"contenido corto"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip publicacion"}';
+    var dsBrand = (document.getElementById('ds-brand') || {value:'kova'}).value;
+    var dsCtx = getBrandContext ? getBrandContext() : '';
+    if (dsBrand === 'alfester') {
+      prompt = 'Eres CM de ALFESTER AGENCY (agencia marketing digital e IA para pymes). ' + dsCtx + '. Genera contenido para un ' + ty + ' sobre ' + agent.toUpperCase() + (ctx ? '. Tema: ' + ctx : '') + '. Responde SOLO JSON: {"slides":[{"titulo":"TITULO CORTO","contenido":"contenido corto"}],"caption":"caption con emojis","hashtags":"#Alfester #marketing #IA","instrucciones":"tip publicacion"}';
+    } else {
+      prompt = 'Eres CM de KOVA (app ventas IA para pymes hispanohablantes). ' + dsCtx + '. Genera contenido para un ' + ty + ' protagonizado por ' + agent.toUpperCase() + (ctx ? '. Tema: ' + ctx : '') + '. Responde SOLO JSON: {"slides":[{"titulo":"TITULO CORTO","contenido":"contenido corto"}],"caption":"caption con emojis","hashtags":"#KOVA #ventas #IA","instrucciones":"tip publicacion"}';
+    }
   }
 
   callAI(prompt, function(txt) {
