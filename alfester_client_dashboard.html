@@ -147,6 +147,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-head);min-hei
   <div class="tab" onclick="showTab('funnel')">EMBUDO</div>
   <div class="tab" onclick="showTab('automation')">AUTOMATIZACIÓN</div>
   <div class="tab" onclick="showTab('kova')">KOVA</div>
+  <div class="tab" onclick="showTab('hybrid')" style="color:#5de0ce">HYBRID</div>
   <div class="tab" onclick="showTab('config')">CONFIGURAR</div>
 </div>
 
@@ -468,6 +469,129 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-head);min-hei
 </div>
 
 <!-- CONFIG TAB -->
+
+<!-- HYBRID INTELLIGENCE TAB -->
+<div id="hybrid" class="section">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">Hybrid Intelligence</div>
+      <div class="sec-sub">IA invisible detrás de tu equipo humano</div>
+    </div>
+    <div class="kova-chip" style="font-size:12px;padding:6px 14px">&#11088; ACTIVO</div>
+  </div>
+
+  <!-- KPIs HYBRID -->
+  <div class="g4" style="margin-bottom:20px">
+    <div class="card highlight-te">
+      <div class="card-label">Conversaciones calificadas IA</div>
+      <div class="card-val">24</div>
+      <div class="card-sub">este mes · antes de hablar con agente</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Sugerencias en tiempo real</div>
+      <div class="card-val">147</div>
+      <div class="card-sub">enviadas al panel del agente</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Post-atención automática</div>
+      <div class="card-val">19</div>
+      <div class="card-sub">emails + propuestas PDF enviados</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tasa de conversión</div>
+      <div class="card-val">58%</div>
+      <div class="card-sub">leads calificados → clientes</div>
+    </div>
+  </div>
+
+  <!-- FLUJO HYBRID -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title" style="margin-bottom:16px">Flujo Hybrid Intelligence activo</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--text2)">
+      <div style="background:rgba(93,224,206,.1);border:1px solid rgba(93,224,206,.25);border-radius:8px;padding:8px 14px">
+        &#128100; Lead entra
+      </div>
+      <div style="color:var(--teal)">&#9658;</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 14px">
+        &#129302; IA califica + briefing
+      </div>
+      <div style="color:var(--teal)">&#9658;</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 14px">
+        &#128101; Agente humano atiende
+      </div>
+      <div style="color:var(--teal)">&#9658;</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 14px">
+        &#128203; Email + propuesta PDF auto
+      </div>
+      <div style="color:var(--teal)">&#9658;</div>
+      <div style="background:rgba(93,224,206,.1);border:1px solid rgba(93,224,206,.25);border-radius:8px;padding:8px 14px">
+        &#10003; CRM actualizado
+      </div>
+    </div>
+  </div>
+
+  <!-- CALIFICACIONES RECIENTES -->
+  <div class="g2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Calificaciones IA recientes</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--bg3);border-radius:8px;padding:12px;border-left:3px solid var(--teal)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:13px;color:var(--text)">María G. — Tratamiento facial</span>
+            <span style="font-size:11px;color:var(--teal)">ALTA</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3)">Presupuesto confirmado · Urgencia alta · Zona OK</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Hoy 09:47</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:12px;border-left:3px solid var(--gold)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:13px;color:var(--text)">Carlos M. — Masaje deportivo</span>
+            <span style="font-size:11px;color:var(--gold)">MEDIA</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3)">Duda precio · Sin urgencia definida · Zona OK</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Hoy 08:15</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:12px;border-left:3px solid rgba(255,80,80,.5)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:13px;color:var(--text)">Pedro L. — Consulta general</span>
+            <span style="font-size:11px;color:rgba(255,80,80,.8)">BAJA</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3)">Fuera de zona · Sin presupuesto claro</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Ayer 19:22</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Post-atención enviada</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--bg3);border-radius:8px;padding:12px">
+          <div style="font-size:13px;color:var(--text);margin-bottom:4px">Ana P. — Propuesta facial premium</div>
+          <div style="font-size:11px;color:var(--text3)">Email + PDF propuesta enviados · Abierto &#10003;</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">EMAIL &#10003;</span>
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">PDF &#10003;</span>
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">CRM &#10003;</span>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Hoy 10:02</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:12px">
+          <div style="font-size:13px;color:var(--text);margin-bottom:4px">Laura K. — Propuesta pack mensual</div>
+          <div style="font-size:11px;color:var(--text3)">Email + PDF propuesta enviados · Pendiente apertura</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">EMAIL &#10003;</span>
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">PDF &#10003;</span>
+            <span style="font-size:10px;background:rgba(93,224,206,.1);color:var(--teal);padding:3px 8px;border-radius:4px">CRM &#10003;</span>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Ayer 17:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- END HYBRID TAB -->
+
 <div id="config" class="section">
   <div class="sec-header">
     <div><div class="sec-title">Configuración del panel</div><div class="sec-sub">Personaliza según tu negocio</div></div>
