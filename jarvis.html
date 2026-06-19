@@ -501,9 +501,17 @@ async function checkAPIHealth() {
     const r = await fetch('https://api.kova-app.net/api/health', { method: 'GET' });
     const latency = Date.now() - start;
     document.getElementById('m-latency').textContent = latency + 'ms';
-    document.getElementById('dot-api').style.background = latency < 500 ? 'var(--green)' : 'var(--gold)';
+    // 403 = servidor vivo pero requiere auth — tratar como OK
+    if (r.status === 403 || r.status === 200 || r.status === 401) {
+      document.getElementById('dot-api').style.background = latency < 500 ? 'var(--green)' : 'var(--gold)';
+    } else {
+      document.getElementById('dot-api').style.background = 'var(--red)';
+      addLog('API status ' + r.status, 'err');
+    }
   } catch(e) {
+    // Solo marcar rojo si es error de red real (no respuesta del servidor)
     document.getElementById('dot-api').style.background = 'var(--red)';
+    addLog('API sin respuesta: ' + e.message, 'err');
   }
 }
 
