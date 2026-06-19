@@ -547,7 +547,7 @@ function formatJarvisResponse(text) {
   return text;
 }
 
-function buildLiveContext() {
+async function buildLiveContext() {
   const now = new Date();
   const users = document.getElementById('total-users')?.textContent || '--';
   const msgs = document.getElementById('total-msgs')?.textContent || '--';
@@ -558,31 +558,61 @@ function buildLiveContext() {
   const trial = document.getElementById('count-trial')?.textContent || '--';
   const topUser = document.getElementById('top-user')?.textContent || '--';
 
+  let healthSummary = 'Sin datos de chequeos preventivos todavia.';
+  try {
+    const hH = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+    const hRes = await fetch(`${SUPABASE_URL}/rest/v1/v_latest_health_status?select=*`, { headers: hH });
+    if (hRes.ok) {
+      const checks = await hRes.json();
+      if (checks && checks.length > 0) {
+        healthSummary = checks.map(c => {
+          const age = Math.round((Date.now() - new Date(c.checked_at).getTime()) / 60000);
+          return `- ${c.check_type}: ${c.status.toUpperCase()} - ${c.detail} (hace ${age} min)`;
+        }).join('\n');
+      }
+    }
+  } catch (e) { healthSummary = `Error: ${e.message}`; }
+
+  let recentAlerts = 'Sin alertas recientes.';
+  try {
+    const aH = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+    const aRes = await fetch(`${SUPABASE_URL}/rest/v1/v_recent_alerts?select=*&limit=5`, { headers: aH });
+    if (aRes.ok) {
+      const alerts = await aRes.json();
+      if (alerts && alerts.length > 0) {
+        recentAlerts = alerts.map(a =>
+          `- [${new Date(a.checked_at).toLocaleString('es-ES')}] ${a.check_type}: ${a.detail}`
+        ).join('\n');
+      }
+    }
+  } catch (e) { }
+
   return `
 
 --- ESTADO EN TIEMPO REAL DEL SISTEMA (${now.toLocaleString('es-ES')}) ---
-MÉTRICAS SUPABASE LIVE:
-- Total usuarios registrados: ${users}
-- Plan free: ${free} | starter: ${starter} | pro: ${pro} | trial: ${trial}
+METRICAS SUPABASE LIVE:
+- Total usuarios: ${users} | free: ${free} | starter: ${starter} | pro: ${pro} | trial: ${trial}
 - Mensajes totales este mes: ${msgs}
 - Top usuario: ${topUser}
 - Latencia API: ${latency}
 
-ESTADO SERVICIOS:
-- iOS 1.0.3 build 46: EN REVISIÓN APPLE (~7 días desde 1 junio)
-- RevenueCat: SANDBOX (activar post-aprobación Apple)
-- Google Play: 10/12 testers
-- Alfester OÜ: EN PROCESO Xolo
-- Anthropic spend cap: $50/mes activo
-- n8n: 9 flujos activos (ES+EN)
-- npm audit: 12 moderate (kova-api) + 14 moderate (kova) — pendiente Expo upgrade
-- RLS: ACTIVO en todas las tablas
-- Security score: 85/100
+CHEQUEOS PREVENTIVOS AUTOMATICOS (n8n, cada 2h):
+${healthSummary}
 
-USA ESTOS DATOS REALES en tu respuesta. Si el dato muestra '--' significa que aún no se ha cargado desde Supabase.
+ALERTAS RECIENTES (ultimos 30 dias):
+${recentAlerts}
+
+ESTADO SERVICIOS (19 jun 2026):
+- iOS build 49 v1.0.4: LIVE EN APP STORE
+- Android: closed testing Google Play, pendiente produccion
+- Anthropic spend cap: $100 configurado
+- n8n: 10 flujos activos + chequeos preventivos LIVE
+- RLS: ACTIVO en todas las tablas
+- Hybrid Intelligence: LIVE en landing + dashboard + template factory
+
+USA ESTOS DATOS REALES en tu respuesta.
 ---`;
 }
-
 async function sendMessage() {
   if (isThinking) return;
   const input = document.getElementById('chatInput');
@@ -601,7 +631,7 @@ async function sendMessage() {
 
   try {
     // Inject real-time system context
-    const liveContext = buildLiveContext();
+    const liveContext = await buildLiveContext();
     const systemWithContext = JARVIS_SYSTEM + liveContext;
 
     const res = await fetch(PROXY_URL, {
