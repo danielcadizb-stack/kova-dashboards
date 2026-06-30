@@ -2302,9 +2302,9 @@ function genDesign() {
 
     data.slides = (data.slides||[]).map(function(s){
 
-      var t=(s.titulo||'').replace(/[\ng,' ').trim();
+      var t=(s.titulo||'').replace(/[\n•*]/g,' ').trim();
 
-      var co=(s.contenido||s.subtitulo||'').replace(/[\ng,' ').trim();
+      var co=(s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
 
       var tw=t.split(' '); if(tw.length>5) t=tw.slice(0,5).join(' ');;
 
