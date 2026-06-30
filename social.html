@@ -2092,11 +2092,11 @@ function makeSlide(title, content, accent, w, h) {
 
   var titleWords = title.split(' ');
 
-  if(titleWords.length > 5) title = titleWords.slice(0,5).join(' ')+'..';
+  if(titleWords.length > 8) title = titleWords.slice(0,8).join(' ')+'..';
 
-  if(title.length>32) title=title.substring(0,30)+'..';
+  if(title.length>48) title=title.substring(0,46)+'..';
 
-  if(content.length>60) content=content.substring(0,58)+'..';
+  if(content.length>140) content=content.substring(0,138)+'..';
 
   var tpx=title.length>40?Math.round(w*0.042):title.length>30?Math.round(w*0.050):title.length>20?Math.round(w*0.058):Math.round(w*0.072);
 
@@ -2306,11 +2306,11 @@ function genDesign() {
 
       var co=(s.contenido||s.subtitulo||'').replace(/[\n•*]/g,' ').trim();
 
-      var tw=t.split(' '); if(tw.length>5) t=tw.slice(0,5).join(' ');;
+      var tw=t.split(' '); if(tw.length>8) t=tw.slice(0,8).join(' ');;
 
-      if(t.length>30) t=t.substring(0,28)+'..';
+      if(t.length>48) t=t.substring(0,46)+'..';
 
-      if(co.length>60) co=co.substring(0,58)+'..';
+      if(co.length>140) co=co.substring(0,138)+'..';
 
       return {titulo:t,contenido:co};
 
